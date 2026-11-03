@@ -90,10 +90,15 @@ class QuizBase extends BaseGame {
         this.showResult(quizResultTemplate(this.mode.title, percent, scoreText, formatTime(this.timer.seconds), this.getRecordText(isRecord)));
     }
 
+    getTopDetail() {
+        return this.mode.title + ' · ' + this.settings.region + ' · ' + this.settings.amount + ' % · ' + formatTime(this.timer.seconds);
+    }
+
     checkQuizAchievements(percent) {
         const mode = this.settings.mode;
         const isFullWorld = this.settings.region === 'Welt' && this.settings.amount === 100;
         const category = this.mode.category;
+        this.storage.saveTopScore('quiz', percent, this.getTopDetail());
         this.achievements.unlockIf(percent === 100, 'quiz-perfect');
         this.achievements.unlockIf(mode === 'map-click' && this.settings.region === 'Europa' && this.settings.amount === 100 && percent >= 90, 'quiz-europe-map');
         this.achievements.unlockIf(mode === 'map-click' && isFullWorld && percent >= 80, 'quiz-world-map');

@@ -89,6 +89,7 @@ class Geodle extends BaseGame {
             return;
         }
         this.storage.saveGameResult('geodle', won, 0);
+        this.storage.saveTopScore('geodle', this.getGeodleScore(won), this.target.name);
         this.playEndSound(won, !won);
         const text = won ? 'Richtig! Gesucht war:' : 'Leider nicht geschafft. Gesucht war:';
         document.getElementById('geodle-info').innerHTML = geodleEndTemplate(text, this.target);
@@ -104,8 +105,12 @@ class Geodle extends BaseGame {
         this.achievements.unlockIf(this.guesses.length === this.maxGuesses, 'geodle-last');
     }
 
+    getGeodleScore(won) {
+        return won ? (this.maxGuesses - this.guesses.length + 1) * 10 : 0;
+    }
+
     finishGeodleDaily(won) {
-        const score = won ? (this.maxGuesses - this.guesses.length + 1) * 10 : 0;
+        const score = this.getGeodleScore(won);
         this.finishDaily('geodle', score, won);
         const text = (won ? 'Richtig! Das Land des Tages war ' : 'Nicht geschafft. Das Land des Tages war ') + this.target.name + '.';
         document.getElementById('geodle-info').innerHTML = dailyEndTemplate(text, score);

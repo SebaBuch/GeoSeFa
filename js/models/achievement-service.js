@@ -1,9 +1,9 @@
 class AchievementService {
-    constructor(storage) {
+    constructor(storage, profiles) {
         this.storage = storage;
+        this.profiles = profiles;
         this.unlocked = storage.load('achievements', {});
         this.counters = storage.load('achievement-counters', {});
-        this.toastNumber = 0;
     }
 
     isUnlocked(id) {
@@ -21,8 +21,10 @@ class AchievementService {
         this.unlocked[id] = getDateKey(new Date());
         this.storage.save('achievements', this.unlocked);
         const matches = ACHIEVEMENTS.filter(achievement => achievement.id === id);
-        this.showToast(matches[0]);
-        updateAchievementButton();
+        const toastId = createToastId();
+        showToast(toastId, achievementToastTemplate(toastId, matches[0]));
+        this.profiles.addXp(XP_PER_TIER[matches[0].tier]);
+        updateHeader();
     }
 
     unlockIf(condition, id) {
@@ -34,6 +36,7 @@ class AchievementService {
     increase(name, amount) {
         this.counters[name] = (this.counters[name] || 0) + amount;
         this.storage.save('achievement-counters', this.counters);
+        this.profiles.addXp((XP_PER_COUNTER[name] || 0) * amount);
         this.checkCounter(name);
     }
 
@@ -68,19 +71,5 @@ class AchievementService {
             }
         }
         return true;
-    }
-
-    showToast(achievement) {
-        this.toastNumber++;
-        const toastId = 'toast-' + this.toastNumber;
-        document.getElementById('toast-area').innerHTML += achievementToastTemplate(toastId, achievement);
-        setTimeout(() => this.removeToast(toastId), 4500);
-    }
-
-    removeToast(toastId) {
-        const toast = document.getElementById(toastId);
-        if (toast) {
-            toast.remove();
-        }
     }
 }

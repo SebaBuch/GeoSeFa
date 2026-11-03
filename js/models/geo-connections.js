@@ -204,6 +204,7 @@ class GeoConnections extends BaseGame {
     }
 
     checkConnectionAchievements(won) {
+        this.storage.saveTopScore('geoconnections', won ? 100 - this.mistakes * 20 : 0, this.mistakes + ' Fehler');
         if (!won) {
             return;
         }

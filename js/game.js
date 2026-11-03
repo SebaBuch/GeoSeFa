@@ -4,6 +4,9 @@ let shapeService;
 let worldMap;
 let soundService;
 let achievementService;
+let profileService;
+let toastCounter = 0;
+let selectedStartAvatar = 'DEU';
 let currentGame = null;
 let lastQuizSettings = null;
 
@@ -24,17 +27,17 @@ const QUIZ_CATEGORIES = [
 
 async function init() {
     storageService = new StorageService();
+    profileService = new ProfileService(storageService);
     countryService = new CountryService(storageService);
     shapeService = new ShapeService(countryService);
     worldMap = new WorldMap(shapeService);
     soundService = new SoundService();
-    achievementService = new AchievementService(storageService);
-    updateAchievementButton();
+    achievementService = new AchievementService(storageService, profileService);
     await loadData(false);
 }
 
 async function loadData(forceReload) {
-    const hasCache = storageService.load('countries', null) !== null;
+    const hasCache = storageService.loadGlobal('countries', null) !== null;
     if ((!hasCache || forceReload) && API_KEY.startsWith('HIER')) {
         return showError('Trage zuerst deinen API-Key in js/config.js ein.');
     }
@@ -73,13 +76,214 @@ function showHome() {
     if (!countryService || countryService.countries.length === 0) {
         return;
     }
+    if (!profileService.hasProfile()) {
+        return showProfileCreate();
+    }
     stopCurrentGame();
     setTheme('home');
+    updateHeader();
     showContent(homeTemplate(buildDailyCard(), buildGameCards(), buildQuizCards(), countryService.countries.length));
 }
 
 function setTheme(name) {
-    document.body.className = 'theme-' + name;
+    const profile = profileService.getCurrent();
+    const color = profile ? profile.theme : 'standard';
+    document.body.className = 'theme-' + name + ' color-' + color;
+}
+
+function updateHeader() {
+    updateAchievementButton();
+    updateProfileButton();
+}
+
+function updateProfileButton() {
+    const button = document.getElementById('profile-button');
+    const profile = profileService.getCurrent();
+    if (!profile || countryService.countries.length === 0) {
+        button.classList.add('hidden');
+        return;
+    }
+    button.classList.remove('hidden');
+    const level = profileService.getLevelInfo(profile.xp).level;
+    button.innerHTML = profileChipTemplate(buildAvatar(profile.avatar, profile.frame, 'avatar-small'), profile.name, level);
+}
+
+function buildAvatar(countryCode, frame, sizeClass) {
+    const country = countryService.getCountry(countryCode);
+    const flagUrl = country ? country.flag : '';
+    return avatarTemplate(flagUrl, frame, sizeClass);
+}
+
+function createToastId() {
+    toastCounter++;
+    return 'toast-' + toastCounter;
+}
+
+function showToast(toastId, html) {
+    document.getElementById('toast-area').insertAdjacentHTML('beforeend', html);
+    setTimeout(() => removeToast(toastId), 4500);
+}
+
+function removeToast(toastId) {
+    const toast = document.getElementById(toastId);
+    if (toast) {
+        toast.remove();
+    }
+}
+
+function showProfileCreate() {
+    stopCurrentGame();
+    setTheme('home');
+    updateHeader();
+    selectedStartAvatar = 'DEU';
+    const cancelHtml = profileService.hasProfile() ? profileCancelTemplate() : '';
+    showContent(profileCreateTemplate(buildStartAvatarOptions(), cancelHtml));
+}
+
+function buildStartAvatarOptions() {
+    const options = PROFILE_OPTIONS.filter(option => option.type === 'avatar' && option.level === 1);
+    let html = '';
+    for (let i = 0; i < options.length; i++) {
+        const selectedClass = options[i].value === selectedStartAvatar ? 'selected' : '';
+        html += startAvatarTemplate(options[i], buildAvatar(options[i].value, 'none', 'avatar-medium'), selectedClass);
+    }
+    return html;
+}
+
+function selectStartAvatar(countryCode) {
+    selectedStartAvatar = countryCode;
+    document.getElementById('start-avatars').innerHTML = buildStartAvatarOptions();
+}
+
+function createProfile(event) {
+    event.preventDefault();
+    const name = escapeHtml(document.getElementById('profile-name').value.trim());
+    if (name === '') {
+        document.getElementById('message').innerHTML = 'Bitte gib einen Namen ein.';
+        return;
+    }
+    profileService.createProfile(name, selectedStartAvatar);
+    changeProfileData();
+}
+
+function switchProfile(profileId) {
+    profileService.select(profileId);
+    changeProfileData();
+}
+
+function changeProfileData() {
+    achievementService = new AchievementService(storageService, profileService);
+    lastQuizSettings = null;
+    showHome();
+}
+
+function showProfile() {
+    if (!profileService.hasProfile()) {
+        return;
+    }
+    stopCurrentGame();
+    setTheme('home');
+    showContent(profilePageTemplate(buildProfileCard(), buildOptionSections(), buildProfileList()));
+}
+
+function buildProfileCard() {
+    const profile = profileService.getCurrent();
+    const info = profileService.getLevelInfo(profile.xp);
+    const isMax = info.level >= MAX_LEVEL;
+    const percent = isMax ? 100 : Math.round(info.current / info.needed * 100);
+    const xpText = isMax ? 'Maximales Level erreicht · ' + profile.xp + ' XP' : info.current + ' / ' + info.needed + ' XP bis Level ' + (info.level + 1);
+    const bestStreak = profileService.getBestStreak();
+    const rankIndex = profileService.getRankIndex(bestStreak);
+    const avatarHtml = buildAvatar(profile.avatar, profile.frame, 'avatar-large');
+    return profileCardTemplate(profile, avatarHtml, RANKS[rankIndex].title, getRankText(rankIndex, bestStreak), info.level, percent, xpText);
+}
+
+function getRankText(rankIndex, bestStreak) {
+    const bestText = 'Beste Tages-Serie: ' + formatDays(bestStreak);
+    if (rankIndex === RANKS.length - 1) {
+        return bestText + ' · Höchster Rang erreicht';
+    }
+    const nextRank = RANKS[rankIndex + 1];
+    return bestText + ' · Nächster Rang: ' + nextRank.title + ' ab ' + formatDays(nextRank.days);
+}
+
+function buildOptionSections() {
+    let html = '';
+    for (let i = 0; i < PROFILE_OPTION_TYPES.length; i++) {
+        const type = PROFILE_OPTION_TYPES[i];
+        const options = PROFILE_OPTIONS.filter(option => option.type === type.key);
+        html += profileSectionTemplate(type.title, buildOptionButtons(options));
+    }
+    return html;
+}
+
+function buildOptionButtons(options) {
+    const profile = profileService.getCurrent();
+    let html = '';
+    for (let i = 0; i < options.length; i++) {
+        const preview = buildOptionPreview(options[i], profile);
+        const selectedClass = profile[options[i].type] === options[i].value ? 'selected' : '';
+        const isUnlocked = profileService.isOptionUnlocked(options[i]);
+        html += isUnlocked ? profileOptionTemplate(options[i], preview, selectedClass) : profileOptionLockedTemplate(options[i], preview);
+    }
+    return html;
+}
+
+function buildOptionPreview(option, profile) {
+    if (option.type === 'avatar') {
+        return buildAvatar(option.value, 'none', 'avatar-medium');
+    }
+    if (option.type === 'frame') {
+        return buildAvatar(profile.avatar, option.value, 'avatar-medium');
+    }
+    return option.type === 'theme' ? themePreviewTemplate(option.value) : '';
+}
+
+function chooseProfileOption(type, value) {
+    profileService.chooseOption(type, value);
+    updateHeader();
+    showProfile();
+}
+
+function buildProfileList() {
+    let html = '';
+    for (let i = 0; i < profileService.profiles.length; i++) {
+        const profile = profileService.profiles[i];
+        const avatarHtml = buildAvatar(profile.avatar, profile.frame, 'avatar-small');
+        const level = profileService.getLevelInfo(profile.xp).level;
+        const isCurrent = profile.id === profileService.currentId;
+        html += isCurrent ? profileListCurrentTemplate(profile, avatarHtml, level) : profileListItemTemplate(profile, avatarHtml, level);
+    }
+    return html + profileNewButtonTemplate();
+}
+
+function showLeaderboard() {
+    if (!profileService.hasProfile()) {
+        return;
+    }
+    stopCurrentGame();
+    setTheme('home');
+    showContent(leaderboardTemplate(buildTopLists()));
+}
+
+function buildTopLists() {
+    let html = '';
+    for (let i = 0; i < TOP_LISTS.length; i++) {
+        const entries = storageService.getTopScores(TOP_LISTS[i].key);
+        html += topListTemplate(TOP_LISTS[i].title, buildTopRows(entries, TOP_LISTS[i].unit));
+    }
+    return html;
+}
+
+function buildTopRows(entries, unit) {
+    if (entries.length === 0) {
+        return topEmptyTemplate();
+    }
+    let html = '';
+    for (let i = 0; i < entries.length; i++) {
+        html += topRowTemplate(i + 1, entries[i].score + ' ' + unit, entries[i].detail, formatDateGerman(entries[i].date));
+    }
+    return html;
 }
 
 function showDaily() {
@@ -92,7 +296,7 @@ function showDaily() {
 function buildDailyCard() {
     const daily = new DailyChallenge();
     const results = daily.getResults(daily.dateKey);
-    return dailyCardTemplate(daily.countDone(results), daily.getTotal(results), formatDays(daily.getStreak()));
+    return dailyCardTemplate(daily.countDone(results), daily.getTotal(results), formatDays(daily.updateBestStreak()));
 }
 
 function showImpressum() {
@@ -104,12 +308,13 @@ function showImpressum() {
 function updateAchievementButton() {
     const button = document.getElementById('achievement-button');
     if (button) {
+        button.classList.toggle('hidden', !profileService.hasProfile());
         button.innerHTML = 'Erfolge ' + achievementService.getUnlockedCount() + ' / ' + ACHIEVEMENTS.length;
     }
 }
 
 function showAchievements() {
-    if (!countryService || countryService.countries.length === 0) {
+    if (!profileService.hasProfile()) {
         return;
     }
     stopCurrentGame();

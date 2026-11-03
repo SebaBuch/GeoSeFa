@@ -122,7 +122,7 @@ class BlitzRound extends BaseGame {
             return;
         }
         const gameKey = 'blitz-' + this.category;
-        const isRecord = this.storage.saveGameResult(gameKey, true, this.score);
+        const isRecord = this.saveBlitzResult(gameKey);
         this.playEndSound(isRecord, this.score < this.lowScore);
         const highscore = this.storage.getGameStats(gameKey).highscore;
         this.showScreen(blitzEndTemplate(BLITZ_CATEGORIES[this.category].title, this.score, highscore, this.getRecordText(isRecord), this.category));
@@ -138,6 +138,11 @@ class BlitzRound extends BaseGame {
         const capitals = this.achievements.getCounter('blitz-capitals');
         const outlines = this.achievements.getCounter('blitz-outlines');
         this.achievements.unlockIf(Math.min(flags, capitals, outlines) >= 10, 'blitz-all');
+    }
+
+    saveBlitzResult(gameKey) {
+        this.storage.saveTopScore(gameKey, this.score, this.wrongCount + ' Fehler');
+        return this.storage.saveGameResult(gameKey, true, this.score);
     }
 
     finishBlitzDaily() {

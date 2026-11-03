@@ -6,6 +6,7 @@ class BaseGame {
         this.worldMap = worldMap;
         this.sound = soundService;
         this.achievements = achievementService;
+        this.profiles = profileService;
         this.achievementKey = '';
         this.finished = false;
         this.timeoutId = null;

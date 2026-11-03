@@ -229,7 +229,7 @@ class GeoRoute extends BaseGame {
             this.finishRouteDaily(won);
             return;
         }
-        this.storage.saveGameResult('georoute', won, 0);
+        this.saveRouteResult(won);
         this.playEndSound(won, !won);
         const text = won ? 'Geschafft! Du bist in ' + this.targetCountry.name + ' angekommen.' : 'Keine Versuche mehr.';
         const shortestRoute = this.getShortestRouteNames();
@@ -238,9 +238,18 @@ class GeoRoute extends BaseGame {
         this.updateMapView();
     }
 
-    finishRouteDaily(won) {
+    saveRouteResult(won) {
+        this.storage.saveGameResult('georoute', won, 0);
+        this.storage.saveTopScore('georoute', this.getRouteScore(won), this.startCountry.name + ' → ' + this.targetCountry.name);
+    }
+
+    getRouteScore(won) {
         const extraGuesses = this.guesses.length - this.neededCountries;
-        const score = won ? Math.max(20, 100 - extraGuesses * 20) : 0;
+        return won ? Math.max(20, 100 - extraGuesses * 20) : 0;
+    }
+
+    finishRouteDaily(won) {
+        const score = this.getRouteScore(won);
         this.finishDaily('route', score, won);
         const text = (won ? 'Geschafft! ' : 'Keine Versuche mehr. ') + 'Ein kürzester Weg: ' + this.getShortestRouteNames();
         document.getElementById('route-info').innerHTML = dailyEndTemplate(text, score);

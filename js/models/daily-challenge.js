@@ -25,17 +25,29 @@ class DailyChallenge extends BaseGame {
         const results = this.getResults(this.dateKey);
         results[taskKey] = score;
         this.storage.save('daily-' + this.dateKey, results);
+        this.profiles.addXp(Math.round(score / 2));
         this.checkDailyAchievements(results);
+    }
+
+    updateBestStreak() {
+        const streak = this.getStreak();
+        const best = Math.max(this.storage.load('best-daily-streak', 0), streak);
+        this.storage.save('best-daily-streak', best);
+        return streak;
     }
 
     checkDailyAchievements(results) {
         const total = this.getTotal(results);
-        const streak = this.getStreak();
-        this.achievements.unlockIf(this.countDone(results) === DAILY_TASKS.length, 'daily-first');
+        const streak = this.updateBestStreak();
+        const isComplete = this.countDone(results) === DAILY_TASKS.length;
+        this.achievements.unlockIf(isComplete, 'daily-first');
         this.achievements.unlockIf(total >= 250, 'daily-250');
         this.achievements.unlockIf(total >= 300, 'daily-perfect');
         this.achievements.unlockIf(streak >= 7, 'daily-streak-7');
         this.achievements.unlockIf(streak >= 30, 'daily-streak-30');
+        if (isComplete) {
+            this.storage.saveTopScore('daily', total, '');
+        }
     }
 
     buildTasksHtml(results) {

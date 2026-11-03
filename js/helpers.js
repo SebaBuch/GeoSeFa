@@ -67,3 +67,10 @@ function formatDateShort(dateKey) {
     const parts = dateKey.split('-');
     return parts[2] + '.' + parts[1] + '.';
 }
+
+function escapeHtml(text) {
+    let result = text.replaceAll('&', '&amp;');
+    result = result.replaceAll('<', '&lt;');
+    result = result.replaceAll('>', '&gt;');
+    return result.replaceAll('"', '&quot;');
+}

@@ -9,7 +9,7 @@ class CountryService {
     }
 
     async loadCountries(forceReload) {
-        const cached = this.storage.load('countries', null);
+        const cached = this.storage.loadGlobal('countries', null);
         if (cached && !forceReload) {
             this.setCountries(cached);
             return true;
@@ -17,7 +17,7 @@ class CountryService {
         const rawList = await this.fetchAllPages();
         if (rawList.length > 0) {
             const countries = this.normalizeList(rawList);
-            this.storage.save('countries', countries);
+            this.storage.saveGlobal('countries', countries);
             this.setCountries(countries);
         }
         return rawList.length > 0;

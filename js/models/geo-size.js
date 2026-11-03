@@ -118,6 +118,7 @@ class GeoSize extends BaseGame {
     finish() {
         this.finished = true;
         const isRecord = this.storage.saveGameResult('geosize', true, this.score);
+        this.storage.saveTopScore('geosize', this.score, '');
         this.achievements.unlockIf(this.score >= 700, 'size-700');
         this.achievements.unlockIf(this.score >= 850, 'size-850');
         this.playEndSound(isRecord, this.score < 400);

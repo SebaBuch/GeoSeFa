@@ -118,6 +118,7 @@ class GeoDecide extends BaseGame {
     finish() {
         this.finished = true;
         const isRecord = this.storage.saveGameResult('geodecide', false, this.streak);
+        this.storage.saveTopScore('geodecide', this.streak, '');
         this.checkDecideAchievements();
         this.playEndSound(isRecord, this.streak < 3);
         const stats = this.storage.getGameStats('geodecide');
