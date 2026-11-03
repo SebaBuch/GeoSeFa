@@ -1,0 +1,554 @@
+.game-header p {
+    color: #4a5a66;
+}
+
+.status-row {
+    display: flex;
+    flex-wrap: wrap;
+    justify-content: space-between;
+    align-items: center;
+    gap: 12px;
+    margin: 12px 0;
+    font-weight: 600;
+}
+
+.end-box {
+    margin-top: 16px;
+    padding: 16px;
+    border-radius: 12px;
+    background-color: #f5f1e8;
+    text-align: center;
+}
+
+/* Karte */
+
+.map-layout {
+    display: flex;
+    flex-direction: column;
+    height: calc(100vh - 140px);
+    min-height: 480px;
+}
+
+.map-layout .panel {
+    flex: 0 0 auto;
+    padding: 16px 24px;
+}
+
+.map {
+    flex: 1 1 auto;
+    min-height: 280px;
+    border-radius: 16px;
+    background-color: #a9cfe0;
+}
+
+/* SVG-Umrisse */
+
+.outline path {
+    fill: #1f6f78;
+    stroke: #17565d;
+    stroke-width: 1;
+}
+
+/* GeoRoute */
+
+.route-ends {
+    display: flex;
+    flex-wrap: wrap;
+    align-items: center;
+    gap: 12px;
+    margin-top: 12px;
+}
+
+.route-end {
+    padding: 8px 14px;
+    border-radius: 999px;
+    color: #ffffff;
+    font-weight: 700;
+}
+
+.route-end.start {
+    background-color: #1b7f3b;
+}
+
+.route-end.target {
+    background-color: #a020a0;
+}
+
+.route-arrow {
+    font-size: 1.5rem;
+}
+
+.route-guesses {
+    display: flex;
+    flex-wrap: wrap;
+    gap: 8px;
+    margin: 8px 0;
+}
+
+.chip {
+    padding: 4px 12px;
+    border-radius: 999px;
+    font-weight: 600;
+    font-size: 0.875rem;
+}
+
+.chip.start {
+    background-color: #1b7f3b;
+    color: #ffffff;
+}
+
+.chip.green {
+    background-color: #4caf50;
+    color: #ffffff;
+}
+
+.chip.yellow {
+    background-color: #f2c94c;
+    color: #1d2b36;
+}
+
+.chip.red {
+    background-color: #e5534b;
+    color: #ffffff;
+}
+
+.route-info {
+    display: flex;
+    flex-wrap: wrap;
+    gap: 16px;
+}
+
+.route-info .end-box {
+    flex: 1 1 100%;
+}
+
+/* GeoSize */
+
+.size-compare {
+    display: flex;
+    flex-wrap: wrap;
+    justify-content: center;
+    gap: 24px;
+    margin: 8px 0;
+}
+
+.size-side {
+    display: flex;
+    flex-direction: column;
+    align-items: center;
+    gap: 4px;
+    flex: 0 1 440px;
+    min-width: 0;
+    text-align: center;
+}
+
+.size-box {
+    display: flex;
+    justify-content: center;
+    align-items: center;
+    width: 440px;
+    height: 440px;
+    border-radius: 16px;
+    background-color: #f5f1e8;
+}
+
+.size-box .outline.reveal {
+    transition: width 0.8s ease, height 0.8s ease;
+}
+
+.size-name {
+    font-weight: 700;
+    font-size: 1.375rem;
+}
+
+.size-share {
+    font-size: 2rem;
+    font-weight: 800;
+    color: #1f6f78;
+}
+
+.size-slider {
+    width: 100%;
+    accent-color: #1f6f78;
+}
+
+.size-result {
+    margin-top: 16px;
+    text-align: center;
+}
+
+/* Blitzrunde */
+
+.blitz-categories {
+    display: flex;
+    flex-wrap: wrap;
+    gap: 16px;
+    margin-top: 16px;
+}
+
+.blitz-category {
+    display: flex;
+    flex-direction: column;
+    gap: 8px;
+    flex: 1 1 240px;
+    padding: 32px 24px;
+    border: none;
+    border-radius: 16px;
+    color: #ffffff;
+    font-family: inherit;
+    text-align: left;
+    cursor: pointer;
+    transition: transform 0.15s;
+}
+
+.blitz-category:hover {
+    transform: translateY(-4px);
+}
+
+.blitz-category-title {
+    font-size: 1.75rem;
+    font-weight: 800;
+}
+
+.blitz-category-best {
+    font-size: 1rem;
+    font-weight: 600;
+}
+
+.blitz-question {
+    margin: 8px 0 0 0;
+    font-size: 1.25rem;
+    font-weight: 600;
+    text-align: center;
+}
+
+.blitz-prompt {
+    min-height: 220px;
+    margin: 12px 0;
+}
+
+.blitz-prompt .prompt-flag {
+    max-height: 220px;
+}
+
+.blitz-prompt .outline {
+    width: 100%;
+    max-width: 420px;
+    height: 260px;
+}
+
+/* GeoDecide */
+
+.question {
+    text-align: center;
+    margin: 16px 0;
+}
+
+.decide-list {
+    display: flex;
+    flex-wrap: wrap;
+    justify-content: center;
+    gap: 16px;
+}
+
+.decide-card {
+    display: flex;
+    flex-direction: column;
+    align-items: center;
+    gap: 8px;
+    flex: 1 1 260px;
+    max-width: 520px;
+    padding: 28px;
+    border: 3px solid #e8e2d0;
+    border-radius: 16px;
+    background-color: #ffffff;
+    font-family: inherit;
+    color: inherit;
+    cursor: pointer;
+}
+
+.decide-card:hover {
+    border-color: #1f6f78;
+}
+
+.decide-card img {
+    height: 180px;
+    border-radius: 6px;
+    box-shadow: 0 0 0 1px #9a9486, 0 2px 8px rgba(0, 0, 0, 0.15);
+}
+
+.decide-name {
+    font-size: 1.75rem;
+    font-weight: 700;
+}
+
+.decide-value {
+    font-size: 1.25rem;
+    color: #4a5a66;
+}
+
+.decide-card.correct {
+    border-color: #4caf50;
+    background-color: #e8f5e9;
+}
+
+.decide-card.wrong {
+    border-color: #e5534b;
+    background-color: #fdecea;
+}
+
+/* Geodle */
+
+.geodle-table {
+    display: flex;
+    flex-direction: column;
+    gap: 6px;
+    margin: 12px 0;
+}
+
+.geodle-row {
+    display: flex;
+    flex-wrap: wrap;
+    gap: 6px;
+    margin-bottom: 6px;
+}
+
+.geodle-row span {
+    display: flex;
+    justify-content: center;
+    align-items: center;
+    gap: 6px;
+    flex: 1 1 120px;
+    padding: 14px 8px;
+    border-radius: 8px;
+    text-align: center;
+    font-weight: 600;
+    font-size: 1rem;
+}
+
+.geodle-head span {
+    background-color: #1d2b36;
+    color: #ffffff;
+}
+
+.geodle-country {
+    background-color: #f5f1e8;
+}
+
+.geodle-country img,
+.geodle-solution img {
+    height: 24px;
+    box-shadow: 0 0 0 1px #9a9486;
+}
+
+.geodle-solution {
+    display: flex;
+    justify-content: center;
+    align-items: center;
+    gap: 8px;
+    font-size: 1.375rem;
+    font-weight: 700;
+}
+
+.geodle-solution img {
+    height: 32px;
+}
+
+.cell-correct {
+    background-color: #4caf50;
+    color: #ffffff;
+}
+
+.cell-close {
+    background-color: #f2c94c;
+    color: #1d2b36;
+}
+
+.cell-wrong {
+    background-color: #e5534b;
+    color: #ffffff;
+}
+
+/* GeoConnections */
+
+.tile-board {
+    display: flex;
+    flex-wrap: wrap;
+    gap: 10px;
+    margin: 12px 0;
+}
+
+.tile {
+    display: flex;
+    flex-direction: column;
+    justify-content: center;
+    align-items: center;
+    gap: 4px;
+    flex: 1 1 calc(25% - 10px);
+    min-width: 130px;
+    height: 130px;
+    padding: 8px;
+    border: 3px solid #e8e2d0;
+    border-radius: 12px;
+    background-color: #ffffff;
+    font-family: inherit;
+    color: inherit;
+    cursor: pointer;
+}
+
+.tile:hover {
+    border-color: #1f6f78;
+}
+
+.tile.selected {
+    border-color: #1d2b36;
+    background-color: #e8e2d0;
+}
+
+.tile.wrong-blink {
+    animation: wrong-blink 0.3s ease 2;
+}
+
+@keyframes wrong-blink {
+    50% {
+        border-color: #e5534b;
+        background-color: #f8c9c6;
+    }
+}
+
+.tile .outline {
+    width: 100%;
+    height: 100px;
+}
+
+.tile-flag {
+    max-height: 80px;
+    border-radius: 4px;
+    box-shadow: 0 0 0 1px #9a9486, 0 2px 6px rgba(0, 0, 0, 0.15);
+}
+
+.tile-label {
+    font-size: 0.875rem;
+    color: #4a5a66;
+    text-transform: uppercase;
+    letter-spacing: 0.05em;
+}
+
+.tile-text {
+    font-size: 1.375rem;
+    font-weight: 700;
+}
+
+.solved-list {
+    display: flex;
+    flex-direction: column;
+    gap: 10px;
+}
+
+.solved-group {
+    padding: 10px;
+    border-radius: 12px;
+}
+
+.group-0 {
+    background-color: #c8e6c9;
+}
+
+.group-1 {
+    background-color: #fff3c4;
+}
+
+.group-2 {
+    background-color: #ffd8cc;
+}
+
+.group-3 {
+    background-color: #d6dcff;
+}
+
+.solved-name {
+    display: block;
+    font-weight: 800;
+    font-size: 1.125rem;
+    text-align: center;
+    margin-bottom: 6px;
+}
+
+.solved-items {
+    display: flex;
+    flex-wrap: wrap;
+    gap: 8px;
+}
+
+.solved-item {
+    display: flex;
+    flex-direction: column;
+    justify-content: center;
+    align-items: center;
+    flex: 1 1 120px;
+    height: 80px;
+    padding: 4px;
+    border-radius: 8px;
+    background-color: rgba(255, 255, 255, 0.7);
+}
+
+.solved-item .outline {
+    width: 100%;
+    height: 64px;
+}
+
+.solved-item .tile-flag {
+    max-height: 50px;
+}
+
+.mistakes {
+    display: inline-flex;
+    gap: 6px;
+    vertical-align: middle;
+}
+
+.dot {
+    width: 14px;
+    height: 14px;
+    border-radius: 50%;
+    background-color: #1f6f78;
+}
+
+.dot.used {
+    background-color: #e5534b;
+}
+
+@media (max-width: 1000px) {
+    .size-side {
+        flex: 0 1 300px;
+    }
+
+    .size-box {
+        width: 300px;
+        height: 300px;
+    }
+}
+
+@media (max-width: 600px) {
+    .size-compare {
+        gap: 12px;
+    }
+
+    .size-side {
+        flex: 0 1 150px;
+    }
+
+    .size-box {
+        width: 150px;
+        height: 150px;
+    }
+
+    .size-name {
+        font-size: 0.875rem;
+    }
+
+    .tile {
+        flex: 1 1 calc(50% - 10px);
+        min-width: 0;
+    }
+}

@@ -1,0 +1,126 @@
+const BLITZ_CATEGORIES = {
+    flags: { title: 'Flaggen', question: 'Welches Land hat diese Flagge?' },
+    capitals: { title: 'Hauptstädte', question: 'Zu welchem Land gehört diese Hauptstadt?' },
+    outlines: { title: 'Umrisse', question: 'Welches Land ist das?' }
+};
+
+class BlitzRound extends BaseGame {
+    constructor() {
+        super();
+        this.seconds = 60;
+        this.lowScore = 5;
+    }
+
+    start() {
+        this.finished = false;
+        const flagsBest = this.storage.getGameStats('blitz-flags').highscore;
+        const capitalsBest = this.storage.getGameStats('blitz-capitals').highscore;
+        const outlinesBest = this.storage.getGameStats('blitz-outlines').highscore;
+        this.showScreen(blitzSelectTemplate(flagsBest, capitalsBest, outlinesBest));
+    }
+
+    chooseCategory(category) {
+        this.category = category;
+        this.pool = this.getPool(category);
+        this.score = 0;
+        this.lastCode = '';
+        this.finished = false;
+        this.showScreen(blitzTemplate(BLITZ_CATEGORIES[category].title, BLITZ_CATEGORIES[category].question));
+        this.timer = new Timer('blitz-timer');
+        this.timer.start(this.seconds, this);
+        this.nextQuestion();
+    }
+
+    getPool(category) {
+        if (category === 'flags') {
+            return this.countries.countries.filter(country => country.flag !== '');
+        }
+        if (category === 'capitals') {
+            return this.countries.countries.filter(country => country.capital !== '');
+        }
+        return this.getPlayableCountries();
+    }
+
+    nextQuestion() {
+        if (this.finished) {
+            return;
+        }
+        this.locked = false;
+        this.question = this.pickQuestion();
+        document.getElementById('quiz-prompt').innerHTML = this.getPromptHtml(this.question);
+        document.getElementById('quiz-options').innerHTML = this.buildOptionsHtml(this.question);
+        document.getElementById('blitz-score').innerHTML = this.score;
+    }
+
+    pickQuestion() {
+        const candidates = this.pool.filter(country => country.code !== this.lastCode);
+        const question = randomItem(candidates.length > 0 ? candidates : this.pool);
+        this.lastCode = question.code;
+        return question;
+    }
+
+    getPromptHtml(question) {
+        if (this.category === 'flags') {
+            return flagPromptTemplate(question.flag);
+        }
+        if (this.category === 'capitals') {
+            return capitalPromptTemplate(question.capital);
+        }
+        return this.shapes.getOutlineSvg(question.code, 'blitz-shape');
+    }
+
+    buildOptionsHtml(question) {
+        const others = this.pool.filter(country => country.code !== question.code);
+        const options = shuffle(others).slice(0, 3);
+        options.push(question);
+        const shuffledOptions = shuffle(options);
+        let html = '';
+        for (let i = 0; i < shuffledOptions.length; i++) {
+            html += choiceOptionTemplate(shuffledOptions[i]);
+        }
+        return html;
+    }
+
+    choose(code) {
+        if (this.locked || this.finished) {
+            return;
+        }
+        this.locked = true;
+        this.markAnswer(code);
+        document.getElementById('blitz-score').innerHTML = this.score;
+        this.timeoutId = setTimeout(() => this.nextQuestion(), 400);
+    }
+
+    markAnswer(code) {
+        document.getElementById('option-' + this.question.code).classList.add('correct');
+        if (code === this.question.code) {
+            this.score++;
+        } else {
+            document.getElementById('option-' + code).classList.add('wrong');
+            this.playWrongSoundIf(true);
+        }
+    }
+
+    handleTimeUp() {
+        this.finish();
+    }
+
+    finish() {
+        this.finished = true;
+        this.timer.stop();
+        clearTimeout(this.timeoutId);
+        const gameKey = 'blitz-' + this.category;
+        const isRecord = this.storage.saveGameResult(gameKey, true, this.score);
+        this.playEndSound(isRecord, this.score < this.lowScore);
+        const highscore = this.storage.getGameStats(gameKey).highscore;
+        this.showScreen(blitzEndTemplate(BLITZ_CATEGORIES[this.category].title, this.score, highscore, this.getRecordText(isRecord), this.category));
+    }
+
+    stop() {
+        super.stop();
+        this.finished = true;
+        if (this.timer) {
+            this.timer.stop();
+        }
+    }
+}

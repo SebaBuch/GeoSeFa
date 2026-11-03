@@ -1,0 +1,51 @@
+<!DOCTYPE html>
+<html lang="de">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>GeoSeFa</title>
+    <link rel="icon" type="image/svg+xml" href="img/favicon.svg">
+    <link rel="icon" type="image/png" href="img/favicon.png">
+    <link rel="apple-touch-icon" href="img/apple-touch-icon.png">
+    <link rel="stylesheet" href="libs/leaflet/leaflet.css">
+    <link rel="stylesheet" href="style.css">
+    <link rel="stylesheet" href="css/games.css">
+    <link rel="stylesheet" href="css/quiz.css">
+    <link rel="stylesheet" href="css/theme.css">
+</head>
+<body onload="init()">
+    <header class="header">
+        <button class="logo" onclick="showHome()">Geo<span>SeFa</span></button>
+        <button class="header-button" onclick="showHome()">Startseite</button>
+    </header>
+
+    <main id="content" class="content"></main>
+
+    <script src="libs/leaflet/leaflet.js"></script>
+    <script src="js/config.js"></script>
+    <script src="js/data/capitals-de.js"></script>
+    <script src="js/helpers.js"></script>
+    <script src="js/templates/menu-templates.js"></script>
+    <script src="js/templates/game-templates.js"></script>
+    <script src="js/templates/quiz-templates.js"></script>
+    <script src="js/models/storage-service.js"></script>
+    <script src="js/models/country-service.js"></script>
+    <script src="js/models/shape-service.js"></script>
+    <script src="js/models/world-map.js"></script>
+    <script src="js/models/timer.js"></script>
+    <script src="js/models/sound-service.js"></script>
+    <script src="js/models/base-game.js"></script>
+    <script src="js/models/geo-route.js"></script>
+    <script src="js/models/geo-size.js"></script>
+    <script src="js/models/geo-decide.js"></script>
+    <script src="js/models/geodle.js"></script>
+    <script src="js/models/geo-connections.js"></script>
+    <script src="js/models/blitz-round.js"></script>
+    <script src="js/models/quiz-base.js"></script>
+    <script src="js/models/map-quiz.js"></script>
+    <script src="js/models/choice-quiz.js"></script>
+    <script src="js/models/shape-quiz.js"></script>
+    <script src="js/models/match-quiz.js"></script>
+    <script src="js/game.js"></script>
+</body>
+</html>

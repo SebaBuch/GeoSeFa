@@ -1,0 +1,605 @@
+/* Farben und Design für alle Seiten */
+
+body {
+    background-color: #bfe6df;
+    background-image:
+        radial-gradient(circle at 8% 10%, rgba(42, 157, 143, 0.55) 0, rgba(42, 157, 143, 0) 520px),
+        radial-gradient(circle at 95% 15%, rgba(244, 162, 97, 0.6) 0, rgba(244, 162, 97, 0) 480px),
+        radial-gradient(circle at 85% 95%, rgba(142, 90, 209, 0.4) 0, rgba(142, 90, 209, 0) 520px),
+        radial-gradient(circle at 15% 95%, rgba(58, 134, 255, 0.45) 0, rgba(58, 134, 255, 0) 520px),
+        linear-gradient(135deg, #c9ece5 0%, #d6e3ff 50%, #ffe2cc 100%);
+    background-attachment: fixed;
+}
+
+/* Kopfleiste */
+
+.header {
+    background: linear-gradient(90deg, #14213d 0%, #1d3557 55%, #1f6f78 100%);
+    box-shadow: 0 4px 18px rgba(20, 33, 61, 0.35);
+}
+
+.logo {
+    font-size: 1.875rem;
+}
+
+.header-button {
+    box-shadow: 0 3px 10px rgba(244, 162, 97, 0.45);
+}
+
+/* Startseite */
+
+.intro {
+    padding: 36px 40px;
+    border-radius: 24px;
+    color: #ffffff;
+    background:
+        radial-gradient(circle at 85% 30%, rgba(255, 255, 255, 0.18) 0, rgba(255, 255, 255, 0) 220px),
+        radial-gradient(circle at 70% 120%, rgba(244, 162, 97, 0.55) 0, rgba(244, 162, 97, 0) 260px),
+        linear-gradient(120deg, #1d3557 0%, #1f6f78 60%, #2a9d8f 100%);
+    box-shadow: 0 12px 32px rgba(29, 53, 87, 0.3);
+}
+
+.intro h1 {
+    color: #ffffff;
+}
+
+.intro p {
+    margin: 0;
+    font-size: 1.125rem;
+    color: #d8eeea;
+}
+
+.intro-badge {
+    display: inline-block;
+    margin-bottom: 10px;
+    padding: 4px 12px;
+    border-radius: 999px;
+    background-color: #f4a261;
+    color: #14213d;
+    font-size: 0.8125rem;
+    font-weight: 700;
+    letter-spacing: 0.04em;
+    text-transform: uppercase;
+}
+
+.section-title {
+    display: flex;
+    align-items: center;
+    gap: 10px;
+    font-size: 1.5rem;
+    color: #14213d;
+}
+
+.section-title::before {
+    content: '';
+    width: 8px;
+    height: 28px;
+    border-radius: 4px;
+    background: linear-gradient(180deg, #f4a261 0%, #e76f51 100%);
+}
+
+/* Karten auf der Startseite */
+
+.card {
+    position: relative;
+    border: none;
+    border-top: 6px solid #1f6f78;
+    box-shadow: 0 6px 20px rgba(20, 33, 61, 0.1);
+    transition: transform 0.15s, box-shadow 0.15s;
+}
+
+.card:hover {
+    transform: translateY(-4px);
+    box-shadow: 0 14px 30px rgba(20, 33, 61, 0.18);
+}
+
+.card-play {
+    align-self: flex-start;
+    margin-top: auto;
+    padding: 6px 14px;
+    border-radius: 999px;
+    background-color: #1f6f78;
+    color: #ffffff;
+    font-size: 0.875rem;
+    font-weight: 700;
+}
+
+.card-georoute {
+    border-top-color: #2a9d8f;
+    background: linear-gradient(180deg, #c5ece5 0%, #eaf8f5 100%);
+}
+
+.card-georoute .card-title,
+.card-georoute .card-stats {
+    color: #1f7a6f;
+}
+
+.card-georoute .card-play {
+    background-color: #2a9d8f;
+}
+
+.card-geosize {
+    border-top-color: #e76f51;
+    background: linear-gradient(180deg, #fcd3c6 0%, #fef0eb 100%);
+}
+
+.card-geosize .card-title,
+.card-geosize .card-stats {
+    color: #c4502f;
+}
+
+.card-geosize .card-play {
+    background-color: #e76f51;
+}
+
+.card-geodecide {
+    border-top-color: #8e5ad1;
+    background: linear-gradient(180deg, #e2d2f7 0%, #f5effd 100%);
+}
+
+.card-geodecide .card-title,
+.card-geodecide .card-stats {
+    color: #7342b3;
+}
+
+.card-geodecide .card-play {
+    background-color: #8e5ad1;
+}
+
+.card-geodle {
+    border-top-color: #e9a23b;
+    background: linear-gradient(180deg, #fbe2b4 0%, #fef5e6 100%);
+}
+
+.card-geodle .card-title,
+.card-geodle .card-stats {
+    color: #b9761a;
+}
+
+.card-geodle .card-play {
+    background-color: #e9a23b;
+}
+
+.card-geoconnections {
+    border-top-color: #3a86ff;
+    background: linear-gradient(180deg, #cfe0ff 0%, #edf3ff 100%);
+}
+
+.card-geoconnections .card-title,
+.card-geoconnections .card-stats {
+    color: #2563c9;
+}
+
+.card-geoconnections .card-play {
+    background-color: #3a86ff;
+}
+
+.card-countries {
+    border-top-color: #1d3557;
+    background: linear-gradient(135deg, #1d3557 0%, #2c5282 100%);
+}
+
+.card-flags {
+    border-top-color: #c1121f;
+    background: linear-gradient(135deg, #c1121f 0%, #e85d4a 100%);
+}
+
+.card-capitals {
+    border-top-color: #457b9d;
+    background: linear-gradient(135deg, #457b9d 0%, #2a9d8f 100%);
+}
+
+.card-quiz .card-title {
+    color: #ffffff;
+}
+
+.card-quiz .card-text {
+    color: #e8f1f5;
+}
+
+.card-quiz .card-play {
+    background-color: #ffffff;
+    color: #14213d;
+}
+
+.home-footer {
+    padding: 14px 20px;
+    border-radius: 14px;
+    background: linear-gradient(90deg, #1d3557 0%, #1f6f78 100%);
+    color: #d8eeea;
+}
+
+.home-footer .link-button {
+    color: #f4a261;
+    font-weight: 600;
+}
+
+/* Kästen in Spielen und Quiz */
+
+.panel {
+    background:
+        linear-gradient(90deg, #2a9d8f 0%, #3a86ff 50%, #f4a261 100%) top / 100% 8px no-repeat,
+        linear-gradient(160deg, #e2f4f0 0%, #e6edff 55%, #fff0e3 100%);
+    box-shadow: 0 10px 30px rgba(20, 33, 61, 0.12);
+}
+
+.game-header h1,
+.quiz-header h1,
+.setup h1 {
+    color: #14213d;
+}
+
+.status-row > span,
+.quiz-stats > span,
+.route-info > span {
+    padding: 4px 12px;
+    border-radius: 999px;
+    background-color: #1d3557;
+    color: #ffffff;
+}
+
+.back-button {
+    background-color: #f4a261;
+    border: 2px solid #f4a261;
+    color: #14213d;
+}
+
+.back-button:hover {
+    background-color: #1f6f78;
+    border-color: #1f6f78;
+    color: #ffffff;
+}
+
+/* Buttons */
+
+.button {
+    background: linear-gradient(135deg, #1f6f78 0%, #2a9d8f 100%);
+    box-shadow: 0 4px 12px rgba(31, 111, 120, 0.35);
+    transition: transform 0.1s, box-shadow 0.1s;
+}
+
+.button:hover {
+    background: linear-gradient(135deg, #17565d 0%, #1f7a6f 100%);
+    transform: translateY(-1px);
+}
+
+.button:disabled {
+    background: #a8b3b8;
+    box-shadow: none;
+    transform: none;
+}
+
+.button-secondary {
+    background: #f4a261;
+    color: #14213d;
+    box-shadow: 0 4px 12px rgba(244, 162, 97, 0.35);
+}
+
+.button-secondary:hover {
+    background: #e76f51;
+    color: #ffffff;
+}
+
+.guess-form input:focus,
+.setting select:focus {
+    outline: none;
+    border-color: #2a9d8f;
+    box-shadow: 0 0 0 4px rgba(42, 157, 143, 0.2);
+}
+
+.end-box {
+    background: linear-gradient(135deg, #b9e6de 0%, #fbe2b4 100%);
+}
+
+.big-number {
+    color: #1f6f78;
+}
+
+/* Karte */
+
+.map {
+    background: linear-gradient(180deg, #9fd0e4 0%, #6fb1cf 100%);
+    box-shadow: inset 0 0 0 1px rgba(20, 33, 61, 0.08), 0 10px 30px rgba(20, 33, 61, 0.12);
+}
+
+/* GeoSize */
+
+.size-box {
+    background: radial-gradient(circle at 50% 40%, #e6f4f8 0%, #cfe6ee 100%);
+}
+
+.size-share {
+    color: #e76f51;
+}
+
+.size-slider {
+    accent-color: #e76f51;
+}
+
+/* GeoDecide */
+
+.question {
+    color: #7342b3;
+    font-size: 1.5rem;
+}
+
+.decide-card {
+    border-color: #c9b2ee;
+    background: linear-gradient(180deg, #e9dcfa 0%, #f6f0fe 100%);
+    box-shadow: 0 6px 18px rgba(115, 66, 179, 0.1);
+}
+
+.decide-card:hover {
+    border-color: #8e5ad1;
+}
+
+/* Geodle */
+
+.geodle-head span {
+    background: linear-gradient(135deg, #14213d 0%, #1d3557 100%);
+}
+
+/* GeoConnections */
+
+.tile {
+    border-color: #b8d0fb;
+    background: linear-gradient(180deg, #dce8ff 0%, #eef4ff 100%);
+}
+
+.tile:hover {
+    border-color: #3a86ff;
+}
+
+.tile.selected {
+    border-color: #2563c9;
+    background: #dbe8ff;
+}
+
+.tile-label {
+    color: #2563c9;
+}
+
+/* Quiz */
+
+.option {
+    border-color: #a9d8ce;
+    background: linear-gradient(180deg, #d3efe9 0%, #ebf8f5 100%);
+}
+
+.option:hover {
+    border-color: #2a9d8f;
+    background: #bfe6de;
+}
+
+.quiz-best {
+    background: linear-gradient(135deg, #e3f5f2 0%, #e6f0ff 100%);
+}
+
+.match-item {
+    border-color: #a9d8ce;
+    background-color: #e3f5f1;
+}
+
+.match-target {
+    border-color: #2a9d8f;
+    background-color: #d3efe9;
+}
+
+/* Farbige Zustände sollen über Verlauf und Hover liegen */
+
+.option.correct,
+.option.correct:hover {
+    border-color: #4caf50;
+    background: #4caf50;
+    color: #ffffff;
+}
+
+.option.wrong,
+.option.wrong:hover {
+    border-color: #e5534b;
+    background: #e5534b;
+    color: #ffffff;
+}
+
+.decide-card.correct,
+.decide-card.correct:hover {
+    border-color: #4caf50;
+    background: #e8f5e9;
+}
+
+.decide-card.wrong,
+.decide-card.wrong:hover {
+    border-color: #e5534b;
+    background: #fdecea;
+}
+
+.tile.wrong-blink {
+    background-image: none;
+}
+
+/* Mehr Farbe statt Weiß */
+
+.geodle-country {
+    background-color: #dfe7f5;
+}
+
+.size-box {
+    box-shadow: inset 0 0 0 2px rgba(31, 111, 120, 0.15);
+}
+
+.quiz-best {
+    background: linear-gradient(135deg, #1d3557 0%, #1f6f78 100%);
+    color: #ffffff;
+}
+
+.setting select,
+.guess-form input {
+    border-color: #9cc9bf;
+    background-color: #f7fcfb;
+}
+
+.solved-item {
+    background-color: rgba(255, 255, 255, 0.55);
+}
+
+.dot {
+    background-color: #6fd1c2;
+}
+
+.dot.used {
+    background-color: #e5534b;
+}
+
+/* Blitzrunde */
+
+.card-blitz {
+    border-top-color: #e63973;
+    background: linear-gradient(180deg, #fbd0df 0%, #fdeef3 100%);
+}
+
+.card-blitz .card-title,
+.card-blitz .card-stats {
+    color: #c2185b;
+}
+
+.card-blitz .card-play {
+    background-color: #e63973;
+}
+
+.blitz-flags {
+    background: linear-gradient(135deg, #c1121f 0%, #e85d4a 100%);
+}
+
+.blitz-capitals {
+    background: linear-gradient(135deg, #457b9d 0%, #2a9d8f 100%);
+}
+
+.blitz-outlines {
+    background: linear-gradient(135deg, #1d3557 0%, #2c5282 100%);
+}
+
+.blitz-question {
+    color: #c2185b;
+}
+
+/* Thematische Hintergründe pro Spiel */
+
+body.theme-home {
+    background-color: #1e88e5;
+    background-image: url('../img/backgrounds/home.jpg');
+    background-position: center;
+    background-size: cover;
+    background-repeat: no-repeat;
+    background-attachment: fixed;
+}
+
+body.theme-georoute {
+    background-color: #1e88e5;
+    background-image: url('../img/backgrounds/georoute.jpg');
+    background-position: center bottom;
+    background-size: cover;
+    background-repeat: no-repeat;
+    background-attachment: fixed;
+}
+
+body.theme-geosize {
+    background-image:
+        url('../img/backgrounds/ruler.svg'),
+        url('../img/backgrounds/world-map.svg'),
+        linear-gradient(135deg, #e76f51 0%, #f4a261 100%);
+    background-position: center bottom, center, center;
+    background-size: cover, cover, cover;
+    background-repeat: no-repeat;
+    background-attachment: fixed;
+}
+
+body.theme-geodecide {
+    background-image:
+        url('../img/backgrounds/arrows.svg'),
+        url('../img/backgrounds/world-map.svg'),
+        linear-gradient(135deg, #6a3fb0 0%, #a77de0 100%);
+    background-position: center, center, center;
+    background-size: cover, cover, cover;
+    background-repeat: no-repeat;
+    background-attachment: fixed;
+}
+
+body.theme-geodle {
+    background-image:
+        url('../img/backgrounds/globe.svg'),
+        linear-gradient(135deg, #e9a23b 0%, #f6c66e 100%);
+    background-position: right bottom, center;
+    background-size: cover, cover;
+    background-repeat: no-repeat;
+    background-attachment: fixed;
+}
+
+body.theme-geoconnections {
+    background-image:
+        url('../img/backgrounds/world-network.svg'),
+        url('../img/backgrounds/world-map.svg'),
+        linear-gradient(135deg, #2563c9 0%, #5b9bff 100%);
+    background-position: center, center, center;
+    background-size: cover, cover, cover;
+    background-repeat: no-repeat;
+    background-attachment: fixed;
+}
+
+body.theme-blitz {
+    background-image:
+        url('../img/backgrounds/bolts.svg'),
+        url('../img/backgrounds/world-map.svg'),
+        linear-gradient(135deg, #c2185b 0%, #f06292 100%);
+    background-position: center, center, center;
+    background-size: cover, cover, cover;
+    background-repeat: no-repeat;
+    background-attachment: fixed;
+}
+
+body.theme-countries {
+    background-image:
+        url('../img/backgrounds/world-lines.svg'),
+        url('../img/backgrounds/world-map.svg'),
+        linear-gradient(135deg, #14213d 0%, #2c5282 100%);
+    background-position: center, center, center;
+    background-size: cover, cover, cover;
+    background-repeat: no-repeat;
+    background-attachment: fixed;
+}
+
+body.theme-flags {
+    background-image:
+        url('../img/backgrounds/bunting.svg'),
+        url('../img/backgrounds/world-map.svg'),
+        linear-gradient(135deg, #b5121b 0%, #e85d4a 100%);
+    background-position: center top, center, center;
+    background-size: cover, cover, cover;
+    background-repeat: no-repeat;
+    background-attachment: fixed;
+}
+
+body.theme-capitals {
+    background-image:
+        url('../img/backgrounds/world-capitals.svg'),
+        url('../img/backgrounds/skyline.svg'),
+        url('../img/backgrounds/world-map.svg'),
+        linear-gradient(180deg, #457b9d 0%, #2a9d8f 100%);
+    background-position: center, center bottom, center, center;
+    background-size: cover, cover, cover, cover;
+    background-repeat: no-repeat;
+    background-attachment: fixed;
+}
+
+/* GeoDecide: kurzes Aufblinken bei richtiger Antwort */
+
+.decide-card.flash {
+    animation: correct-flash 0.35s ease 2;
+}
+
+@keyframes correct-flash {
+    50% {
+        transform: scale(1.04);
+        background: #a5e3a8;
+        box-shadow: 0 0 0 6px rgba(76, 175, 80, 0.45);
+    }
+}
