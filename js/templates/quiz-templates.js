@@ -64,16 +64,16 @@ function choiceOptionTemplate(country) {
     `;
 }
 
-function shapeQuizTemplate(title, nameOptionsHtml) {
+function shapeQuizTemplate(title) {
     return `
         <section class="panel">
             ${quizHeaderTemplate(title)}
             <div id="quiz-prompt" class="quiz-prompt shape-prompt"></div>
             <form class="guess-form" onsubmit="currentGame.submitGuess(event)">
-                <input id="shape-input" list="country-names" placeholder="Welches Land ist das?" autocomplete="off">
+                <input id="shape-input" oninput="currentGame.showSuggestions(this)" placeholder="Welches Land ist das?" autocomplete="off">
                 <button class="button" type="submit">Raten</button>
             </form>
-            <datalist id="country-names">${nameOptionsHtml}</datalist>
+            <div id="suggestions" class="suggestions"></div>
             <div id="message" class="message"></div>
         </section>
     `;

@@ -11,7 +11,7 @@ class Geodle extends BaseGame {
         this.guesses = [];
         this.rowsHtml = '';
         this.finished = false;
-        this.showScreen(geodleTemplate(this.buildNameOptions()));
+        this.showScreen(geodleTemplate());
         this.updateInfo();
     }
 

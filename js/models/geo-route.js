@@ -11,7 +11,7 @@ class GeoRoute extends BaseGame {
         this.guesses = [];
         this.current = this.startCountry.code;
         this.finished = false;
-        const html = geoRouteTemplate(this.startCountry, this.targetCountry, this.buildNameOptions());
+        const html = geoRouteTemplate(this.startCountry, this.targetCountry);
         this.showScreen(html);
         this.setupMap();
         this.updateInfo();

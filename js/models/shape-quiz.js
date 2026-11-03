@@ -1,6 +1,6 @@
 class ShapeQuiz extends QuizBase {
     startQuiz() {
-        this.showScreen(shapeQuizTemplate(this.mode.title, this.buildNameOptions()));
+        this.showScreen(shapeQuizTemplate(this.mode.title));
         this.startTimer();
         this.showQuestion();
     }

@@ -29,21 +29,46 @@ class BaseGame {
         return playable;
     }
 
-    buildNameOptions() {
-        const names = this.countries.getSortedNames();
-        let html = '';
-        for (let i = 0; i < names.length; i++) {
-            html += nameOptionTemplate(names[i]);
-        }
-        return html;
-    }
-
     readInput(elementId) {
         const input = document.getElementById(elementId);
         const value = input.value;
         input.value = '';
         input.focus();
+        this.clearSuggestions();
         return value;
+    }
+
+    showSuggestions(input) {
+        this.inputId = input.id;
+        const text = normalizeText(input.value);
+        this.suggestions = text === '' ? [] : this.findSuggestions(text);
+        let html = '';
+        for (let i = 0; i < this.suggestions.length; i++) {
+            html += suggestionTemplate(this.suggestions[i], i);
+        }
+        document.getElementById('suggestions').innerHTML = html;
+    }
+
+    findSuggestions(text) {
+        const names = this.countries.getSortedNames();
+        const startMatches = names.filter(name => normalizeText(name).startsWith(text));
+        const otherMatches = names.filter(name => !normalizeText(name).startsWith(text) && normalizeText(name).includes(text));
+        return [...startMatches, ...otherMatches].slice(0, 6);
+    }
+
+    pickSuggestion(index) {
+        const input = document.getElementById(this.inputId);
+        input.value = this.suggestions[index];
+        this.clearSuggestions();
+        input.form.requestSubmit();
+    }
+
+    clearSuggestions() {
+        this.suggestions = [];
+        const element = document.getElementById('suggestions');
+        if (element) {
+            element.innerHTML = '';
+        }
     }
 
     pickItem(list) {

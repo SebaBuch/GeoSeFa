@@ -1,5 +1,5 @@
-function nameOptionTemplate(name) {
-    return `<option value="${name}"></option>`;
+function suggestionTemplate(name, index) {
+    return `<button class="suggestion" type="button" onclick="currentGame.pickSuggestion(${index})">${name}</button>`;
 }
 
 function outlineSvgTemplate(elementId, viewBox, path) {
@@ -26,7 +26,7 @@ function backButtonTemplate() {
     return `<button class="back-button" onclick="showHome()">← Startseite</button>`;
 }
 
-function geoRouteTemplate(start, target, nameOptionsHtml) {
+function geoRouteTemplate(start, target) {
     return `
         <div class="map-layout">
         <section class="panel">
@@ -37,10 +37,10 @@ function geoRouteTemplate(start, target, nameOptionsHtml) {
                 <span class="route-end target">Ziel: ${target.name}</span>
             </div>
             <form class="guess-form" onsubmit="currentGame.submitGuess(event)">
-                <input id="guess-input" list="country-names" placeholder="Land eingeben ..." autocomplete="off">
+                <input id="guess-input" oninput="currentGame.showSuggestions(this)" placeholder="Land eingeben ..." autocomplete="off">
                 <button class="button" type="submit">Eingeben</button>
             </form>
-            <datalist id="country-names">${nameOptionsHtml}</datalist>
+            <div id="suggestions" class="suggestions"></div>
             <div id="message" class="message"></div>
             <div id="route-guesses" class="route-guesses"></div>
             <div id="route-info" class="route-info"></div>
@@ -167,15 +167,15 @@ function streakEndTemplate(streak, highscore, recordText) {
     `;
 }
 
-function geodleTemplate(nameOptionsHtml) {
+function geodleTemplate() {
     return `
         <section class="panel">
             ${gameHeaderTemplate('Geodle', 'Errate das gesuchte Land. Jeder Versuch zeigt dir, wie nah du dran bist.')}
             <form class="guess-form" onsubmit="currentGame.submitGuess(event)">
-                <input id="geodle-input" list="country-names" placeholder="Land eingeben ..." autocomplete="off">
+                <input id="geodle-input" oninput="currentGame.showSuggestions(this)" placeholder="Land eingeben ..." autocomplete="off">
                 <button class="button" type="submit">Raten</button>
             </form>
-            <datalist id="country-names">${nameOptionsHtml}</datalist>
+            <div id="suggestions" class="suggestions"></div>
             <div id="message" class="message"></div>
             <div class="geodle-table">
                 <div class="geodle-row geodle-head">
