@@ -12,6 +12,7 @@ class BlitzRound extends BaseGame {
     }
 
     start() {
+        this.sound.stop();
         this.finished = false;
         const flagsBest = this.storage.getGameStats('blitz-flags').highscore;
         const capitalsBest = this.storage.getGameStats('blitz-capitals').highscore;
@@ -20,8 +21,10 @@ class BlitzRound extends BaseGame {
     }
 
     chooseCategory(category) {
+        this.sound.stop();
         this.category = category;
-        this.pool = this.getPool(category);
+        const pool = this.getPool(category);
+        this.pool = this.seeded ? this.seeded.sortByCode(pool) : pool;
         this.score = 0;
         this.lastCode = '';
         this.finished = false;
@@ -54,7 +57,7 @@ class BlitzRound extends BaseGame {
 
     pickQuestion() {
         const candidates = this.pool.filter(country => country.code !== this.lastCode);
-        const question = randomItem(candidates.length > 0 ? candidates : this.pool);
+        const question = this.pickItem(candidates.length > 0 ? candidates : this.pool);
         this.lastCode = question.code;
         return question;
     }
@@ -71,9 +74,9 @@ class BlitzRound extends BaseGame {
 
     buildOptionsHtml(question) {
         const others = this.pool.filter(country => country.code !== question.code);
-        const options = shuffle(others).slice(0, 3);
+        const options = this.shuffleItems(others).slice(0, 3);
         options.push(question);
-        const shuffledOptions = shuffle(options);
+        const shuffledOptions = this.shuffleItems(options);
         let html = '';
         for (let i = 0; i < shuffledOptions.length; i++) {
             html += choiceOptionTemplate(shuffledOptions[i]);
@@ -110,11 +113,22 @@ class BlitzRound extends BaseGame {
         this.finished = true;
         this.timer.stop();
         clearTimeout(this.timeoutId);
+        if (this.daily) {
+            this.finishBlitzDaily();
+            return;
+        }
         const gameKey = 'blitz-' + this.category;
         const isRecord = this.storage.saveGameResult(gameKey, true, this.score);
         this.playEndSound(isRecord, this.score < this.lowScore);
         const highscore = this.storage.getGameStats(gameKey).highscore;
         this.showScreen(blitzEndTemplate(BLITZ_CATEGORIES[this.category].title, this.score, highscore, this.getRecordText(isRecord), this.category));
+    }
+
+    finishBlitzDaily() {
+        const score = Math.min(100, this.score * 5);
+        this.finishDaily('blitz', score, this.score >= this.lowScore);
+        const text = 'Du hast ' + this.score + ' Flaggen richtig erkannt (5 Punkte pro Flagge, maximal 100).';
+        this.showScreen(dailyResultPageTemplate('Tages-Blitz', text, score));
     }
 
     stop() {

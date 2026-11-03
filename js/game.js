@@ -59,6 +59,7 @@ function showError(text) {
 }
 
 function stopCurrentGame() {
+    soundService.stop();
     if (currentGame) {
         currentGame.stop();
         currentGame = null;
@@ -71,11 +72,24 @@ function showHome() {
     }
     stopCurrentGame();
     setTheme('home');
-    showContent(homeTemplate(buildGameCards(), buildQuizCards(), countryService.countries.length));
+    showContent(homeTemplate(buildDailyCard(), buildGameCards(), buildQuizCards(), countryService.countries.length));
 }
 
 function setTheme(name) {
     document.body.className = 'theme-' + name;
+}
+
+function showDaily() {
+    stopCurrentGame();
+    setTheme('daily');
+    currentGame = new DailyChallenge();
+    currentGame.start();
+}
+
+function buildDailyCard() {
+    const daily = new DailyChallenge();
+    const results = daily.getResults(daily.dateKey);
+    return dailyCardTemplate(daily.countDone(results), daily.getTotal(results), formatDays(daily.getStreak()));
 }
 
 function showImpressum() {

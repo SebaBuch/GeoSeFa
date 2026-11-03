@@ -43,6 +43,23 @@ class BaseGame {
         return value;
     }
 
+    pickItem(list) {
+        return this.seeded ? this.seeded.pick(list) : randomItem(list);
+    }
+
+    pickCode(codes) {
+        return this.seeded ? this.seeded.pickText(codes) : randomItem(codes);
+    }
+
+    shuffleItems(list) {
+        return this.seeded ? this.seeded.shuffle(list) : shuffle(list);
+    }
+
+    finishDaily(taskKey, score, isWin) {
+        this.daily.saveTaskResult(taskKey, score);
+        this.playEndSound(isWin, !isWin);
+    }
+
     playEndSound(isWin, isBad) {
         if (isWin) {
             this.sound.playWinSound();

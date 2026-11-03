@@ -484,7 +484,8 @@ body {
 
 /* Thematische Hintergründe pro Spiel */
 
-body.theme-home {
+body.theme-home,
+body.theme-daily {
     background-color: #1e88e5;
     background-image: url('../img/backgrounds/home.jpg');
     background-position: center;
@@ -602,4 +603,156 @@ body.theme-capitals {
         background: #a5e3a8;
         box-shadow: 0 0 0 6px rgba(76, 175, 80, 0.45);
     }
+}
+
+/* Tages-Challenge */
+
+.daily-card {
+    display: flex;
+    flex-direction: column;
+    gap: 8px;
+    width: 100%;
+    margin-top: 24px;
+    padding: 24px 28px;
+    border: 3px solid #ffd166;
+    border-radius: 20px;
+    background: linear-gradient(120deg, #f4a261 0%, #e76f51 50%, #c2185b 100%);
+    box-shadow: 0 10px 28px rgba(231, 111, 81, 0.4);
+    color: #ffffff;
+    font-family: inherit;
+    text-align: left;
+    cursor: pointer;
+    transition: transform 0.15s;
+}
+
+.daily-card:hover {
+    transform: translateY(-3px);
+}
+
+.daily-card-badge {
+    align-self: flex-start;
+    padding: 4px 12px;
+    border-radius: 999px;
+    background-color: #ffd166;
+    color: #14213d;
+    font-size: 0.8125rem;
+    font-weight: 700;
+    text-transform: uppercase;
+}
+
+.daily-card-title {
+    font-size: 2rem;
+    font-weight: 800;
+}
+
+.daily-card-text {
+    font-size: 1.125rem;
+}
+
+.daily-card .card-play {
+    background-color: #ffffff;
+    color: #c2185b;
+}
+
+.daily-tasks {
+    display: flex;
+    flex-wrap: wrap;
+    gap: 16px;
+    margin: 16px 0;
+}
+
+.daily-task {
+    display: flex;
+    flex-direction: column;
+    gap: 8px;
+    flex: 1 1 260px;
+    padding: 22px;
+    border: none;
+    border-radius: 16px;
+    color: #ffffff;
+    font-family: inherit;
+    text-align: left;
+    cursor: pointer;
+    transition: transform 0.15s;
+}
+
+button.daily-task:hover {
+    transform: translateY(-3px);
+}
+
+.daily-task.done {
+    cursor: default;
+    opacity: 0.85;
+}
+
+.daily-task-geodle {
+    background: linear-gradient(135deg, #e9a23b 0%, #f6c66e 100%);
+}
+
+.daily-task-route {
+    background: linear-gradient(135deg, #2a9d8f 0%, #1f6f78 100%);
+}
+
+.daily-task-blitz {
+    background: linear-gradient(135deg, #c2185b 0%, #f06292 100%);
+}
+
+.daily-task-title {
+    font-size: 1.5rem;
+    font-weight: 800;
+}
+
+.daily-task-text {
+    font-size: 1rem;
+}
+
+.daily-task-score {
+    font-size: 2rem;
+    font-weight: 800;
+}
+
+.daily-task .card-play {
+    background-color: #ffffff;
+    color: #14213d;
+}
+
+.center-text {
+    text-align: center;
+}
+
+.daily-calendar-title {
+    margin-top: 16px;
+}
+
+.daily-calendar {
+    display: flex;
+    flex-wrap: wrap;
+    gap: 8px;
+}
+
+.daily-day {
+    display: flex;
+    flex-direction: column;
+    align-items: center;
+    flex: 1 1 70px;
+    padding: 8px 4px;
+    border-radius: 10px;
+    background-color: #dfe7f5;
+    font-size: 0.8125rem;
+}
+
+.daily-day.played {
+    background-color: #4caf50;
+    color: #ffffff;
+}
+
+.daily-day.today {
+    background-color: #f4a261;
+    color: #14213d;
+    font-weight: 700;
+}
+
+.daily-day-total {
+    font-size: 1.125rem;
+    font-weight: 800;
 }

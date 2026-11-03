@@ -6,7 +6,7 @@ class Geodle extends BaseGame {
 
     start() {
         const pool = this.getPlayableCountries().filter(country => country.population > 0);
-        this.target = randomItem(pool);
+        this.target = this.pickItem(pool);
         this.guesses = [];
         this.rowsHtml = '';
         this.finished = false;
@@ -82,9 +82,20 @@ class Geodle extends BaseGame {
 
     finish(won) {
         this.finished = true;
+        if (this.daily) {
+            this.finishGeodleDaily(won);
+            return;
+        }
         this.storage.saveGameResult('geodle', won, 0);
         this.playEndSound(won, !won);
         const text = won ? 'Richtig! Gesucht war:' : 'Leider nicht geschafft. Gesucht war:';
         document.getElementById('geodle-info').innerHTML = geodleEndTemplate(text, this.target);
+    }
+
+    finishGeodleDaily(won) {
+        const score = won ? (this.maxGuesses - this.guesses.length + 1) * 10 : 0;
+        this.finishDaily('geodle', score, won);
+        const text = (won ? 'Richtig! Das Land des Tages war ' : 'Nicht geschafft. Das Land des Tages war ') + this.target.name + '.';
+        document.getElementById('geodle-info').innerHTML = dailyEndTemplate(text, score);
     }
 }

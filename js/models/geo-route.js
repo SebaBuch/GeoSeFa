@@ -60,11 +60,11 @@ class GeoRoute extends BaseGame {
     createRoute() {
         const candidates = this.getRouteCandidates();
         for (let attempt = 0; attempt < 100; attempt++) {
-            const target = randomItem(candidates);
+            const target = this.pickItem(candidates);
             const distances = this.getDistances(target.code);
             const startCodes = this.getStartCodes(distances);
             if (startCodes.length > 0) {
-                this.setRoute(this.countries.getCountry(randomItem(startCodes)), target, distances);
+                this.setRoute(this.countries.getCountry(this.pickCode(startCodes)), target, distances);
                 return;
             }
         }
@@ -211,11 +211,25 @@ class GeoRoute extends BaseGame {
 
     finish(won) {
         this.finished = true;
+        if (this.daily) {
+            this.finishRouteDaily(won);
+            return;
+        }
         this.storage.saveGameResult('georoute', won, 0);
         this.playEndSound(won, !won);
         const text = won ? 'Geschafft! Du bist in ' + this.targetCountry.name + ' angekommen.' : 'Keine Versuche mehr.';
         const shortestRoute = this.getShortestRouteNames();
         document.getElementById('route-info').innerHTML = routeEndTemplate(text, shortestRoute);
+        this.setMessage('', '');
+        this.updateMapView();
+    }
+
+    finishRouteDaily(won) {
+        const extraGuesses = this.guesses.length - this.neededCountries;
+        const score = won ? Math.max(20, 100 - extraGuesses * 20) : 0;
+        this.finishDaily('route', score, won);
+        const text = (won ? 'Geschafft! ' : 'Keine Versuche mehr. ') + 'Ein kürzester Weg: ' + this.getShortestRouteNames();
+        document.getElementById('route-info').innerHTML = dailyEndTemplate(text, score);
         this.setMessage('', '');
         this.updateMapView();
     }

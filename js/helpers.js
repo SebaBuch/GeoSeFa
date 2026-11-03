@@ -39,3 +39,31 @@ function formatTime(seconds) {
 function normalizeText(text) {
     return text.trim().toLowerCase();
 }
+
+function formatDays(count) {
+    return count === 1 ? '1 Tag' : count + ' Tage';
+}
+
+function padNumber(value) {
+    return value < 10 ? '0' + value : '' + value;
+}
+
+function getDateKey(date) {
+    return date.getFullYear() + '-' + padNumber(date.getMonth() + 1) + '-' + padNumber(date.getDate());
+}
+
+function addDaysToKey(dateKey, days) {
+    const parts = dateKey.split('-');
+    const date = new Date(Number(parts[0]), Number(parts[1]) - 1, Number(parts[2]) + days);
+    return getDateKey(date);
+}
+
+function formatDateGerman(dateKey) {
+    const parts = dateKey.split('-');
+    return parts[2] + '.' + parts[1] + '.' + parts[0];
+}
+
+function formatDateShort(dateKey) {
+    const parts = dateKey.split('-');
+    return parts[2] + '.' + parts[1] + '.';
+}

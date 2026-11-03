@@ -23,13 +23,14 @@ function errorTemplate(text) {
     `;
 }
 
-function homeTemplate(gameCardsHtml, quizCardsHtml, countryCount) {
+function homeTemplate(dailyCardHtml, gameCardsHtml, quizCardsHtml, countryCount) {
     return `
         <section class="intro">
             <span class="intro-badge">Ohne Tageslimit</span>
             <h1>Willkommen bei GeoSeFa</h1>
             <p>Geografie-Spiele und Quiz für zwischendurch. Spiel, so oft du willst.</p>
         </section>
+        ${dailyCardHtml}
         <h2 class="section-title">Spiele</h2>
         <section class="card-list">${gameCardsHtml}</section>
         <h2 class="section-title">Quiz</h2>
@@ -139,6 +140,96 @@ function impressumTemplate() {
                 <li>Länderumrisse: <a href="https://www.naturalearthdata.com" target="_blank">Natural Earth</a> (gemeinfrei)</li>
                 <li>Karte: <a href="https://leafletjs.com" target="_blank">Leaflet</a> (BSD-2-Clause-Lizenz)</li>
             </ul>
+        </section>
+    `;
+}
+
+function dailyCardTemplate(doneCount, total, streakText) {
+    return `
+        <button class="daily-card" onclick="showDaily()">
+            <span class="daily-card-badge">Jeden Tag neu</span>
+            <span class="daily-card-title">Tages-Challenge</span>
+            <span class="daily-card-text">Heute erledigt: <b>${doneCount} / 3</b> · Punkte: <b>${total} / 300</b> · Serie: <b>${streakText}</b></span>
+            <span class="card-play">Zur Challenge →</span>
+        </button>
+    `;
+}
+
+function dailyTemplate(dateText, tasksHtml, total, streakText, calendarHtml) {
+    return `
+        <section class="panel">
+            <div class="title-row">
+                <h1>Tages-Challenge vom ${dateText}</h1>
+                ${backButtonTemplate()}
+            </div>
+            <p>Drei Aufgaben, jede einmal pro Tag. Alle Spieler bekommen am selben Tag dieselben Aufgaben.</p>
+            <div class="status-row">
+                <span>Punkte heute: <b>${total} / 300</b></span>
+                <span>Serie: <b>${streakText}</b></span>
+            </div>
+            <div class="daily-tasks">${tasksHtml}</div>
+            <div class="button-row">
+                <button class="button" onclick="currentGame.copyResult()">Ergebnis kopieren</button>
+            </div>
+            <div class="center-text">
+                <div id="message" class="message"></div>
+            </div>
+            <h2 class="daily-calendar-title">Die letzten 14 Tage</h2>
+            <div class="daily-calendar">${calendarHtml}</div>
+        </section>
+    `;
+}
+
+function dailyTaskOpenTemplate(task) {
+    return `
+        <button class="daily-task daily-task-${task.key}" onclick="currentGame.startTask('${task.key}')">
+            <span class="daily-task-title">${task.title}</span>
+            <span class="daily-task-text">${task.description}</span>
+            <span class="card-play">Jetzt spielen →</span>
+        </button>
+    `;
+}
+
+function dailyTaskDoneTemplate(task, score) {
+    return `
+        <div class="daily-task daily-task-${task.key} done">
+            <span class="daily-task-title">${task.title}</span>
+            <span class="daily-task-text">Heute schon gespielt</span>
+            <span class="daily-task-score">${score} / 100</span>
+        </div>
+    `;
+}
+
+function dailyDayTemplate(dateText, totalText, className) {
+    return `
+        <div class="daily-day ${className}">
+            <span class="daily-day-date">${dateText}</span>
+            <span class="daily-day-total">${totalText}</span>
+        </div>
+    `;
+}
+
+function dailyEndTemplate(text, score) {
+    return `
+        <div class="end-box">
+            <p><b>${text}</b></p>
+            <p class="big-number">${score} / 100 Punkte</p>
+            <div class="button-row">
+                <button class="button" onclick="showDaily()">Zur Tages-Challenge</button>
+            </div>
+        </div>
+    `;
+}
+
+function dailyResultPageTemplate(title, text, score) {
+    return `
+        <section class="panel center">
+            <h1>${title} beendet</h1>
+            <p>${text}</p>
+            <p class="big-number">${score} / 100 Punkte</p>
+            <div class="button-row">
+                <button class="button" onclick="showDaily()">Zur Tages-Challenge</button>
+            </div>
         </section>
     `;
 }
