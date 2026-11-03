@@ -1,16 +1,17 @@
-function avatarTemplate(flagUrl, frame, sizeClass) {
+function avatarTemplate(svgHtml, frame, sizeClass) {
     return `
         <span class="avatar-frame frame-${frame} ${sizeClass}">
-            <img class="avatar" src="${flagUrl}" alt="">
+            <span class="avatar">${svgHtml}</span>
         </span>
     `;
 }
 
-function profileChipTemplate(avatarHtml, name, level) {
+function profileChipTemplate(avatarHtml, name, level, coins) {
     return `
         ${avatarHtml}
         <span class="profile-chip-name">${name}</span>
         <span class="profile-chip-level">Lv. ${level}</span>
+        <span class="profile-chip-coins"><span class="coin-icon"></span>${coins}</span>
     `;
 }
 
@@ -34,7 +35,8 @@ function profileCreateTemplate(avatarOptionsHtml, cancelHtml) {
                 <button class="button" type="submit">Profil erstellen</button>
             </form>
             <div id="message" class="message"></div>
-            <h2 class="profile-section-title">Wähle deinen Avatar</h2>
+            <h2 class="profile-section-title">Wähle deine Hautfarbe</h2>
+            <p>Frisur, Kleidung und mehr kannst du danach im Shop ändern.</p>
             <div id="start-avatars" class="profile-options">${avatarOptionsHtml}</div>
             ${cancelHtml}
         </section>
@@ -49,11 +51,11 @@ function profileCancelTemplate() {
     `;
 }
 
-function startAvatarTemplate(option, avatarHtml, selectedClass) {
+function startAvatarTemplate(item, avatarHtml, selectedClass) {
     return `
-        <button class="profile-option ${selectedClass}" onclick="selectStartAvatar('${option.value}')">
+        <button class="profile-option ${selectedClass}" onclick="selectStartAvatar('${item.id}')">
             ${avatarHtml}
-            <span class="profile-option-label">${option.label}</span>
+            <span class="profile-option-label">${item.name}</span>
         </button>
     `;
 }
@@ -67,6 +69,7 @@ function profilePageTemplate(cardHtml, sectionsHtml, profileListHtml) {
             </div>
             ${cardHtml}
             <div class="button-row">
+                <button class="button" onclick="showShop()">Avatar &amp; Shop</button>
                 <button class="button" onclick="showLeaderboard()">Meine Bestenliste</button>
                 <button class="button" onclick="showAchievements()">Erfolge</button>
             </div>

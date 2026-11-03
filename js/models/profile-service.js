@@ -3,8 +3,21 @@ class ProfileService {
         this.storage = storage;
         this.profiles = storage.loadGlobal('profiles', []);
         this.currentId = storage.loadGlobal('current-profile', '');
+        this.prepareProfiles();
         if (this.getCurrent()) {
             storage.setProfile(this.currentId);
+        }
+    }
+
+    prepareProfiles() {
+        for (let i = 0; i < this.profiles.length; i++) {
+            const profile = this.profiles[i];
+            if (!profile.outfit) {
+                const flagId = profile.avatar ? 'flag-' + profile.avatar : 'flag-none';
+                profile.outfit = { ...DEFAULT_OUTFIT, flag: flagId };
+                profile.owned = profile.avatar ? [flagId] : [];
+                profile.coins = START_COINS;
+            }
         }
     }
 
@@ -17,12 +30,13 @@ class ProfileService {
         return this.getCurrent() !== undefined;
     }
 
-    createProfile(name, avatar) {
+    createProfile(name, skin) {
         const id = 'p' + Date.now();
         if (this.profiles.length === 0) {
             this.storage.migrateOldData(id);
         }
-        this.profiles.push({ id: id, name: name, avatar: avatar, title: 'Neuling', frame: 'none', theme: 'standard', xp: 0 });
+        const outfit = { ...DEFAULT_OUTFIT, skin: skin };
+        this.profiles.push({ id: id, name: name, title: 'Neuling', frame: 'none', theme: 'standard', xp: 0, coins: START_COINS, owned: [], outfit: outfit });
         this.saveProfiles();
         this.select(id);
     }
@@ -46,9 +60,24 @@ class ProfileService {
         profile.xp += amount;
         this.saveProfiles();
         const newLevel = this.getLevelInfo(profile.xp).level;
+        this.handleLevelUps(oldLevel, newLevel);
+        updateHeader();
+    }
+
+    handleLevelUps(oldLevel, newLevel) {
         for (let level = oldLevel + 1; level <= newLevel; level++) {
             this.showLevelUp(level);
+            this.addCoins(COINS_PER_LEVEL);
         }
+    }
+
+    addCoins(amount) {
+        const profile = this.getCurrent();
+        if (!profile || amount <= 0) {
+            return;
+        }
+        profile.coins += amount;
+        this.saveProfiles();
         updateHeader();
     }
 
@@ -70,7 +99,7 @@ class ProfileService {
 
     showLevelUp(level) {
         const rewards = PROFILE_OPTIONS.filter(option => option.level === level);
-        let rewardText = '';
+        let rewardText = COINS_PER_LEVEL + ' Coins ';
         for (let i = 0; i < rewards.length; i++) {
             rewardText += this.getTypeTitle(rewards[i].type) + ': ' + rewards[i].label + ' ';
         }

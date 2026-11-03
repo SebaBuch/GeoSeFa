@@ -26,6 +26,7 @@ class DailyChallenge extends BaseGame {
         results[taskKey] = score;
         this.storage.save('daily-' + this.dateKey, results);
         this.profiles.addXp(Math.round(score / 2));
+        this.profiles.addCoins(Math.round(score / 10));
         this.checkDailyAchievements(results);
     }
 
@@ -46,6 +47,7 @@ class DailyChallenge extends BaseGame {
         this.achievements.unlockIf(streak >= 7, 'daily-streak-7');
         this.achievements.unlockIf(streak >= 30, 'daily-streak-30');
         if (isComplete) {
+            this.profiles.addCoins(DAILY_COMPLETE_COINS);
             this.storage.saveTopScore('daily', total, '');
         }
     }

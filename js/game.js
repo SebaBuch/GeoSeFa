@@ -6,7 +6,10 @@ let soundService;
 let achievementService;
 let profileService;
 let toastCounter = 0;
-let selectedStartAvatar = 'DEU';
+let selectedStartAvatar = 'skin-1';
+let shopService;
+let previewOutfit = null;
+let shopSlot = 'hair';
 let currentGame = null;
 let lastQuizSettings = null;
 
@@ -31,6 +34,7 @@ async function init() {
     countryService = new CountryService(storageService);
     shapeService = new ShapeService(countryService);
     worldMap = new WorldMap(shapeService);
+    shopService = new ShopService(profileService, countryService);
     soundService = new SoundService();
     achievementService = new AchievementService(storageService, profileService);
     await loadData(false);
@@ -105,13 +109,31 @@ function updateProfileButton() {
     }
     button.classList.remove('hidden');
     const level = profileService.getLevelInfo(profile.xp).level;
-    button.innerHTML = profileChipTemplate(buildAvatar(profile.avatar, profile.frame, 'avatar-small'), profile.name, level);
+    button.innerHTML = profileChipTemplate(buildProfileAvatar(profile, profile.frame, 'avatar-small'), profile.name, level, profile.coins);
 }
 
-function buildAvatar(countryCode, frame, sizeClass) {
-    const country = countryService.getCountry(countryCode);
-    const flagUrl = country ? country.flag : '';
-    return avatarTemplate(flagUrl, frame, sizeClass);
+function buildProfileAvatar(profile, frame, sizeClass) {
+    return avatarTemplate(buildAvatarSvg(profile.outfit), frame, sizeClass);
+}
+
+function buildAvatarSvg(outfit) {
+    const hair = shopService.getOutfitItem(outfit, 'hair');
+    return avatarSvgTemplate({
+        background: shopService.getOutfitItem(outfit, 'background').svg,
+        hairBack: hair.svgBack || '',
+        top: shopService.getOutfitItem(outfit, 'top').svg,
+        skin: shopService.getOutfitItem(outfit, 'skin').color,
+        hair: hair.svg,
+        glasses: shopService.getOutfitItem(outfit, 'glasses').svg,
+        hat: shopService.getOutfitItem(outfit, 'hat').svg,
+        accessory: shopService.getOutfitItem(outfit, 'accessory').svg,
+        flag: buildFlagPin(shopService.getOutfitItem(outfit, 'flag'))
+    });
+}
+
+function buildFlagPin(flagItem) {
+    const country = flagItem.code ? countryService.getCountry(flagItem.code) : null;
+    return country && country.flag ? flagPinTemplate(country.flag) : '';
 }
 
 function createToastId() {
@@ -135,23 +157,24 @@ function showProfileCreate() {
     stopCurrentGame();
     setTheme('home');
     updateHeader();
-    selectedStartAvatar = 'DEU';
+    selectedStartAvatar = 'skin-1';
     const cancelHtml = profileService.hasProfile() ? profileCancelTemplate() : '';
     showContent(profileCreateTemplate(buildStartAvatarOptions(), cancelHtml));
 }
 
 function buildStartAvatarOptions() {
-    const options = PROFILE_OPTIONS.filter(option => option.type === 'avatar' && option.level === 1);
+    const skins = SHOP_ITEMS.filter(item => item.slot === 'skin' && item.price === 0);
     let html = '';
-    for (let i = 0; i < options.length; i++) {
-        const selectedClass = options[i].value === selectedStartAvatar ? 'selected' : '';
-        html += startAvatarTemplate(options[i], buildAvatar(options[i].value, 'none', 'avatar-medium'), selectedClass);
+    for (let i = 0; i < skins.length; i++) {
+        const selectedClass = skins[i].id === selectedStartAvatar ? 'selected' : '';
+        const outfit = { ...DEFAULT_OUTFIT, skin: skins[i].id };
+        html += startAvatarTemplate(skins[i], avatarTemplate(buildAvatarSvg(outfit), 'none', 'avatar-medium'), selectedClass);
     }
     return html;
 }
 
-function selectStartAvatar(countryCode) {
-    selectedStartAvatar = countryCode;
+function selectStartAvatar(skinId) {
+    selectedStartAvatar = skinId;
     document.getElementById('start-avatars').innerHTML = buildStartAvatarOptions();
 }
 
@@ -194,7 +217,7 @@ function buildProfileCard() {
     const xpText = isMax ? 'Maximales Level erreicht · ' + profile.xp + ' XP' : info.current + ' / ' + info.needed + ' XP bis Level ' + (info.level + 1);
     const bestStreak = profileService.getBestStreak();
     const rankIndex = profileService.getRankIndex(bestStreak);
-    const avatarHtml = buildAvatar(profile.avatar, profile.frame, 'avatar-large');
+    const avatarHtml = buildProfileAvatar(profile, profile.frame, 'avatar-large');
     return profileCardTemplate(profile, avatarHtml, RANKS[rankIndex].title, getRankText(rankIndex, bestStreak), info.level, percent, xpText);
 }
 
@@ -230,11 +253,8 @@ function buildOptionButtons(options) {
 }
 
 function buildOptionPreview(option, profile) {
-    if (option.type === 'avatar') {
-        return buildAvatar(option.value, 'none', 'avatar-medium');
-    }
     if (option.type === 'frame') {
-        return buildAvatar(profile.avatar, option.value, 'avatar-medium');
+        return buildProfileAvatar(profile, option.value, 'avatar-medium');
     }
     return option.type === 'theme' ? themePreviewTemplate(option.value) : '';
 }
@@ -249,7 +269,7 @@ function buildProfileList() {
     let html = '';
     for (let i = 0; i < profileService.profiles.length; i++) {
         const profile = profileService.profiles[i];
-        const avatarHtml = buildAvatar(profile.avatar, profile.frame, 'avatar-small');
+        const avatarHtml = buildProfileAvatar(profile, profile.frame, 'avatar-small');
         const level = profileService.getLevelInfo(profile.xp).level;
         const isCurrent = profile.id === profileService.currentId;
         html += isCurrent ? profileListCurrentTemplate(profile, avatarHtml, level) : profileListItemTemplate(profile, avatarHtml, level);
@@ -498,4 +518,124 @@ function createQuiz(mode) {
 
 function backToQuizSetup() {
     showQuizSetup(QUIZ_MODES[lastQuizSettings.mode].category);
+}
+
+function showShop() {
+    if (!profileService.hasProfile()) {
+        return;
+    }
+    stopCurrentGame();
+    setTheme('home');
+    previewOutfit = { ...profileService.getCurrent().outfit };
+    shopSlot = 'hair';
+    renderShop();
+}
+
+function renderShop() {
+    const profile = profileService.getCurrent();
+    const previewHtml = avatarTemplate(buildAvatarSvg(previewOutfit), profile.frame, 'avatar-shop');
+    const flagPickerHtml = shopSlot === 'flag' ? shopFlagPickerTemplate(buildFlagOptions()) : '';
+    showContent(shopPageTemplate(previewHtml, profile.coins, buildBuyArea(), buildShopTabs(), buildShopItems(), flagPickerHtml));
+}
+
+function buildShopTabs() {
+    let html = '';
+    for (let i = 0; i < SHOP_SLOTS.length; i++) {
+        html += shopTabTemplate(SHOP_SLOTS[i], SHOP_SLOTS[i].key === shopSlot ? 'active' : '');
+    }
+    return html;
+}
+
+function buildShopItems() {
+    const items = shopService.getItemsForSlot(shopSlot);
+    let html = '';
+    for (let i = 0; i < items.length; i++) {
+        const outfit = { ...previewOutfit };
+        outfit[shopSlot] = items[i].id;
+        const previewHtml = avatarTemplate(buildAvatarSvg(outfit), 'none', 'avatar-medium');
+        html += shopItemTemplate(items[i], previewHtml, getItemStateText(items[i]), getItemStateClass(items[i]));
+    }
+    return html;
+}
+
+function getItemStateText(item) {
+    if (profileService.getCurrent().outfit[item.slot] === item.id) {
+        return 'Angelegt';
+    }
+    if (shopService.isOwned(item)) {
+        return item.price === 0 ? 'Gratis' : 'Im Besitz';
+    }
+    return shopService.isLevelReached(item) ? item.price + ' Coins' : 'ab Level ' + item.level;
+}
+
+function getItemStateClass(item) {
+    const triedClass = previewOutfit[item.slot] === item.id ? 'tried ' : '';
+    if (shopService.isOwned(item)) {
+        return triedClass + 'owned';
+    }
+    return triedClass + (shopService.isLevelReached(item) ? 'buyable' : 'locked');
+}
+
+function buildFlagOptions() {
+    const names = countryService.getSortedNames();
+    const owned = profileService.getCurrent().owned;
+    let html = '';
+    for (let i = 0; i < names.length; i++) {
+        const country = countryService.findByName(names[i]);
+        if (country && country.flag && !owned.includes('flag-' + country.code)) {
+            html += selectOptionTemplate('flag-' + country.code, names[i]);
+        }
+    }
+    return html;
+}
+
+function buildBuyArea() {
+    const pending = shopService.getPendingItems(previewOutfit);
+    if (pending.length === 0) {
+        return shopSavedTemplate();
+    }
+    let names = '';
+    for (let i = 0; i < pending.length; i++) {
+        names += (i > 0 ? ', ' : '') + pending[i].name;
+    }
+    const total = shopService.getTotalPrice(pending);
+    const disabledText = shopService.canBuyAll(pending) ? '' : 'disabled';
+    return shopBuyTemplate(names, total, disabledText, getBuyHint(pending, total));
+}
+
+function getBuyHint(pending, total) {
+    const lockedItems = pending.filter(item => !shopService.isLevelReached(item));
+    if (lockedItems.length > 0) {
+        return lockedItems[0].name + ' gibt es erst ab Level ' + lockedItems[0].level + '.';
+    }
+    const missing = total - profileService.getCurrent().coins;
+    return missing > 0 ? 'Dir fehlen noch ' + missing + ' Coins.' : '';
+}
+
+function selectShopSlot(slotKey) {
+    shopSlot = slotKey;
+    renderShop();
+}
+
+function tryShopItem(itemId) {
+    if (itemId === '') {
+        return;
+    }
+    const item = shopService.getItem(itemId);
+    previewOutfit[item.slot] = item.id;
+    shopService.wearOwned(previewOutfit);
+    updateHeader();
+    renderShop();
+}
+
+function buyPreviewOutfit() {
+    if (shopService.buyAndWear(previewOutfit)) {
+        updateHeader();
+    }
+    renderShop();
+}
+
+function resetPreviewOutfit() {
+    previewOutfit = { ...profileService.getCurrent().outfit };
+    renderShop();
 }

@@ -24,6 +24,7 @@ class AchievementService {
         const toastId = createToastId();
         showToast(toastId, achievementToastTemplate(toastId, matches[0]));
         this.profiles.addXp(XP_PER_TIER[matches[0].tier]);
+        this.profiles.addCoins(COINS_PER_TIER[matches[0].tier]);
         updateHeader();
     }
 
@@ -37,6 +38,7 @@ class AchievementService {
         this.counters[name] = (this.counters[name] || 0) + amount;
         this.storage.save('achievement-counters', this.counters);
         this.profiles.addXp((XP_PER_COUNTER[name] || 0) * amount);
+        this.profiles.addCoins((COINS_PER_COUNTER[name] || 0) * amount);
         this.checkCounter(name);
     }
 
