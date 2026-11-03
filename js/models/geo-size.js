@@ -85,6 +85,7 @@ class GeoSize extends BaseGame {
         const difference = Math.abs(this.sliderValue - realShare);
         const points = Math.max(0, Math.round(100 - difference * 4));
         this.score += points;
+        this.playCorrectSoundIf(points >= 80);
         const guess = this.sliderValue;
         this.showRealShare(realShare);
         this.showRoundResult(realShare, points, guess);

@@ -3,7 +3,9 @@ class SoundService {
         this.sounds = {
             win: new Audio('sounds/hsv-torhymne.mp3'),
             wrong: new Audio('sounds/laughing.mp3'),
-            low: new Audio('sounds/what-meme.mp3')
+            low: new Audio('sounds/what-meme.mp3'),
+            correct: new Audio('sounds/goat.mp3'),
+            decideCorrect: new Audio('sounds/yabadabadoo.mp3')
         };
         this.volume = 0.1;
         this.winSeconds = 9;
@@ -38,6 +40,14 @@ class SoundService {
 
     playLowScoreSound() {
         this.play('low');
+    }
+
+    playCorrectSound() {
+        this.play('correct');
+    }
+
+    playDecideCorrectSound() {
+        this.play('decideCorrect');
     }
 
     fadeOut() {

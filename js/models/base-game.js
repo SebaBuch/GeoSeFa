@@ -51,6 +51,12 @@ class BaseGame {
         }
     }
 
+    playCorrectSoundIf(condition) {
+        if (condition) {
+            this.sound.playCorrectSound();
+        }
+    }
+
     playWrongSoundIf(condition) {
         if (condition) {
             this.sound.playWrongSound();

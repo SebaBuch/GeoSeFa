@@ -31,6 +31,7 @@ class ShapeQuiz extends QuizBase {
     }
 
     handleCorrect(question) {
+        this.playCorrectSoundIf(true);
         const result = this.attempts === 0 ? 'green' : 'yellow';
         this.score += POINTS[result];
         this.setMessage('Richtig: ' + question.name, result);

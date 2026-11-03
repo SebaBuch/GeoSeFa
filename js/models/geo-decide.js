@@ -84,6 +84,7 @@ class GeoDecide extends BaseGame {
         document.getElementById('decide-value-' + this.unknown.code).innerHTML = this.formatValue(this.unknown);
         document.getElementById('decide-' + correctCode).classList.add('correct');
         if (code === correctCode) {
+            this.sound.playDecideCorrectSound();
             document.getElementById('decide-' + code).classList.add('flash');
         } else {
             this.playWrongSoundIf(true);

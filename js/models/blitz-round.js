@@ -95,6 +95,7 @@ class BlitzRound extends BaseGame {
         document.getElementById('option-' + this.question.code).classList.add('correct');
         if (code === this.question.code) {
             this.score++;
+            this.playCorrectSoundIf(true);
         } else {
             document.getElementById('option-' + code).classList.add('wrong');
             this.playWrongSoundIf(true);

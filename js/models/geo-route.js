@@ -148,6 +148,7 @@ class GeoRoute extends BaseGame {
         this.guesses.push({ code: country.code, name: country.name, color: color });
         this.worldMap.colorCountry(country.code, MAP_COLORS[color]);
         this.playWrongSoundIf(color === 'red');
+        this.playCorrectSoundIf(color === 'green');
         const previousName = this.countries.getCountry(this.current).name;
         this.current = color === 'red' ? this.current : country.code;
         this.setMessage(this.getColorMessage(color, country.name, previousName), color);

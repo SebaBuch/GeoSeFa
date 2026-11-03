@@ -53,6 +53,7 @@ class MapQuiz extends QuizBase {
     }
 
     markAnswer(result) {
+        this.playCorrectSoundIf(result !== 'red');
         const question = this.questions[this.index];
         this.worldMap.colorCountry(question.code, MAP_COLORS[result]);
         this.answeredCodes.push(question.code);
@@ -79,13 +80,18 @@ class MapQuiz extends QuizBase {
             return;
         }
         if (this.getQuestionCodes().includes(country.code)) {
-            this.answeredCodes.push(country.code);
-            this.worldMap.colorCountry(country.code, MAP_COLORS.green);
-            this.score++;
-            document.getElementById('type-input').value = '';
-            this.setMessage('Gefunden: ' + country.name, 'green');
-            this.updateTypeProgress();
+            this.markTyped(country);
         }
+    }
+
+    markTyped(country) {
+        this.answeredCodes.push(country.code);
+        this.worldMap.colorCountry(country.code, MAP_COLORS.green);
+        this.score++;
+        this.playCorrectSoundIf(true);
+        document.getElementById('type-input').value = '';
+        this.setMessage('Gefunden: ' + country.name, 'green');
+        this.updateTypeProgress();
     }
 
     updateTypeProgress() {
