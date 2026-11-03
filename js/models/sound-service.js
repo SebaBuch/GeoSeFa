@@ -5,10 +5,10 @@ class SoundService {
             wrong: new Audio('sounds/laughing.mp3'),
             low: new Audio('sounds/what-meme.mp3'),
             correct: new Audio('sounds/goat.mp3'),
-            decideCorrect: new Audio('sounds/yabadabadoo.mp3')
+            decideCorrect: new Audio('sounds/bing.mp3')
         };
         this.volume = 0.1;
-        this.winSeconds = 9;
+        this.winSeconds = 2;
         this.stopTimeoutId = null;
         this.fadeIntervalId = null;
     }

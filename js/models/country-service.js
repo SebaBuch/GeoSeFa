@@ -1,4 +1,5 @@
 const ALWAYS_INCLUDED_CODES = ['UNK', 'XKX'];
+const EXCLUDED_COUNTRY_NAMES = ['Abkhazia', 'Abchasien'];
 
 class CountryService {
     constructor(storage) {
@@ -129,11 +130,15 @@ class CountryService {
     }
 
     setCountries(countries) {
-        this.countries = countries;
+        this.countries = countries.filter(country => !this.isExcluded(country));
         this.byCode = {};
-        for (let i = 0; i < countries.length; i++) {
-            this.byCode[countries[i].code] = countries[i];
+        for (let i = 0; i < this.countries.length; i++) {
+            this.byCode[this.countries[i].code] = this.countries[i];
         }
+    }
+
+    isExcluded(country) {
+        return EXCLUDED_COUNTRY_NAMES.includes(country.englishName) || EXCLUDED_COUNTRY_NAMES.includes(country.name);
     }
 
     getCountry(code) {

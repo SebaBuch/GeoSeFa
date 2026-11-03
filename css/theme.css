@@ -517,7 +517,7 @@ body.theme-geosize {
 body.theme-geodecide {
     background-image:
         url('../img/backgrounds/arrows.svg'),
-        url('../img/backgrounds/world-map.svg'),
+        url('../img/backgrounds/question-marks.svg'),
         linear-gradient(135deg, #6a3fb0 0%, #a77de0 100%);
     background-position: center, center, center;
     background-size: cover, cover, cover;
