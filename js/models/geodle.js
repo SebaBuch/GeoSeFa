@@ -1,6 +1,7 @@
 class Geodle extends BaseGame {
     constructor() {
         super();
+        this.achievementKey = 'geodle';
         this.maxGuesses = 10;
     }
 
@@ -82,6 +83,7 @@ class Geodle extends BaseGame {
 
     finish(won) {
         this.finished = true;
+        this.checkGeodleAchievements(won);
         if (this.daily) {
             this.finishGeodleDaily(won);
             return;
@@ -90,6 +92,16 @@ class Geodle extends BaseGame {
         this.playEndSound(won, !won);
         const text = won ? 'Richtig! Gesucht war:' : 'Leider nicht geschafft. Gesucht war:';
         document.getElementById('geodle-info').innerHTML = geodleEndTemplate(text, this.target);
+    }
+
+    checkGeodleAchievements(won) {
+        if (!won) {
+            return;
+        }
+        this.achievements.increase('geodle-wins', 1);
+        this.achievements.unlockIf(this.guesses.length === 1, 'geodle-one');
+        this.achievements.unlockIf(this.guesses.length <= 3, 'geodle-three');
+        this.achievements.unlockIf(this.guesses.length === this.maxGuesses, 'geodle-last');
     }
 
     finishGeodleDaily(won) {

@@ -11,6 +11,7 @@ const QUIZ_MODES = {
 
 class QuizBase extends BaseGame {
     start(settings) {
+        this.achievementKey = 'quiz';
         this.settings = settings;
         this.mode = QUIZ_MODES[settings.mode];
         this.pool = this.getPool();
@@ -83,9 +84,21 @@ class QuizBase extends BaseGame {
         clearTimeout(this.timeoutId);
         const percent = Math.round(this.score / this.questions.length * 100);
         const isRecord = this.storage.saveQuizResult(this.getQuizKey(), percent, this.timer.seconds);
+        this.checkQuizAchievements(percent);
         this.playEndSound(isRecord, percent < 40);
         const scoreText = formatScore(this.score) + ' von ' + this.questions.length;
         this.showResult(quizResultTemplate(this.mode.title, percent, scoreText, formatTime(this.timer.seconds), this.getRecordText(isRecord)));
+    }
+
+    checkQuizAchievements(percent) {
+        const mode = this.settings.mode;
+        const isFullWorld = this.settings.region === 'Welt' && this.settings.amount === 100;
+        const category = this.mode.category;
+        this.achievements.unlockIf(percent === 100, 'quiz-perfect');
+        this.achievements.unlockIf(mode === 'map-click' && this.settings.region === 'Europa' && this.settings.amount === 100 && percent >= 90, 'quiz-europe-map');
+        this.achievements.unlockIf(mode === 'map-click' && isFullWorld && percent >= 80, 'quiz-world-map');
+        this.achievements.unlockIf(category === 'flags' && isFullWorld && percent >= 90, 'quiz-flags-world');
+        this.achievements.unlockIf(category === 'capitals' && isFullWorld && percent >= 90, 'quiz-capitals-world');
     }
 
     showResult(html) {

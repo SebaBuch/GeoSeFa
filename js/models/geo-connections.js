@@ -10,6 +10,7 @@ const TILE_LABELS = {
 class GeoConnections extends BaseGame {
     constructor() {
         super();
+        this.achievementKey = 'geoconnections';
         this.groupCount = 4;
         this.maxMistakes = 4;
     }
@@ -174,6 +175,7 @@ class GeoConnections extends BaseGame {
         this.solved.push(code);
         this.selected = [];
         this.setMessage('Richtig: ' + this.countries.getCountry(code).name, 'green');
+        this.achievements.increase('correct', 1);
         this.sound.playWinSound();
         if (this.solved.length === this.groupCount) {
             this.finish(true);
@@ -201,9 +203,19 @@ class GeoConnections extends BaseGame {
         }
     }
 
+    checkConnectionAchievements(won) {
+        if (!won) {
+            return;
+        }
+        this.achievements.increase('conn-wins', 1);
+        this.achievements.unlockIf(this.mistakes === 0, 'conn-perfect');
+        this.achievements.unlockIf(this.mistakes === 3, 'conn-close');
+    }
+
     finish(won) {
         this.finished = true;
         this.storage.saveGameResult('geoconnections', won, 0);
+        this.checkConnectionAchievements(won);
         this.playEndSound(won, false);
         this.playWrongSoundIf(!won);
         for (let i = 0; i < this.groups.length; i++) {

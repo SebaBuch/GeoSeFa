@@ -1,6 +1,7 @@
 class GeoSize extends BaseGame {
     constructor() {
         super();
+        this.achievementKey = 'geosize';
         this.totalRounds = 10;
         this.boxSize = 260;
     }
@@ -104,6 +105,7 @@ class GeoSize extends BaseGame {
     }
 
     showRoundResult(realShare, points, guess) {
+        this.achievements.unlockIf(points >= 98, 'size-bullseye');
         const leftText = this.left.name + ' ' + Math.round(100 - realShare) + ' % (' + formatNumber(this.left.area) + ' km²)';
         const rightText = this.right.name + ' ' + Math.round(realShare) + ' % (' + formatNumber(this.right.area) + ' km²)';
         const isLastRound = this.round >= this.totalRounds;
@@ -116,6 +118,8 @@ class GeoSize extends BaseGame {
     finish() {
         this.finished = true;
         const isRecord = this.storage.saveGameResult('geosize', true, this.score);
+        this.achievements.unlockIf(this.score >= 700, 'size-700');
+        this.achievements.unlockIf(this.score >= 850, 'size-850');
         this.playEndSound(isRecord, this.score < 400);
         const stats = this.storage.getGameStats('geosize');
         this.showScreen(scoreEndTemplate('GeoSize', this.score, this.totalRounds * 100, stats.highscore, this.getRecordText(isRecord), 'geosize'));

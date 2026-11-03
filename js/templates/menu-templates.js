@@ -233,3 +233,43 @@ function dailyResultPageTemplate(title, text, score) {
         </section>
     `;
 }
+
+function achievementToastTemplate(toastId, achievement) {
+    return `
+        <div id="${toastId}" class="toast toast-${achievement.tier}">
+            <span class="toast-label">Erfolg freigeschaltet!</span>
+            <span class="toast-title">${achievement.title}</span>
+            <span class="toast-text">${achievement.description}</span>
+        </div>
+    `;
+}
+
+function achievementsPageTemplate(unlockedCount, total, categoriesHtml) {
+    return `
+        <section class="panel">
+            <div class="title-row">
+                <h1>Erfolge</h1>
+                ${backButtonTemplate()}
+            </div>
+            <p class="achievement-summary">Freigeschaltet: <b>${unlockedCount} / ${total}</b></p>
+            ${categoriesHtml}
+        </section>
+    `;
+}
+
+function achievementCategoryTemplate(title, unlockedCount, total, itemsHtml) {
+    return `
+        <h2 class="achievement-category">${title} <span>${unlockedCount} / ${total}</span></h2>
+        <div class="achievement-list">${itemsHtml}</div>
+    `;
+}
+
+function achievementItemTemplate(achievement, className, statusText) {
+    return `
+        <div class="achievement ${className}">
+            <span class="achievement-tier">${statusText}</span>
+            <span class="achievement-title">${achievement.title}</span>
+            <span class="achievement-text">${achievement.description}</span>
+        </div>
+    `;
+}

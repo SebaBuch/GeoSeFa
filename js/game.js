@@ -3,6 +3,7 @@ let countryService;
 let shapeService;
 let worldMap;
 let soundService;
+let achievementService;
 let currentGame = null;
 let lastQuizSettings = null;
 
@@ -27,6 +28,8 @@ async function init() {
     shapeService = new ShapeService(countryService);
     worldMap = new WorldMap(shapeService);
     soundService = new SoundService();
+    achievementService = new AchievementService(storageService);
+    updateAchievementButton();
     await loadData(false);
 }
 
@@ -96,6 +99,53 @@ function showImpressum() {
     stopCurrentGame();
     setTheme('home');
     showContent(impressumTemplate());
+}
+
+function updateAchievementButton() {
+    const button = document.getElementById('achievement-button');
+    if (button) {
+        button.innerHTML = 'Erfolge ' + achievementService.getUnlockedCount() + ' / ' + ACHIEVEMENTS.length;
+    }
+}
+
+function showAchievements() {
+    if (!countryService || countryService.countries.length === 0) {
+        return;
+    }
+    stopCurrentGame();
+    setTheme('home');
+    const unlockedCount = achievementService.getUnlockedCount();
+    showContent(achievementsPageTemplate(unlockedCount, ACHIEVEMENTS.length, buildAchievementCategories()));
+}
+
+function buildAchievementCategories() {
+    let html = '';
+    for (let i = 0; i < ACHIEVEMENT_CATEGORIES.length; i++) {
+        const category = ACHIEVEMENT_CATEGORIES[i];
+        const items = ACHIEVEMENTS.filter(achievement => achievement.category === category);
+        const unlocked = items.filter(achievement => achievementService.isUnlocked(achievement.id));
+        html += achievementCategoryTemplate(category, unlocked.length, items.length, buildAchievementItems(items));
+    }
+    return html;
+}
+
+function buildAchievementItems(items) {
+    let html = '';
+    for (let i = 0; i < items.length; i++) {
+        const isUnlocked = achievementService.isUnlocked(items[i].id);
+        const className = isUnlocked ? 'unlocked achievement-' + items[i].tier : 'locked';
+        const statusText = isUnlocked ? 'Seit ' + formatDateGerman(achievementService.unlocked[items[i].id]) : getProgressText(items[i]);
+        html += achievementItemTemplate(items[i], className, statusText);
+    }
+    return html;
+}
+
+function getProgressText(achievement) {
+    if (!achievement.counter) {
+        return 'Gesperrt';
+    }
+    const current = Math.min(achievementService.getCounter(achievement.counter), achievement.goal);
+    return 'Fortschritt: ' + current + ' / ' + achievement.goal;
 }
 
 function buildGameCards() {

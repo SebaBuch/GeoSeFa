@@ -7,6 +7,7 @@ const BLITZ_CATEGORIES = {
 class BlitzRound extends BaseGame {
     constructor() {
         super();
+        this.achievementKey = 'blitz';
         this.seconds = 60;
         this.lowScore = 5;
     }
@@ -26,6 +27,7 @@ class BlitzRound extends BaseGame {
         const pool = this.getPool(category);
         this.pool = this.seeded ? this.seeded.sortByCode(pool) : pool;
         this.score = 0;
+        this.wrongCount = 0;
         this.lastCode = '';
         this.finished = false;
         this.showScreen(blitzTemplate(BLITZ_CATEGORIES[category].title, BLITZ_CATEGORIES[category].question));
@@ -101,11 +103,13 @@ class BlitzRound extends BaseGame {
             this.playCorrectSoundIf(true);
         } else {
             document.getElementById('option-' + code).classList.add('wrong');
+            this.wrongCount++;
             this.playWrongSoundIf(true);
         }
     }
 
     handleTimeUp() {
+        this.checkBlitzAchievements();
         this.finish();
     }
 
@@ -122,6 +126,18 @@ class BlitzRound extends BaseGame {
         this.playEndSound(isRecord, this.score < this.lowScore);
         const highscore = this.storage.getGameStats(gameKey).highscore;
         this.showScreen(blitzEndTemplate(BLITZ_CATEGORIES[this.category].title, this.score, highscore, this.getRecordText(isRecord), this.category));
+    }
+
+    checkBlitzAchievements() {
+        this.achievements.unlockIf(this.score >= 10, 'blitz-10');
+        this.achievements.unlockIf(this.score >= 20, 'blitz-20');
+        this.achievements.unlockIf(this.score >= 30, 'blitz-30');
+        this.achievements.unlockIf(this.score >= 10 && this.wrongCount === 0, 'blitz-perfect');
+        this.achievements.saveBest('blitz-' + this.category, this.score);
+        const flags = this.achievements.getCounter('blitz-flags');
+        const capitals = this.achievements.getCounter('blitz-capitals');
+        const outlines = this.achievements.getCounter('blitz-outlines');
+        this.achievements.unlockIf(Math.min(flags, capitals, outlines) >= 10, 'blitz-all');
     }
 
     finishBlitzDaily() {

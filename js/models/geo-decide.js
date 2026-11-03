@@ -7,6 +7,7 @@ const DECIDE_CATEGORIES = [
 
 class GeoDecide extends BaseGame {
     start() {
+        this.achievementKey = 'geodecide';
         this.streak = 0;
         this.finished = false;
         this.pool = this.countries.countries.filter(country => country.population > 0 && country.area > 0);
@@ -84,6 +85,7 @@ class GeoDecide extends BaseGame {
         document.getElementById('decide-value-' + this.unknown.code).innerHTML = this.formatValue(this.unknown);
         document.getElementById('decide-' + correctCode).classList.add('correct');
         if (code === correctCode) {
+            this.achievements.increase('correct', 1);
             this.sound.playDecideCorrectSound();
             document.getElementById('decide-' + code).classList.add('flash');
         } else {
@@ -105,9 +107,18 @@ class GeoDecide extends BaseGame {
         this.nextRound();
     }
 
+    checkDecideAchievements() {
+        this.achievements.unlockIf(this.streak >= 5, 'decide-5');
+        this.achievements.unlockIf(this.streak >= 15, 'decide-15');
+        this.achievements.unlockIf(this.streak >= 30, 'decide-30');
+        this.achievements.unlockIf(this.streak >= 50, 'decide-50');
+        this.achievements.unlockIf(this.streak === 0, 'decide-first-fail');
+    }
+
     finish() {
         this.finished = true;
         const isRecord = this.storage.saveGameResult('geodecide', false, this.streak);
+        this.checkDecideAchievements();
         this.playEndSound(isRecord, this.streak < 3);
         const stats = this.storage.getGameStats('geodecide');
         this.showScreen(streakEndTemplate(this.streak, stats.highscore, this.getRecordText(isRecord)));

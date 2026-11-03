@@ -5,6 +5,8 @@ class BaseGame {
         this.storage = storageService;
         this.worldMap = worldMap;
         this.sound = soundService;
+        this.achievements = achievementService;
+        this.achievementKey = '';
         this.finished = false;
         this.timeoutId = null;
     }
@@ -61,6 +63,7 @@ class BaseGame {
     }
 
     playEndSound(isWin, isBad) {
+        this.achievements.recordGameEnd(this.achievementKey);
         if (isWin) {
             this.sound.playWinSound();
         } else if (isBad) {
@@ -70,12 +73,14 @@ class BaseGame {
 
     playCorrectSoundIf(condition) {
         if (condition) {
+            this.achievements.increase('correct', 1);
             this.sound.playCorrectSound();
         }
     }
 
     playWrongSoundIf(condition) {
         if (condition) {
+            this.achievements.increase('wrong', 1);
             this.sound.playWrongSound();
         }
     }

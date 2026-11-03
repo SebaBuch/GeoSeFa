@@ -1,6 +1,7 @@
 class GeoRoute extends BaseGame {
     constructor() {
         super();
+        this.achievementKey = 'georoute';
         this.minSteps = 3;
         this.maxSteps = 6;
     }
@@ -145,6 +146,7 @@ class GeoRoute extends BaseGame {
 
     evaluateGuess(country) {
         const color = this.getGuessColor(country.code);
+        this.checkKaliningrad(color, country.code);
         this.guesses.push({ code: country.code, name: country.name, color: color });
         this.worldMap.colorCountry(country.code, MAP_COLORS[color]);
         this.playWrongSoundIf(color === 'red');
@@ -155,6 +157,17 @@ class GeoRoute extends BaseGame {
         this.renderGuesses();
         this.updateMapView();
         this.checkEnd(color);
+    }
+
+    checkKaliningrad(color, code) {
+        const fromBaltic = this.current === 'POL' || this.current === 'LTU';
+        this.achievements.unlockIf(color === 'red' && code === 'RUS' && fromBaltic, 'route-kaliningrad');
+    }
+
+    checkRouteAchievements() {
+        this.achievements.increase('route-wins', 1);
+        this.achievements.unlockIf(this.guesses.length === this.neededCountries, 'route-perfect');
+        this.achievements.unlockIf(this.neededCountries >= 5, 'route-long');
     }
 
     updateMapView() {
@@ -187,6 +200,7 @@ class GeoRoute extends BaseGame {
     checkEnd(color) {
         const reachedTarget = color !== 'red' && this.distances[this.current] <= 1;
         if (reachedTarget) {
+            this.checkRouteAchievements();
             this.finish(true);
         } else if (this.guesses.length >= this.maxGuesses) {
             this.finish(false);
