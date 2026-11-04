@@ -2,6 +2,9 @@ const API_KEY = 'rc_live_aa722ee07aea4230852a6e924a1aeb0b';
 const API_URL = 'https://api.restcountries.com/countries/v5';
 const SHAPES_URL = 'data/countries.geojson';
 
+const FIREBASE_API_KEY = 'AIzaSyC-UiSmUjctPcysknAQLeG9YQFkLJOber4';
+const FIREBASE_DB_URL = 'https://geosefa-default-rtdb.europe-west1.firebasedatabase.app';
+
 const REGIONS = ['Welt', 'Europa', 'Nordamerika', 'Südamerika', 'Afrika', 'Asien', 'Ozeanien'];
 
 const CONTINENT_NAMES = {

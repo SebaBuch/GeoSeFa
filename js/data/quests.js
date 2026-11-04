@@ -17,6 +17,6 @@ const QUEST_POOL = [
     { id: 'q-daily-3', text: 'Schließe 3 Tages-Challenges ab', counter: 'daily-completed', goal: 3, reward: 120 },
     { id: 'q-bullseye', text: 'Hol bei GeoSize einmal 98 oder mehr Punkte', counter: 'size-bullseyes', goal: 1, reward: 100 },
     { id: 'q-quiz-perfect', text: 'Beende ein Quiz mit 100 %', counter: 'quiz-perfects', goal: 1, reward: 100 },
-    { id: 'q-distance-hit', text: 'Triff bei GeoDistanz 3-mal das richtige Land', counter: 'distance-hits', goal: 3, reward: 90 },
+    { id: 'q-distance-hit', text: 'Hol bei GeoDistanz 3-mal 100 Punkte in einer Runde', counter: 'distance-hits', goal: 3, reward: 90 },
     { id: 'q-shop', text: 'Kauf ein Teil im Shop', counter: 'items-bought', goal: 1, reward: 50 }
 ];

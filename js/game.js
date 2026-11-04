@@ -6,6 +6,9 @@ let soundService;
 let achievementService;
 let profileService;
 let questService;
+let authService;
+let cloudService;
+let syncService;
 let toastCounter = 0;
 let shopService;
 let currentGame = null;
@@ -17,7 +20,7 @@ const GAMES = [
     { key: 'geodecide', title: 'GeoDecide', description: 'Mehr oder weniger? Halte deine Serie so lange wie möglich.', statsType: 'streak' },
     { key: 'geodle', title: 'Geodle', description: 'Finde das gesuchte Land mit Hilfe von Hinweisen.', statsType: 'win' },
     { key: 'geoconnections', title: 'GeoConnections', description: 'Finde die 4 Gruppen, die zum selben Land gehören.', statsType: 'win' },
-    { key: 'geodistance', title: 'GeoDistanz', description: 'Klicke auf der Karte, wo ein Land liegt. Punkte nach Entfernung.', statsType: 'score' },
+    { key: 'geodistance', title: 'GeoDistanz', description: 'Finde ein Land, dessen Hauptstadt so weit von der Start-Hauptstadt entfernt ist wie angegeben.', statsType: 'score' },
     { key: 'blitz', title: 'Blitzrunde', description: '60 Sekunden: so viele Flaggen, Hauptstädte oder Umrisse wie möglich.', statsType: 'blitz' }
 ];
 
@@ -28,17 +31,27 @@ const QUIZ_CATEGORIES = [
 ];
 
 async function init() {
+    createServices();
+    updateSoundButton();
+    if (!authService.isLoggedIn()) {
+        profileService.clearCurrent();
+    }
+    await loadData(false);
+}
+
+function createServices() {
     storageService = new StorageService();
     profileService = new ProfileService(storageService);
+    authService = new AuthService(storageService);
+    cloudService = new CloudService(authService);
+    syncService = new SyncService(storageService, profileService, cloudService, authService);
     countryService = new CountryService(storageService);
     shapeService = new ShapeService(countryService);
     worldMap = new WorldMap(shapeService);
     shopService = new ShopService(profileService, countryService);
     questService = new QuestService(storageService, profileService);
     soundService = new SoundService(storageService);
-    updateSoundButton();
     achievementService = new AchievementService(storageService, profileService);
-    await loadData(false);
 }
 
 async function loadData(forceReload) {
@@ -53,7 +66,24 @@ async function loadData(forceReload) {
     if (!await shapeService.loadShapes()) {
         return showError('Die Datei data/countries.geojson konnte nicht geladen werden.');
     }
-    showHome();
+    await startOnline();
+}
+
+async function startOnline() {
+    if (!authService.isConfigured()) {
+        return showError('Trage zuerst FIREBASE_API_KEY und FIREBASE_DB_URL in js/config.js ein.');
+    }
+    if (authService.isLoggedIn()) {
+        await finishLogin();
+    } else {
+        showLogin();
+    }
+}
+
+function scheduleCloudSync() {
+    if (syncService) {
+        syncService.schedule();
+    }
 }
 
 async function reloadData() {
@@ -81,8 +111,8 @@ function showHome() {
     if (!countryService || countryService.countries.length === 0) {
         return;
     }
-    if (!profileService.hasProfile()) {
-        return showProfileCreate();
+    if (!authService.isLoggedIn() || !profileService.hasProfile()) {
+        return showLogin();
     }
     stopCurrentGame();
     setTheme('home');

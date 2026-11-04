@@ -57,20 +57,20 @@ const TOP_LISTS = [
 ];
 
 const COMPARE_ROWS = [
-    { label: 'Level', source: 'level' },
-    { label: 'XP gesamt', source: 'profile', key: 'xp' },
-    { label: 'Coins', source: 'profile', key: 'coins' },
-    { label: 'Erfolge', source: 'achievements' },
-    { label: 'Beste Tages-Serie', source: 'storage', key: 'best-daily-streak' },
-    { label: 'Spiele beendet', source: 'counter', key: 'games' },
-    { label: 'Richtige Antworten', source: 'counter', key: 'correct' },
-    { label: 'GeoRoute gewonnen', source: 'stats', key: 'georoute', field: 'won' },
-    { label: 'GeoSize Highscore', source: 'stats', key: 'geosize', field: 'highscore' },
-    { label: 'GeoDecide Rekord', source: 'stats', key: 'geodecide', field: 'highscore' },
-    { label: 'Geodle gewonnen', source: 'stats', key: 'geodle', field: 'won' },
-    { label: 'GeoConnections gewonnen', source: 'stats', key: 'geoconnections', field: 'won' },
-    { label: 'GeoDistanz Highscore', source: 'stats', key: 'geodistance', field: 'highscore' },
-    { label: 'Blitz Flaggen', source: 'stats', key: 'blitz-flags', field: 'highscore' },
-    { label: 'Blitz Hauptstädte', source: 'stats', key: 'blitz-capitals', field: 'highscore' },
-    { label: 'Blitz Umrisse', source: 'stats', key: 'blitz-outlines', field: 'highscore' }
+    { id: 'level', label: 'Level', source: 'level' },
+    { id: 'xp', label: 'XP gesamt', source: 'profile', key: 'xp' },
+    { id: 'coins', label: 'Coins', source: 'profile', key: 'coins' },
+    { id: 'achievements', label: 'Erfolge', source: 'achievements' },
+    { id: 'best-streak', label: 'Beste Tages-Serie', source: 'storage', key: 'best-daily-streak' },
+    { id: 'games', label: 'Spiele beendet', source: 'counter', key: 'games' },
+    { id: 'correct', label: 'Richtige Antworten', source: 'counter', key: 'correct' },
+    { id: 'route-won', label: 'GeoRoute gewonnen', source: 'stats', key: 'georoute', field: 'won' },
+    { id: 'size-best', label: 'GeoSize Highscore', source: 'stats', key: 'geosize', field: 'highscore' },
+    { id: 'decide-best', label: 'GeoDecide Rekord', source: 'stats', key: 'geodecide', field: 'highscore' },
+    { id: 'geodle-won', label: 'Geodle gewonnen', source: 'stats', key: 'geodle', field: 'won' },
+    { id: 'conn-won', label: 'GeoConnections gewonnen', source: 'stats', key: 'geoconnections', field: 'won' },
+    { id: 'distance-best', label: 'GeoDistanz Highscore', source: 'stats', key: 'geodistance', field: 'highscore' },
+    { id: 'blitz-flags', label: 'Blitz Flaggen', source: 'stats', key: 'blitz-flags', field: 'highscore' },
+    { id: 'blitz-capitals', label: 'Blitz Hauptstädte', source: 'stats', key: 'blitz-capitals', field: 'highscore' },
+    { id: 'blitz-outlines', label: 'Blitz Umrisse', source: 'stats', key: 'blitz-outlines', field: 'highscore' }
 ];

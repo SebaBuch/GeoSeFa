@@ -344,12 +344,17 @@ function blitzEndTemplate(categoryTitle, score, highscore, recordText, category)
     `;
 }
 
-function geoDistanceTemplate(totalRounds) {
+function geoDistanceTemplate() {
     return `
         <div class="map-layout">
         <section class="panel">
-            ${gameHeaderTemplate('GeoDistanz', 'Klicke auf der Karte dorthin, wo das Land liegt. Je näher du dran bist, desto mehr Punkte. Ein Treffer im Land gibt 100 Punkte.')}
-            <p class="quiz-task">Wo liegt: <b id="distance-prompt"></b></p>
+            ${gameHeaderTemplate('GeoDistanz', 'Gemessen wird von Hauptstadt zu Hauptstadt. Gib ein Land ein, dessen Hauptstadt möglichst genau so weit von der Start-Hauptstadt entfernt ist.')}
+            <div id="distance-task" class="distance-task"></div>
+            <form id="distance-form" class="guess-form" onsubmit="currentGame.submitGuess(event)">
+                <input id="distance-input" oninput="currentGame.showSuggestions(this)" placeholder="Land eingeben ..." autocomplete="off">
+                <button class="button" type="submit">Raten</button>
+            </form>
+            <div id="suggestions" class="suggestions"></div>
             <div id="message" class="message"></div>
             <div id="distance-info" class="distance-info"></div>
         </section>
@@ -358,16 +363,23 @@ function geoDistanceTemplate(totalRounds) {
     `;
 }
 
+function distanceTaskTemplate(startCountry, kmText) {
+    return `
+        <span class="route-end start">Start: ${startCountry.name} (${startCountry.capital})</span>
+        <span class="distance-target">Gesucht: ein Land, dessen Hauptstadt ca. <b>${kmText} km</b> entfernt ist</span>
+    `;
+}
+
 function distanceInfoTemplate(round, totalRounds, score) {
     return `
-        <span class="info-pill">Land ${round} / ${totalRounds}</span>
+        <span class="info-pill">Runde ${round} / ${totalRounds}</span>
         <span class="info-pill">Punkte: ${score}</span>
     `;
 }
 
 function distanceResultTemplate(round, totalRounds, score, action, label) {
     return `
-        <span class="info-pill">Land ${round} / ${totalRounds}</span>
+        <span class="info-pill">Runde ${round} / ${totalRounds}</span>
         <span class="info-pill">Punkte: ${score}</span>
         <button class="button" onclick="currentGame.${action}()">${label}</button>
     `;

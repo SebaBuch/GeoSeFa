@@ -219,3 +219,103 @@ body.theme-geodistance {
         font-size: 0.875rem;
     }
 }
+
+.distance-task {
+    display: flex;
+    flex-wrap: wrap;
+    align-items: center;
+    gap: 12px;
+    margin-top: 12px;
+}
+
+.distance-target {
+    font-size: 1.25rem;
+}
+
+/* Login */
+
+.login-intro {
+    margin-bottom: 20px;
+}
+
+.login-layout {
+    display: flex;
+    flex-wrap: wrap;
+    gap: 20px;
+}
+
+.login-box {
+    flex: 1 1 340px;
+}
+
+.login-form {
+    display: flex;
+    flex-direction: column;
+    gap: 10px;
+    margin: 14px 0 8px 0;
+}
+
+.login-form input {
+    padding: 10px 14px;
+    border: 2px solid #d8d0b8;
+    border-radius: 10px;
+    font-family: inherit;
+    font-size: 1rem;
+}
+
+.login-form input:focus {
+    outline: none;
+    border-color: #2a9d8f;
+}
+
+.login-subtitle {
+    margin-top: 16px;
+    font-size: 1rem;
+}
+
+.account-row {
+    display: flex;
+    flex-wrap: wrap;
+    align-items: center;
+    gap: 12px;
+    margin-top: 14px;
+}
+
+/* Rangliste */
+
+.intro-buttons {
+    display: flex;
+    flex-wrap: wrap;
+    gap: 10px;
+    margin-top: 16px;
+}
+
+.intro-button {
+    padding: 8px 18px;
+    border: 2px solid #ffffff;
+    border-radius: 999px;
+    background-color: rgba(255, 255, 255, 0.15);
+    color: #ffffff;
+    font-family: inherit;
+    font-size: 0.9375rem;
+    font-weight: 700;
+    cursor: pointer;
+}
+
+.intro-button:hover {
+    background-color: #ffffff;
+    color: #1d3557;
+}
+
+.ranking-row {
+    align-items: center;
+}
+
+.ranking-name {
+    flex: 1 1 100px;
+    font-weight: 700;
+}
+
+.ranking-row.me {
+    outline: 3px solid #2a9d8f;
+}

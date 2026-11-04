@@ -31,33 +31,42 @@ class ProfileService {
         return this.getCurrent() !== undefined;
     }
 
-    createProfile(name, skin) {
-        const id = 'p' + Date.now();
-        if (this.profiles.length === 0) {
-            this.storage.migrateOldData(id);
-        }
+    createAccountProfile(uid, name, skin, legacyId) {
+        const legacy = this.profiles.filter(profile => profile.id === legacyId)[0];
+        this.copyOldData(uid, legacy);
         const outfit = { ...DEFAULT_OUTFIT, skin: skin };
-        this.profiles.push({ id: id, name: name, title: 'Neuling', frame: 'none', theme: 'standard', xp: 0, coins: START_COINS, owned: [], outfit: outfit });
-        this.saveProfiles();
-        this.select(id);
+        const fresh = { title: 'Neuling', frame: 'none', theme: 'standard', xp: 0, coins: START_COINS, owned: [], outfit: outfit };
+        const base = legacy ? legacy : fresh;
+        this.storeAccountProfile({ ...base, id: uid, name: name });
+        this.select(uid);
+        this.storage.markAllChanged();
     }
 
-    createBackup() {
-        const profile = this.getCurrent();
-        return { app: 'GeoSeFa', version: 1, profile: profile, data: this.storage.getProfileData(profile.id) };
-    }
-
-    importBackup(backup) {
-        if (!backup || backup.app !== 'GeoSeFa' || !backup.profile || !backup.data) {
-            return false;
+    copyOldData(uid, legacy) {
+        if (this.profiles.length === 0) {
+            this.storage.migrateOldData(uid);
         }
-        const others = this.profiles.filter(profile => profile.id !== backup.profile.id);
-        this.profiles = [...others, backup.profile];
+        if (legacy) {
+            this.storage.setProfileData(uid, this.storage.getProfileData(legacy.id));
+        }
+    }
+
+    storeAccountProfile(profile) {
+        const others = this.profiles.filter(item => item.id !== profile.id);
+        this.profiles = [...others, { ...profile, account: true }];
         this.prepareProfiles();
-        this.saveProfiles();
-        this.storage.setProfileData(backup.profile.id, backup.data);
-        this.select(backup.profile.id);
-        return true;
+        this.writeProfiles();
+    }
+
+    getLegacyProfiles() {
+        return this.profiles.filter(profile => !profile.account);
+    }
+
+    clearCurrent() {
+        this.currentId = '';
+        this.storage.saveGlobal('current-profile', '');
+        this.storage.setProfile('');
+        this.storage.profilePrefix = '';
     }
 
     select(id) {
@@ -67,6 +76,11 @@ class ProfileService {
     }
 
     saveProfiles() {
+        this.writeProfiles();
+        this.storage.markChanged('__profile');
+    }
+
+    writeProfiles() {
         this.storage.saveGlobal('profiles', this.profiles);
     }
 

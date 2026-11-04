@@ -3,64 +3,118 @@ class GeoDistance extends BaseGame {
         super();
         this.achievementKey = 'geodistance';
         this.totalRounds = 5;
+        this.minDistance = 500;
     }
 
     start() {
         this.round = 0;
         this.score = 0;
         this.finished = false;
-        const shuffled = this.shuffleItems(this.getPlayableCountries());
-        this.targets = shuffled.slice(0, this.totalRounds);
-        this.showScreen(geoDistanceTemplate(this.totalRounds));
+        const playable = this.getPlayableCountries();
+        this.pool = playable.filter(country => country.capitalPosition && country.capital !== '');
+        this.showScreen(geoDistanceTemplate());
         this.worldMap.create('map', 'Welt');
         this.nextRound();
     }
 
     nextRound() {
-        if (this.target) {
-            this.worldMap.resetCountry(this.target.code);
-        }
-        this.worldMap.clearExtras();
+        this.resetMap();
         this.round++;
-        this.target = this.targets[this.round - 1];
+        this.createTask();
         this.answered = false;
-        document.getElementById('distance-prompt').innerHTML = this.target.name;
+        this.worldMap.colorCountry(this.startCountry.code, MAP_COLORS.start);
+        document.getElementById('distance-task').innerHTML = distanceTaskTemplate(this.startCountry, formatNumber(this.targetKm));
         document.getElementById('distance-info').innerHTML = distanceInfoTemplate(this.round, this.totalRounds, this.score);
+        document.getElementById('distance-form').classList.remove('hidden');
         this.setMessage('', '');
     }
 
-    handleMapPoint(lat, lng) {
+    createTask() {
+        this.startCountry = this.pickItem(this.pool);
+        const others = this.pool.filter(country => this.getKm(country) >= this.minDistance);
+        this.answerCountry = this.pickItem(others);
+        this.targetKm = Math.round(this.getKm(this.answerCountry) / 100) * 100;
+    }
+
+    getKm(country) {
+        const from = this.startCountry.capitalPosition;
+        return getDistanceKm(from.lat, from.lng, country.capitalPosition.lat, country.capitalPosition.lng);
+    }
+
+    resetMap() {
+        this.worldMap.clearExtras();
+        const codes = this.startCountry ? [this.startCountry.code, this.answerCountry.code, this.guessCode] : [];
+        for (let i = 0; i < codes.length; i++) {
+            if (codes[i]) {
+                this.worldMap.resetCountry(codes[i]);
+            }
+        }
+    }
+
+    submitGuess(event) {
+        event.preventDefault();
         if (this.answered || this.finished) {
             return;
         }
-        this.answered = true;
-        const nearest = this.shapes.getDistanceInfo(this.target.code, lat, lng);
-        const points = this.getPoints(nearest.km);
-        this.score += points;
-        this.showGuess(lat, lng, nearest);
-        this.rateGuess(points, nearest.km);
-        const isLast = this.round >= this.totalRounds;
-        document.getElementById('distance-info').innerHTML = distanceResultTemplate(this.round, this.totalRounds, this.score, isLast ? 'finish' : 'nextRound', isLast ? 'Ergebnis anzeigen' : 'Nächstes Land');
-    }
-
-    getPoints(km) {
-        return km === 0 ? 100 : Math.max(0, Math.round(100 - km / 25));
-    }
-
-    showGuess(lat, lng, nearest) {
-        this.worldMap.colorCountry(this.target.code, MAP_COLORS.target);
-        this.worldMap.addMarker(lat, lng, nearest.km === 0 ? MAP_COLORS.green : MAP_COLORS.red);
-        if (nearest.km > 0) {
-            this.worldMap.addLine([lat, lng], [nearest.lat, nearest.lng]);
+        const country = this.countries.findByName(this.readInput('distance-input'));
+        const errorText = this.getGuessError(country);
+        if (errorText !== '') {
+            this.setMessage(errorText, 'error');
+        } else {
+            this.evaluateGuess(country);
         }
     }
 
-    rateGuess(points, km) {
-        const text = km === 0 ? 'Volltreffer! Du hast ' + this.target.name + ' getroffen.' : formatNumber(km) + ' km daneben.';
-        this.setMessage(text + ' +' + points + ' Punkte', this.getRatingClass(points));
+    getGuessError(country) {
+        if (!country || !this.shapes.hasShape(country.code)) {
+            return 'Dieses Land kenne ich nicht.';
+        }
+        if (country.code === this.startCountry.code) {
+            return 'Das ist das Startland. Gesucht ist ein anderes Land.';
+        }
+        return country.capitalPosition ? '' : 'Für ' + country.name + ' ist keine Hauptstadt bekannt. Nimm ein anderes Land.';
+    }
+
+    evaluateGuess(country) {
+        this.answered = true;
+        this.guessCode = country.code;
+        const guessKm = this.getKm(country);
+        const points = this.getPoints(Math.abs(guessKm - this.targetKm));
+        this.score += points;
+        this.showOnMap(country);
+        this.rateGuess(country, guessKm, points);
+        document.getElementById('distance-form').classList.add('hidden');
+        const isLast = this.round >= this.totalRounds;
+        document.getElementById('distance-info').innerHTML = distanceResultTemplate(this.round, this.totalRounds, this.score, isLast ? 'finish' : 'nextRound', isLast ? 'Ergebnis anzeigen' : 'Nächste Runde');
+    }
+
+    getPoints(differenceKm) {
+        if (differenceKm <= 200) {
+            return 100;
+        }
+        return Math.max(0, Math.round(100 - (differenceKm - 200) / 15));
+    }
+
+    showOnMap(country) {
+        const start = this.startCountry.capitalPosition;
+        const guess = country.capitalPosition;
+        const answer = this.answerCountry.capitalPosition;
+        this.worldMap.colorCountry(this.answerCountry.code, MAP_COLORS.target);
+        this.worldMap.colorCountry(country.code, country.code === this.answerCountry.code ? MAP_COLORS.target : MAP_COLORS.yellow);
+        this.worldMap.addLine([start.lat, start.lng], [answer.lat, answer.lng]);
+        this.worldMap.addLine([start.lat, start.lng], [guess.lat, guess.lng]);
+        this.worldMap.addMarker(start.lat, start.lng, MAP_COLORS.start);
+        this.worldMap.addMarker(answer.lat, answer.lng, MAP_COLORS.target);
+        this.worldMap.addMarker(guess.lat, guess.lng, MAP_COLORS.yellow);
+    }
+
+    rateGuess(country, guessKm, points) {
+        const guessText = country.capital + ' (' + country.name + ') ist ca. ' + formatNumber(guessKm) + ' km von ' + this.startCountry.capital + ' entfernt.';
+        const answerText = ' Gedacht war ' + this.answerCountry.capital + ' (' + this.answerCountry.name + ', ' + formatNumber(this.getKm(this.answerCountry)) + ' km).';
+        this.setMessage(guessText + answerText + ' +' + points + ' Punkte', this.getRatingClass(points));
         this.playCorrectSoundIf(points >= 80);
         this.playWrongSoundIf(points < 20);
-        this.achievements.increase('distance-hits', km === 0 ? 1 : 0);
+        this.achievements.increase('distance-hits', points === 100 ? 1 : 0);
     }
 
     getRatingClass(points) {

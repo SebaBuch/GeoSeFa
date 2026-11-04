@@ -25,32 +25,6 @@ function levelToastTemplate(toastId, level, rewardText) {
     `;
 }
 
-function profileCreateTemplate(avatarOptionsHtml, cancelHtml) {
-    return `
-        <section class="panel profile-create">
-            <h1>Profil erstellen</h1>
-            <p>Dein Profil wird nur in diesem Browser gespeichert. Jedes Profil hat eigene Erfolge, XP und Rekorde.</p>
-            <form class="guess-form" onsubmit="createProfile(event)">
-                <input id="profile-name" maxlength="20" placeholder="Dein Name" autocomplete="off">
-                <button class="button" type="submit">Profil erstellen</button>
-            </form>
-            <div id="message" class="message"></div>
-            <h2 class="profile-section-title">Wähle deine Hautfarbe</h2>
-            <p>Frisur, Kleidung und mehr kannst du danach im Shop ändern.</p>
-            <div id="start-avatars" class="profile-options">${avatarOptionsHtml}</div>
-            ${cancelHtml}
-        </section>
-    `;
-}
-
-function profileCancelTemplate() {
-    return `
-        <div class="button-row">
-            <button class="button button-secondary" onclick="showProfile()">Abbrechen</button>
-        </div>
-    `;
-}
-
 function startAvatarTemplate(item, avatarHtml, selectedClass) {
     return `
         <button class="profile-option ${selectedClass}" onclick="selectStartAvatar('${item.id}')">
@@ -62,25 +36,26 @@ function startAvatarTemplate(item, avatarHtml, selectedClass) {
 
 function settingsTemplate(percent) {
     return `
-        <h2 class="profile-section-title">Einstellungen &amp; Sicherung</h2>
+        <h2 class="profile-section-title">Einstellungen</h2>
         <div class="settings-row">
             <label class="setting volume-setting">Lautstärke: <span id="volume-value">${percent} %</span>
                 <input type="range" min="0" max="100" value="${percent}" oninput="changeVolume(this.value)">
             </label>
             <button class="button button-secondary" onclick="testSound()">Ton testen</button>
         </div>
-        <div class="settings-row">
-            <button class="button" onclick="exportProfile()">Profil sichern</button>
-            <label class="button button-secondary">Profil laden
-                <input class="hidden" type="file" accept=".json,application/json" onchange="importProfile(this)">
-            </label>
-        </div>
-        <p class="settings-hint">„Profil sichern“ lädt eine Datei mit allem herunter (Coins, Erfolge, Rekorde, Avatar). Mit „Profil laden“ holst du es zurück, auch auf einem anderen Gerät.</p>
-        <div id="settings-message" class="message"></div>
     `;
 }
 
-function profilePageTemplate(cardHtml, sectionsHtml, profileListHtml, settingsHtml) {
+function accountTemplate(email) {
+    return `
+        <div class="account-row">
+            <span>Angemeldet als <b>${email}</b>. Dein Spielstand wird automatisch online gespeichert.</span>
+            <button class="button button-secondary" onclick="logout()">Abmelden</button>
+        </div>
+    `;
+}
+
+function profilePageTemplate(cardHtml, sectionsHtml, accountHtml, settingsHtml) {
     return `
         <section class="panel">
             <div class="title-row">
@@ -91,13 +66,14 @@ function profilePageTemplate(cardHtml, sectionsHtml, profileListHtml, settingsHt
             <div class="button-row">
                 <button class="button" onclick="showShop()">Avatar &amp; Shop</button>
                 <button class="button" onclick="showLeaderboard()">Meine Bestenliste</button>
+                <button class="button" onclick="showRanking()">Rangliste</button>
                 <button class="button" onclick="showCompare()">Profilvergleich</button>
                 <button class="button" onclick="showAchievements()">Erfolge</button>
             </div>
             ${sectionsHtml}
-            <h2 class="profile-section-title">Profile auf diesem Gerät</h2>
-            <div class="profile-list">${profileListHtml}</div>
             ${settingsHtml}
+            <h2 class="profile-section-title">Konto</h2>
+            ${accountHtml}
         </section>
     `;
 }
@@ -149,28 +125,6 @@ function themePreviewTemplate(theme) {
     return `<span class="theme-preview preview-${theme}"></span>`;
 }
 
-function profileListItemTemplate(profile, avatarHtml, level) {
-    return `
-        <button class="profile-list-item" onclick="switchProfile('${profile.id}')">
-            ${avatarHtml}
-            <span>${profile.name} · Level ${level}</span>
-        </button>
-    `;
-}
-
-function profileListCurrentTemplate(profile, avatarHtml, level) {
-    return `
-        <div class="profile-list-item current">
-            ${avatarHtml}
-            <span>${profile.name} · Level ${level} (aktiv)</span>
-        </div>
-    `;
-}
-
-function profileNewButtonTemplate() {
-    return `<button class="profile-list-item new" onclick="showProfileCreate()">+ Neues Profil</button>`;
-}
-
 function leaderboardTemplate(listsHtml) {
     return `
         <section class="panel">
@@ -208,47 +162,3 @@ function topEmptyTemplate() {
     return `<p class="top-empty">Noch keine Einträge.</p>`;
 }
 
-function compareTemplate(headHtml, rowsHtml, hintHtml) {
-    return `
-        <section class="panel">
-            <div class="title-row">
-                <h1>Profilvergleich</h1>
-                ${backButtonTemplate()}
-            </div>
-            ${hintHtml}
-            <div class="compare-table">
-                <div class="compare-row compare-head">
-                    <span class="compare-label"></span>
-                    ${headHtml}
-                </div>
-                ${rowsHtml}
-            </div>
-        </section>
-    `;
-}
-
-function compareHeadTemplate(profile, avatarHtml) {
-    return `
-        <span class="compare-cell compare-profile">
-            ${avatarHtml}
-            <b>${profile.name}</b>
-        </span>
-    `;
-}
-
-function compareRowTemplate(label, cellsHtml) {
-    return `
-        <div class="compare-row">
-            <span class="compare-label">${label}</span>
-            ${cellsHtml}
-        </div>
-    `;
-}
-
-function compareCellTemplate(value, className) {
-    return `<span class="compare-cell ${className}">${value}</span>`;
-}
-
-function compareHintTemplate() {
-    return `<p class="message">Auf diesem Gerät gibt es nur ein Profil. Lege über die Profilseite ein zweites an (oder lade die Sicherung deines Bruders), um zu vergleichen.</p>`;
-}

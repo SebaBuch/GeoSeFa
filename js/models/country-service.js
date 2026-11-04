@@ -11,7 +11,7 @@ class CountryService {
 
     async loadCountries(forceReload) {
         const cached = this.storage.loadGlobal('countries', null);
-        if (cached && !forceReload) {
+        if (this.isCacheUsable(cached) && !forceReload) {
             this.setCountries(cached);
             return true;
         }
@@ -22,6 +22,10 @@ class CountryService {
             this.setCountries(countries);
         }
         return rawList.length > 0;
+    }
+
+    isCacheUsable(cached) {
+        return cached !== null && cached.length > 0 && cached[0].capitalPosition !== undefined;
     }
 
     async fetchAllPages() {
@@ -74,6 +78,7 @@ class CountryService {
     normalizeCountry(raw) {
         const country = this.getNames(raw);
         country.capital = this.getCapital(raw);
+        country.capitalPosition = this.getCapitalPosition(raw);
         country.continent = this.getContinent(raw);
         country.landlocked = raw.landlocked === true;
         country.borders = raw.borders || [];
@@ -107,6 +112,15 @@ class CountryService {
         }
         const name = raw.capitals[0].name;
         return CAPITAL_TRANSLATIONS[name] || name;
+    }
+
+    getCapitalPosition(raw) {
+        const hasCapital = raw.capitals && raw.capitals.length > 0;
+        const coordinates = hasCapital ? raw.capitals[0].coordinates : null;
+        if (!coordinates || typeof coordinates.lat !== 'number') {
+            return null;
+        }
+        return { lat: coordinates.lat, lng: coordinates.lng };
     }
 
     getContinent(raw) {

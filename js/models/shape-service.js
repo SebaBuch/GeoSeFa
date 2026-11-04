@@ -250,45 +250,4 @@ class ShapeService {
         }
         return Math.abs(sum) / 2;
     }
-
-    getDistanceInfo(code, lat, lng) {
-        const polygons = this.getPolygons(this.features[code].geometry);
-        if (this.isInsidePolygons(polygons, lat, lng)) {
-            return { km: 0, lat: lat, lng: lng };
-        }
-        let nearest = { km: Infinity, lat: lat, lng: lng };
-        for (let i = 0; i < polygons.length; i++) {
-            nearest = this.findNearestPoint(polygons[i][0], lat, lng, nearest);
-        }
-        return nearest;
-    }
-
-    isInsidePolygons(polygons, lat, lng) {
-        for (let i = 0; i < polygons.length; i++) {
-            if (this.isInsideRing(polygons[i][0], lat, lng)) {
-                return true;
-            }
-        }
-        return false;
-    }
-
-    isInsideRing(ring, lat, lng) {
-        let inside = false;
-        for (let i = 0; i < ring.length; i++) {
-            const j = i === 0 ? ring.length - 1 : i - 1;
-            const crosses = (ring[i][1] > lat) !== (ring[j][1] > lat);
-            const crossLng = (ring[j][0] - ring[i][0]) * (lat - ring[i][1]) / (ring[j][1] - ring[i][1]) + ring[i][0];
-            inside = crosses && lng < crossLng ? !inside : inside;
-        }
-        return inside;
-    }
-
-    findNearestPoint(ring, lat, lng, nearest) {
-        let best = nearest;
-        for (let i = 0; i < ring.length; i++) {
-            const km = getDistanceKm(lat, lng, ring[i][1], ring[i][0]);
-            best = km < best.km ? { km: km, lat: ring[i][1], lng: ring[i][0] } : best;
-        }
-        return best;
-    }
 }

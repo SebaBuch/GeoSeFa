@@ -15,14 +15,7 @@ class WorldMap {
             onEachFeature: (feature, layer) => this.registerLayer(feature, layer)
         }).addTo(this.map);
         this.extras = L.layerGroup().addTo(this.map);
-        this.map.on('click', event => this.handlePointClick(event.latlng));
         this.showRegion(region);
-    }
-
-    handlePointClick(latlng) {
-        if (currentGame && currentGame.handleMapPoint) {
-            currentGame.handleMapPoint(latlng.lat, normalizeLongitude(latlng.lng));
-        }
     }
 
     addMarker(lat, lng, color) {

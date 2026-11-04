@@ -2,9 +2,11 @@ class StorageService {
     constructor() {
         this.prefix = 'geosefa-';
         this.profilePrefix = '';
+        this.profileId = '';
     }
 
     setProfile(profileId) {
+        this.profileId = profileId;
         this.profilePrefix = 'profile-' + profileId + '-';
     }
 
@@ -14,6 +16,41 @@ class StorageService {
 
     save(key, value) {
         this.saveGlobal(this.profilePrefix + key, value);
+        this.markChanged(key);
+    }
+
+    markChanged(key) {
+        if (this.profileId === '') {
+            return;
+        }
+        const changed = this.loadGlobal('changed-' + this.profileId, {});
+        changed[key] = true;
+        this.saveGlobal('changed-' + this.profileId, changed);
+        scheduleCloudSync();
+    }
+
+    markAllChanged() {
+        const keys = Object.keys(this.getProfileData(this.profileId));
+        for (let i = 0; i < keys.length; i++) {
+            this.markChanged(keys[i]);
+        }
+        this.markChanged('__profile');
+    }
+
+    getChangedKeys() {
+        return Object.keys(this.loadGlobal('changed-' + this.profileId, {}));
+    }
+
+    clearChangedKeys(keys) {
+        const changed = this.loadGlobal('changed-' + this.profileId, {});
+        for (let i = 0; i < keys.length; i++) {
+            delete changed[keys[i]];
+        }
+        this.saveGlobal('changed-' + this.profileId, changed);
+    }
+
+    getRawValue(key) {
+        return localStorage.getItem(this.prefix + this.profilePrefix + key);
     }
 
     loadGlobal(key, fallback) {

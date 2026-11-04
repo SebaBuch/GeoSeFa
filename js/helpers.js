@@ -85,7 +85,3 @@ function getDistanceKm(lat1, lng1, lat2, lng2) {
     const a = Math.pow(Math.sin(deltaLat / 2), 2) + Math.cos(toRadians(lat1)) * Math.cos(toRadians(lat2)) * Math.pow(Math.sin(deltaLng / 2), 2);
     return 6371 * 2 * Math.atan2(Math.sqrt(a), Math.sqrt(1 - a));
 }
-
-function normalizeLongitude(lng) {
-    return ((lng + 540) % 360) - 180;
-}

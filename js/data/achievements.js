@@ -91,8 +91,8 @@ const ACHIEVEMENTS = [
     { id: 'distance-first', category: 'GeoDistanz', tier: 'bronze', title: 'Erste Peilung', description: 'Beende dein erstes GeoDistanz.', counter: 'end-geodistance', goal: 1 },
     { id: 'distance-400', category: 'GeoDistanz', tier: 'silver', title: 'Ortskundig', description: 'Hol 400 Punkte in einem Spiel.' },
     { id: 'distance-450', category: 'GeoDistanz', tier: 'gold', title: 'Navigationsgerät', description: 'Hol 450 Punkte in einem Spiel.' },
-    { id: 'distance-500', category: 'GeoDistanz', tier: 'platinum', title: 'Satellit', description: 'Triff alle 5 Länder in einem Spiel.' },
-    { id: 'distance-hits-10', category: 'GeoDistanz', tier: 'gold', title: 'Treffsicher', description: 'Triff insgesamt 10-mal genau das gesuchte Land.', counter: 'distance-hits', goal: 10 },
+    { id: 'distance-500', category: 'GeoDistanz', tier: 'platinum', title: 'Satellit', description: 'Hol in allen 5 Runden 100 Punkte.' },
+    { id: 'distance-hits-10', category: 'GeoDistanz', tier: 'gold', title: 'Treffsicher', description: 'Hol insgesamt 10-mal 100 Punkte in einer Runde (höchstens 200 km daneben).', counter: 'distance-hits', goal: 10 },
 
     { id: 'blitz-40', category: 'Blitzrunde', tier: 'platinum', title: 'Überschall', description: 'Hol 40 Punkte in einer Blitzrunde.' },
     { id: 'blitz-perfect-20', category: 'Blitzrunde', tier: 'gold', title: 'Eiskalt', description: 'Hol mindestens 20 Punkte ohne einen Fehler.' },
@@ -124,7 +124,7 @@ const ACHIEVEMENTS = [
     { id: 'hidden-midas', category: 'Versteckt', tier: 'gold', hidden: true, title: 'König Midas', description: 'Trage Goldanzug, Goldhose, Goldschuhe und Krone gleichzeitig. Belohnung: Heiligenschein.' },
     { id: 'hidden-rich', category: 'Versteckt', tier: 'gold', hidden: true, title: 'Dagoberts Erbe', description: 'Besitze 3000 Coins auf einmal.' },
     { id: 'hidden-holiday', category: 'Versteckt', tier: 'silver', hidden: true, title: 'Feiertagsspieler', description: 'Beende ein Spiel an Heiligabend, Silvester oder Neujahr. Belohnung: Weihnachtsmütze.' },
-    { id: 'hidden-family', category: 'Versteckt', tier: 'bronze', hidden: true, title: 'Familienbande', description: 'Lege ein zweites Profil an.' },
+    { id: 'hidden-family', category: 'Versteckt', tier: 'bronze', hidden: true, title: 'Gesellige Runde', description: 'Öffne die Rangliste, wenn mindestens 4 Spieler dabei sind.' },
     { id: 'hidden-fashion', category: 'Versteckt', tier: 'silver', hidden: true, title: 'Modezar', description: 'Ändere dein Outfit 50-mal.', counter: 'outfit-changes', goal: 50 },
     { id: 'hidden-early', category: 'Versteckt', tier: 'silver', hidden: true, title: 'Frühaufsteher', description: 'Schließe die Tages-Challenge vor 7 Uhr morgens ab.' }
 ];

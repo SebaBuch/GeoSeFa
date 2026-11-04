@@ -29,6 +29,10 @@ function homeTemplate(dailyCardHtml, gameCardsHtml, quizCardsHtml, countryCount)
             <span class="intro-badge">Ohne Tageslimit</span>
             <h1>Willkommen bei GeoSeFa</h1>
             <p>Geografie-Spiele und Quiz für zwischendurch. Spiel, so oft du willst.</p>
+            <div class="intro-buttons">
+                <button class="intro-button" onclick="showRanking()">Rangliste</button>
+                <button class="intro-button" onclick="showCompare()">Profilvergleich</button>
+            </div>
         </section>
         ${dailyCardHtml}
         <h2 class="section-title">Spiele</h2>
