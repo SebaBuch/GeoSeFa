@@ -24,6 +24,7 @@ function avatarSvgTemplate(parts, viewBox) {
             ${parts.glasses}
             ${parts.accessory}
             ${parts.flag}
+            ${parts.pet}
             ${parts.hat}
         </svg>
     `;
@@ -59,7 +60,7 @@ function shopPageTemplate(previewHtml, coins, buyAreaHtml, tabsHtml, itemsHtml, 
                     <div class="shop-items">${itemsHtml}</div>
                 </div>
             </div>
-            <p class="shop-hint">Coins gibt es für jedes beendete Spiel (5), Erfolge (25 / 50 / 100 / 250), Tages-Aufgaben (bis 10 pro Aufgabe, +20 für alle drei) und jeden Level-Aufstieg (50).</p>
+            <p class="shop-hint">Coins gibt es für jedes beendete Spiel (5), Erfolge (25 / 50 / 100 / 250), Tages-Aufgaben, Wochenaufgaben, Duelle, den täglichen Login-Bonus und jeden Level-Aufstieg (50). Haare und viele Kleidungsstücke kannst du frei einfärben – Grundfarben sind gratis.</p>
         </section>
     `;
 }
@@ -91,6 +92,24 @@ function shopBuyTemplate(names, total, disabledText, hintText) {
 
 function shopSavedTemplate() {
     return `<p class="shop-buy-text">Alles angezogen, was du besitzt.</p>`;
+}
+
+function shopColorPickerTemplate(itemName, colorsHtml) {
+    return `
+        <div class="shop-colors">
+            <span class="shop-colors-title">Farbe für ${itemName}</span>
+            <div class="shop-color-list">${colorsHtml}</div>
+        </div>
+    `;
+}
+
+function shopColorTemplate(color, activeClass, labelText) {
+    return `
+        <button class="shop-color ${activeClass}" title="${color.name}" onclick="chooseShopColor('${color.id}')">
+            <span class="shop-color-swatch" style="background-color: ${color.hex}"></span>
+            <span class="shop-color-label">${labelText}</span>
+        </button>
+    `;
 }
 
 function shopFlagPickerTemplate(optionsHtml) {

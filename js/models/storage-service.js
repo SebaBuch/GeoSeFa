@@ -168,6 +168,18 @@ class StorageService {
         this.save('mistakes-' + category, mistakes);
     }
 
+    trackContinent(country, isCorrect) {
+        if (!country || !country.continent) {
+            return;
+        }
+        const stats = this.load('continent-stats', {});
+        const entry = stats[country.continent] || { right: 0, wrong: 0 };
+        entry.right += isCorrect ? 1 : 0;
+        entry.wrong += isCorrect ? 0 : 1;
+        stats[country.continent] = entry;
+        this.save('continent-stats', stats);
+    }
+
     getMistakeCodes(category) {
         return Object.keys(this.load('mistakes-' + category, {}));
     }

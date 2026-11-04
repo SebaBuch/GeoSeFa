@@ -433,3 +433,23 @@
         height: 90px;
     }
 }
+
+/* Legende */
+
+.frame-legend {
+    padding: 5px;
+    background: linear-gradient(135deg, #3c096c 0%, #ffd700 35%, #fff3b0 50%, #ffd700 65%, #3c096c 100%);
+    box-shadow: 0 0 18px rgba(255, 215, 0, 0.9);
+}
+
+.avatar-shop.frame-legend,
+.avatar-large.frame-legend {
+    padding: 7px;
+}
+
+.preview-legende,
+.color-legende .header,
+.color-legende .intro,
+.color-legende .profile-card {
+    background: linear-gradient(90deg, #240046 0%, #5a189a 45%, #b8860b 80%, #ffd700 100%);
+}

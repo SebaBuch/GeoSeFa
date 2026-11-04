@@ -1,4 +1,4 @@
-const ACHIEVEMENT_CATEGORIES = ['Allgemein', 'Meilensteine', 'GeoRoute', 'GeoSize', 'GeoDecide', 'Geodle', 'GeoConnections', 'GeoDistanz', 'Grenz-Kette', 'Blitzrunde', 'Quiz', 'Tages-Challenge', 'Duelle', 'Avatar & Shop', 'Versteckt'];
+const ACHIEVEMENT_CATEGORIES = ['Allgemein', 'Meilensteine', 'GeoRoute', 'GeoSize', 'GeoDecide', 'Geodle', 'GeoConnections', 'GeoDistanz', 'Grenz-Kette', 'Blitzrunde', 'Quiz', 'Tages-Challenge', 'Duelle', 'Avatar & Shop', 'Versteckt', 'Legende'];
 
 const ACHIEVEMENTS = [
     { id: 'first-game', category: 'Allgemein', tier: 'bronze', title: 'Erste Schritte', description: 'Beende dein erstes Spiel.', counter: 'games', goal: 1 },
@@ -11,6 +11,9 @@ const ACHIEVEMENTS = [
     { id: 'correct-500', category: 'Allgemein', tier: 'silver', title: 'Lexikon', description: 'Gib 500 richtige Antworten.', counter: 'correct', goal: 500 },
     { id: 'correct-1000', category: 'Allgemein', tier: 'gold', title: 'Wandelnder Atlas', description: 'Gib 1000 richtige Antworten.', counter: 'correct', goal: 1000 },
     { id: 'night-owl', category: 'Allgemein', tier: 'bronze', title: 'Nachteule', description: 'Beende ein Spiel zwischen 0 und 4 Uhr nachts.' },
+    { id: 'hints-10', category: 'Allgemein', tier: 'bronze', title: 'Spickzettel', description: 'Kaufe 10 Tipps.', counter: 'hints-used', goal: 10 },
+    { id: 'login-7', category: 'Allgemein', tier: 'silver', title: 'Treue Seele', description: 'Hol dir 7 Tage hintereinander den Login-Bonus.' },
+    { id: 'login-30', category: 'Allgemein', tier: 'gold', title: 'Unzertrennlich', description: 'Hol dir 30 Tage hintereinander den Login-Bonus.' },
 
     { id: 'route-first', category: 'GeoRoute', tier: 'bronze', title: 'Losgefahren', description: 'Schaffe deine erste Route.', counter: 'route-wins', goal: 1 },
     { id: 'route-5', category: 'GeoRoute', tier: 'bronze', title: 'Routinier', description: 'Schaffe 5 Routen.', counter: 'route-wins', goal: 5 },
@@ -136,7 +139,9 @@ const ACHIEVEMENTS = [
     { id: 'hidden-holiday', category: 'Versteckt', tier: 'silver', hidden: true, title: 'Feiertagsspieler', description: 'Beende ein Spiel an Heiligabend, Silvester oder Neujahr. Belohnung: Weihnachtsmütze.' },
     { id: 'hidden-family', category: 'Versteckt', tier: 'bronze', hidden: true, title: 'Gesellige Runde', description: 'Öffne die Rangliste, wenn mindestens 4 Spieler dabei sind.' },
     { id: 'hidden-fashion', category: 'Versteckt', tier: 'silver', hidden: true, title: 'Modezar', description: 'Ändere dein Outfit 50-mal.', counter: 'outfit-changes', goal: 50 },
-    { id: 'hidden-early', category: 'Versteckt', tier: 'silver', hidden: true, title: 'Frühaufsteher', description: 'Schließe die Tages-Challenge vor 7 Uhr morgens ab.' }
+    { id: 'hidden-early', category: 'Versteckt', tier: 'silver', hidden: true, title: 'Frühaufsteher', description: 'Schließe die Tages-Challenge vor 7 Uhr morgens ab.' },
+
+    { id: 'all-done', category: 'Legende', tier: 'platinum', title: 'Geo-Gott', description: 'Schalte alle anderen Erfolge frei. Belohnung: Lorbeerkranz, Legendenrobe, Ruhmeshalle, Phönix, Titel „Geo-Gott“, Rahmen und Farbthema „Legende“.' }
 ];
 
 const ACHIEVEMENT_GAME_KEYS = ['georoute', 'geosize', 'geodecide', 'geodle', 'geoconnections', 'geodistance', 'borderchain', 'blitz', 'quiz'];

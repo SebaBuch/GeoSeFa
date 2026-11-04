@@ -286,3 +286,63 @@
 .shop-item.seasonal.tried {
     border-color: #2a9d8f;
 }
+
+/* Farben */
+
+.shop-colors {
+    display: flex;
+    flex-direction: column;
+    gap: 8px;
+    margin-bottom: 14px;
+    padding: 12px 14px;
+    border-radius: 14px;
+    background-color: #f6f8fa;
+}
+
+.shop-colors-title {
+    font-weight: 800;
+}
+
+.shop-color-list {
+    display: flex;
+    flex-wrap: wrap;
+    gap: 6px;
+}
+
+.shop-color {
+    display: flex;
+    flex-direction: column;
+    align-items: center;
+    gap: 2px;
+    width: 44px;
+    padding: 4px 2px;
+    border: 2px solid transparent;
+    border-radius: 10px;
+    background: none;
+    font-family: inherit;
+    cursor: pointer;
+}
+
+.shop-color:hover {
+    border-color: #adb5bd;
+}
+
+.shop-color.active {
+    border-color: #2a9d8f;
+    background-color: #ffffff;
+}
+
+.shop-color-swatch {
+    width: 28px;
+    height: 28px;
+    border: 2px solid #ffffff;
+    border-radius: 50%;
+    box-shadow: 0 0 0 1px #adb5bd;
+}
+
+.shop-color-label {
+    min-height: 0.875rem;
+    font-size: 0.6875rem;
+    font-weight: 700;
+    color: #5c6b77;
+}

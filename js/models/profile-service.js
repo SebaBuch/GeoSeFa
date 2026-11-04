@@ -19,7 +19,35 @@ class ProfileService {
                 profile.coins = START_COINS;
             }
             profile.outfit = { ...DEFAULT_OUTFIT, ...profile.outfit };
+            this.migrateOutfit(profile);
         }
+    }
+
+    migrateOutfit(profile) {
+        const colors = { ...profile.outfit.colors };
+        for (let i = 0; i < COLOR_SLOTS.length; i++) {
+            const migration = ITEM_MIGRATION[profile.outfit[COLOR_SLOTS[i]]];
+            if (migration) {
+                profile.outfit[COLOR_SLOTS[i]] = migration.id;
+                colors[COLOR_SLOTS[i]] = migration.color;
+            }
+        }
+        profile.outfit.colors = colors;
+        profile.owned = this.migrateOwned(profile.owned || []);
+    }
+
+    migrateOwned(owned) {
+        const result = [];
+        for (let i = 0; i < owned.length; i++) {
+            const migration = ITEM_MIGRATION[owned[i]];
+            const ids = migration ? [migration.id, migration.color] : [owned[i]];
+            for (let j = 0; j < ids.length; j++) {
+                if (!result.includes(ids[j])) {
+                    result.push(ids[j]);
+                }
+            }
+        }
+        return result;
     }
 
     getCurrent() {
@@ -141,7 +169,7 @@ class ProfileService {
     }
 
     showLevelUp(level) {
-        const rewards = PROFILE_OPTIONS.filter(option => option.level === level);
+        const rewards = PROFILE_OPTIONS.filter(option => option.level === level && !option.achievement);
         let rewardText = COINS_PER_LEVEL + ' Coins ';
         for (let i = 0; i < rewards.length; i++) {
             rewardText += this.getTypeTitle(rewards[i].type) + ': ' + rewards[i].label + ' ';
@@ -156,6 +184,9 @@ class ProfileService {
     }
 
     isOptionUnlocked(option) {
+        if (option.achievement) {
+            return achievementService.isUnlocked(option.achievement);
+        }
         return option.level <= this.getLevelInfo(this.getCurrent().xp).level;
     }
 

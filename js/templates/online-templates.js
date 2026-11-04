@@ -126,7 +126,7 @@ function playerCardTemplate(player, avatarHtml, level, rankTitle, meClass) {
     `;
 }
 
-function playerProfileTemplate(player, avatarHtml, rankTitle, achievementCount, compareHtml, achievementsHtml, duelButtonHtml) {
+function playerProfileTemplate(player, avatarHtml, rankTitle, achievementCount, compareHtml, achievementsHtml, duelButtonHtml, favoritesHtml) {
     return `
         <section class="panel">
             <div class="title-row">
@@ -144,6 +144,7 @@ function playerProfileTemplate(player, avatarHtml, rankTitle, achievementCount, 
                     <span class="profile-level">Erfolge: ${achievementCount} / ${ACHIEVEMENTS.length}</span>
                 </div>
             </div>
+            ${favoritesHtml}
             <h2 class="profile-section-title">Rekorde</h2>
             <div class="compare-table">${compareHtml}</div>
             <h2 class="profile-section-title">Erfolge</h2>

@@ -35,7 +35,7 @@ function duelWaitingTemplate(matchId, opponentName, gameTitle, minutes) {
     `;
 }
 
-function duelPanelTemplate(gameTitle, me, opponent, opponentStatus, resultText) {
+function duelPanelTemplate(gameTitle, me, opponent, opponentStatus, resultText, rematchHtml) {
     return `
         <span class="duel-panel-title">Duell · ${gameTitle}</span>
         <div class="duel-scores">
@@ -44,11 +44,16 @@ function duelPanelTemplate(gameTitle, me, opponent, opponentStatus, resultText) 
             <span class="duel-score"><span>${opponent.name}</span><b>${opponent.score}</b><small>${opponentStatus}</small></span>
         </div>
         <span class="duel-result">${resultText}</span>
+        ${rematchHtml}
         <div class="duel-panel-buttons">
             <button class="link-button" onclick="showDuels()">Zu den Duellen</button>
             <button class="link-button" onclick="closeDuelPanel()">Ausblenden</button>
         </div>
     `;
+}
+
+function duelRematchTemplate(matchId) {
+    return `<button class="button" onclick="rematchDuel('${matchId}')">Revanche</button>`;
 }
 
 function duelsPageTemplate(sectionsHtml) {

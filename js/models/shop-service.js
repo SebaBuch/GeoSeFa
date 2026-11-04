@@ -8,8 +8,26 @@ class ShopService {
         if (id.startsWith('flag-') && id !== 'flag-none') {
             return this.getFlagItem(id.slice(5));
         }
-        const matches = SHOP_ITEMS.filter(item => item.id === id);
-        return matches[0];
+        if (id.startsWith('color-')) {
+            return SHOP_COLORS.filter(color => color.id === id)[0];
+        }
+        const realId = ITEM_MIGRATION[id] ? ITEM_MIGRATION[id].id : id;
+        return SHOP_ITEMS.filter(item => item.id === realId)[0];
+    }
+
+    getColorId(outfit, slot) {
+        const colors = outfit.colors || {};
+        if (colors[slot]) {
+            return colors[slot];
+        }
+        const migration = ITEM_MIGRATION[outfit[slot]];
+        return migration ? migration.color : '';
+    }
+
+    getSlotHex(outfit, slot, item) {
+        const colorId = this.getColorId(outfit, slot);
+        const color = colorId ? this.getItem(colorId) : undefined;
+        return color ? color.hex : item.defaultColor;
     }
 
     getOutfitItem(outfit, slot) {
@@ -71,6 +89,19 @@ class ShopService {
             const item = this.getOutfitItem(outfit, SHOP_SLOTS[i].key);
             if (!this.isOwned(item)) {
                 pending.push(item);
+            }
+        }
+        return [...pending, ...this.getPendingColors(outfit)];
+    }
+
+    getPendingColors(outfit) {
+        const pending = [];
+        for (let i = 0; i < COLOR_SLOTS.length; i++) {
+            const item = this.getOutfitItem(outfit, COLOR_SLOTS[i]);
+            const colorId = item.colorable ? this.getColorId(outfit, COLOR_SLOTS[i]) : '';
+            const color = colorId ? this.getItem(colorId) : undefined;
+            if (color && !this.isOwned(color) && !pending.includes(color)) {
+                pending.push(color);
             }
         }
         return pending;

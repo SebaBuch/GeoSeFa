@@ -10,6 +10,7 @@ let authService;
 let cloudService;
 let syncService;
 let duelService;
+let nameService;
 let toastCounter = 0;
 let countdownIntervalId = null;
 let shopService;
@@ -47,6 +48,7 @@ function createOnlineServices() {
     cloudService = new CloudService(authService);
     syncService = new SyncService(storageService, profileService, cloudService, authService);
     duelService = new DuelService(cloudService, authService, profileService);
+    nameService = new NameService(cloudService, authService);
 }
 
 function createServices() {
@@ -128,8 +130,34 @@ function showHome() {
     setTheme('home');
     updateHeader();
     showContent(homeTemplate(buildDailyCard() + buildWeeklyCard(), buildGameCards(), buildQuizCards(), countryService.countries.length));
+    startHomeExtras();
+}
+
+function startHomeExtras() {
     startDailyCountdown();
     loadChampions();
+    checkLoginBonus();
+}
+
+function checkLoginBonus() {
+    const today = getDateKey(new Date());
+    const bonus = storageService.load('login-bonus', { last: '', streak: 0 });
+    if (bonus.last === today) {
+        return;
+    }
+    const yesterday = getDateKey(new Date(Date.now() - 86400000));
+    const streak = bonus.last === yesterday ? bonus.streak + 1 : 1;
+    const coins = Math.min(LOGIN_BONUS_BASE + (streak - 1) * LOGIN_BONUS_STEP, LOGIN_BONUS_MAX);
+    storageService.save('login-bonus', { last: today, streak: streak });
+    showLoginBonus(streak, coins);
+}
+
+function showLoginBonus(streak, coins) {
+    profileService.addCoins(coins);
+    achievementService.unlockIf(streak >= 7, 'login-7');
+    achievementService.unlockIf(streak >= 30, 'login-30');
+    const toastId = createToastId();
+    showToast(toastId, loginBonusToastTemplate(toastId, streak, coins));
 }
 
 function startDailyCountdown() {

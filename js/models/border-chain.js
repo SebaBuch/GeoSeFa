@@ -13,7 +13,7 @@ class BorderChain extends BaseGame {
         this.locked = false;
         this.current = null;
         this.pool = this.getPlayableCountries().filter(country => this.getNeighbors(country).length >= 2);
-        this.showScreen(borderChainTemplate(this.seconds));
+        this.showScreen(borderChainTemplate(this.seconds, this.buildHintBar()));
         this.worldMap.create('map', 'Welt');
         this.worldMap.hideAll();
         this.timer = new Timer('chain-timer');
@@ -36,6 +36,7 @@ class BorderChain extends BaseGame {
         this.neighbors = this.getNeighbors(this.current);
         this.found = [];
         this.locked = false;
+        this.showHint('');
         this.showCurrent();
     }
 
@@ -44,6 +45,18 @@ class BorderChain extends BaseGame {
         this.worldMap.fitCountries([this.current.code]);
         this.setMessage('', '');
         this.updateInfo();
+    }
+
+    getHintText(key) {
+        if (key === 'chain-count') {
+            return this.current.name + ' hat ' + this.neighbors.length + ' Nachbarländer.';
+        }
+        const missing = this.neighbors.filter(code => !this.found.includes(code));
+        if (missing.length === 0) {
+            return '';
+        }
+        const name = this.countries.getCountry(missing[Math.floor(Math.random() * missing.length)]).name;
+        return 'Ein fehlender Nachbar beginnt mit „' + name.charAt(0) + '“.';
     }
 
     resetMap() {

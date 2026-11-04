@@ -74,6 +74,11 @@
         },
         "name": {
           ".validate": "newData.isString() && newData.val().length <= 60"
+        },
+        "favorites": {
+          "$achievementId": {
+            ".validate": "newData.isBoolean()"
+          }
         }
       }
     },
@@ -96,6 +101,13 @@
         "$matchId": {
           ".write": "auth != null"
         }
+      }
+    },
+    "names": {
+      ".read": true,
+      "$nameKey": {
+        ".write": "auth != null && (!data.exists() || data.val() === auth.uid)",
+        ".validate": "newData.isString() && newData.val() === auth.uid"
       }
     }
   }

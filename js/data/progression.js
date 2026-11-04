@@ -1,5 +1,13 @@
 const MAX_LEVEL = 30;
 
+const LOGIN_BONUS_BASE = 20;
+
+const LOGIN_BONUS_STEP = 10;
+
+const LOGIN_BONUS_MAX = 80;
+
+const FAVORITE_COUNT = 3;
+
 const XP_PER_COUNTER = { games: 10, correct: 2 };
 
 const XP_PER_TIER = { bronze: 50, silver: 100, gold: 200, platinum: 400 };
@@ -39,7 +47,10 @@ const PROFILE_OPTIONS = [
     { type: 'theme', value: 'gold', label: 'Gold', level: 25 },
     { type: 'title', value: 'Atlas-Meister', label: 'Atlas-Meister', level: 27 },
     { type: 'title', value: 'GeoSeFa-Legende', label: 'GeoSeFa-Legende', level: 29 },
-    { type: 'frame', value: 'rainbow', label: 'Regenbogen', level: 30 }
+    { type: 'frame', value: 'rainbow', label: 'Regenbogen', level: 30 },
+    { type: 'title', value: 'Geo-Gott', label: 'Geo-Gott', level: 1, achievement: 'all-done' },
+    { type: 'frame', value: 'legend', label: 'Legende', level: 1, achievement: 'all-done' },
+    { type: 'theme', value: 'legende', label: 'Legende', level: 1, achievement: 'all-done' }
 ];
 
 const TOP_LISTS = [

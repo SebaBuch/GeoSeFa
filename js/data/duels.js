@@ -1,5 +1,7 @@
 const DUEL_INVITE_MINUTES = 5;
 
+const DUEL_KEEP_DAYS = 30;
+
 const DUEL_WIN_COINS = 60;
 
 const DUEL_DRAW_COINS = 25;

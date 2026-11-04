@@ -6,26 +6,46 @@ function buildProfileAvatar(profile, frame, sizeClass) {
 }
 
 function buildAvatarSvg(outfit, isFullBody) {
-    const hair = shopService.getOutfitItem(outfit, 'hair');
-    const accessory = shopService.getOutfitItem(outfit, 'accessory');
+    return avatarSvgTemplate(buildAvatarParts(outfit), isFullBody ? '0 0 100 168' : '0 0 100 100');
+}
+
+function buildAvatarParts(outfit) {
     const parts = {
-        background: shopService.getOutfitItem(outfit, 'background').svg,
-        accessoryBack: accessory.svgBack || '',
-        hairBack: hair.svgBack || '',
+        background: getItemPart(outfit, 'background', 'svg'),
+        accessoryBack: getItemPart(outfit, 'accessory', 'svgBack'),
+        hairBack: getItemPart(outfit, 'hair', 'svgBack'),
         skin: shopService.getOutfitItem(outfit, 'skin').color,
-        hair: hair.svg,
-        accessory: accessory.svg,
         flag: buildFlagPin(shopService.getOutfitItem(outfit, 'flag'))
     };
-    return avatarSvgTemplate(addClothingParts(parts, outfit), isFullBody ? '0 0 100 168' : '0 0 100 100');
+    return addClothingParts(parts, outfit);
 }
 
 function addClothingParts(parts, outfit) {
-    const slots = ['top', 'pants', 'shoes', 'glasses', 'hat'];
+    const slots = ['hair', 'accessory', 'top', 'pants', 'shoes', 'glasses', 'hat', 'pet'];
     for (let i = 0; i < slots.length; i++) {
-        parts[slots[i]] = shopService.getOutfitItem(outfit, slots[i]).svg;
+        parts[slots[i]] = getItemPart(outfit, slots[i], 'svg');
     }
     return parts;
+}
+
+function getItemPart(outfit, slot, key) {
+    const item = shopService.getOutfitItem(outfit, slot);
+    const svg = item[key] || '';
+    return item.colorable ? paintSvg(svg, shopService.getSlotHex(outfit, slot, item)) : svg;
+}
+
+function paintSvg(svg, hex) {
+    const mainPainted = svg.replaceAll('{{c}}', hex);
+    return mainPainted.replaceAll('{{d}}', darkenColor(hex));
+}
+
+function darkenColor(hex) {
+    let result = '#';
+    for (let i = 1; i < 7; i += 2) {
+        const value = Math.round(parseInt(hex.slice(i, i + 2), 16) * 0.7);
+        result += value.toString(16).padStart(2, '0');
+    }
+    return result;
 }
 
 function buildFlagPin(flagItem) {
@@ -47,8 +67,43 @@ function showShop() {
 function renderShop() {
     const profile = profileService.getCurrent();
     const previewHtml = bodyTemplate(buildAvatarSvg(previewOutfit, true), 'body-large');
-    const flagPickerHtml = shopSlot === 'flag' ? shopFlagPickerTemplate(buildFlagOptions()) : '';
-    showContent(shopPageTemplate(previewHtml, profile.coins, buildBuyArea(), buildShopTabs(), buildShopItems(), flagPickerHtml));
+    showContent(shopPageTemplate(previewHtml, profile.coins, buildBuyArea(), buildShopTabs(), buildShopItems(), buildShopPicker()));
+}
+
+function buildShopPicker() {
+    if (shopSlot === 'flag') {
+        return shopFlagPickerTemplate(buildFlagOptions());
+    }
+    const item = shopService.getOutfitItem(previewOutfit, shopSlot);
+    if (!COLOR_SLOTS.includes(shopSlot) || !item.colorable) {
+        return '';
+    }
+    return shopColorPickerTemplate(item.name, buildColorOptions());
+}
+
+function buildColorOptions() {
+    const chosenHex = shopService.getSlotHex(previewOutfit, shopSlot, shopService.getOutfitItem(previewOutfit, shopSlot));
+    let html = '';
+    for (let i = 0; i < SHOP_COLORS.length; i++) {
+        const color = SHOP_COLORS[i];
+        const activeClass = color.hex === chosenHex ? 'active' : '';
+        html += shopColorTemplate(color, activeClass, getColorLabel(color));
+    }
+    return html;
+}
+
+function getColorLabel(color) {
+    if (shopService.isOwned(color)) {
+        return '';
+    }
+    return shopService.isLevelReached(color) ? color.price + ' C' : 'Lv ' + color.level;
+}
+
+function chooseShopColor(colorId) {
+    previewOutfit.colors = { ...previewOutfit.colors, [shopSlot]: colorId };
+    shopService.wearOwned(previewOutfit);
+    updateHeader();
+    renderShop();
 }
 
 function buildShopTabs() {
@@ -63,8 +118,7 @@ function buildShopItems() {
     const items = shopService.getItemsForSlot(shopSlot);
     let html = '';
     for (let i = 0; i < items.length; i++) {
-        const outfit = { ...previewOutfit };
-        outfit[shopSlot] = items[i].id;
+        const outfit = { ...previewOutfit, [shopSlot]: items[i].id };
         const previewHtml = buildShopPreview(outfit);
         html += shopItemTemplate(items[i], previewHtml, getItemStateText(items[i]), getItemStateClass(items[i]), getSeasonText(items[i]));
     }
@@ -73,6 +127,9 @@ function buildShopItems() {
 
 function buildShopPreview(outfit) {
     const portraitSlots = ['skin', 'hair', 'hat', 'glasses', 'flag'];
+    if (shopSlot === 'pet') {
+        return avatarTemplate(avatarSvgTemplate(buildAvatarParts(outfit), '58 118 48 48'), 'none', 'avatar-medium');
+    }
     if (portraitSlots.includes(shopSlot)) {
         return avatarTemplate(buildAvatarSvg(outfit, false), 'none', 'avatar-medium');
     }
@@ -87,7 +144,7 @@ function getItemStateText(item) {
         return item.price === 0 ? 'Gratis' : 'Im Besitz';
     }
     if (item.achievement) {
-        return 'Geheimer Erfolg';
+        return item.achievement === 'all-done' ? 'Alle Erfolge' : 'Geheimer Erfolg';
     }
     return shopService.isLevelReached(item) ? item.price + ' Coins' : 'ab Level ' + item.level;
 }

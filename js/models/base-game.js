@@ -118,10 +118,56 @@ class BaseGame {
 
     trackAnswer(category, code, isCorrect) {
         this.storage.trackMistake(category, code, !isCorrect);
+        this.storage.trackContinent(this.countries.getCountry(code), isCorrect);
     }
 
     getRecordText(isRecord) {
         return isRecord ? 'Neuer Rekord!' : '';
+    }
+
+    buildHintBar() {
+        const hints = HINTS.filter(hint => hint.game === this.achievementKey);
+        if (this.daily || this.duel || hints.length === 0) {
+            return '';
+        }
+        let html = '';
+        for (let i = 0; i < hints.length; i++) {
+            html += hintButtonTemplate(hints[i]);
+        }
+        return hintBarTemplate(html);
+    }
+
+    useHint(key) {
+        const hint = HINTS.filter(item => item.key === key)[0];
+        const text = hint && !this.finished && !this.locked ? this.getHintText(key) : '';
+        if (text === '') {
+            return;
+        }
+        this.showHint(this.payHint(hint.price) ? text : 'Dafür fehlen dir Coins (' + hint.price + ').');
+    }
+
+    payHint(price) {
+        const profile = this.profiles.getCurrent();
+        if (profile.coins < price) {
+            return false;
+        }
+        profile.coins -= price;
+        this.profiles.saveProfiles();
+        this.achievements.increase('coins-spent', price);
+        this.achievements.increase('hints-used', 1);
+        updateHeader();
+        return true;
+    }
+
+    showHint(text) {
+        const element = document.getElementById('hint-text');
+        if (element) {
+            element.innerHTML = text;
+        }
+    }
+
+    getHintText(key) {
+        return '';
     }
 
     reportDuelEnd() {

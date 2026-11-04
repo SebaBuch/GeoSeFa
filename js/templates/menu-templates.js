@@ -33,6 +33,7 @@ function homeTemplate(dailyCardHtml, gameCardsHtml, quizCardsHtml, countryCount)
                 <button class="intro-button" onclick="showRanking()">Rangliste</button>
                 <button class="intro-button" onclick="showPlayers()">Spieler</button>
                 <button class="intro-button" onclick="showDuels()">Duelle</button>
+                <button class="intro-button" onclick="showStats()">Statistik</button>
             </div>
         </section>
         <section id="champions" class="champions"><span class="champion">Lade Bestenliste ...</span></section>
@@ -252,14 +253,15 @@ function achievementToastTemplate(toastId, achievement) {
     `;
 }
 
-function achievementsPageTemplate(unlockedCount, total, categoriesHtml) {
+function achievementsPageTemplate(unlockedCount, total, favoritesHtml, categoriesHtml) {
     return `
         <section class="panel">
             <div class="title-row">
                 <h1>Erfolge</h1>
                 ${backButtonTemplate()}
             </div>
-            <p class="achievement-summary">Freigeschaltet: <b>${unlockedCount} / ${total}</b></p>
+            <p class="achievement-summary">Freigeschaltet: <b>${unlockedCount} / ${total}</b> · Mit dem Stern wählst du bis zu ${FAVORITE_COUNT} Lieblingserfolge für dein Profil.</p>
+            ${favoritesHtml}
             ${categoriesHtml}
         </section>
     `;
@@ -272,14 +274,26 @@ function achievementCategoryTemplate(title, unlockedCount, total, itemsHtml) {
     `;
 }
 
-function achievementItemTemplate(achievement, className, statusText) {
+function achievementItemTemplate(achievement, className, statusText, favoriteHtml) {
     return `
         <div class="achievement ${className}">
+            ${favoriteHtml}
             <span class="achievement-tier">${statusText}</span>
             <span class="achievement-title">${achievement.title}</span>
             <span class="achievement-text">${achievement.description}</span>
         </div>
     `;
+}
+
+function favoritesTemplate(itemsHtml) {
+    return `
+        <h2 class="achievement-category">Lieblingserfolge</h2>
+        <div class="achievement-list">${itemsHtml}</div>
+    `;
+}
+
+function favoriteButtonTemplate(achievementId, activeClass, symbol) {
+    return `<button class="favorite-button ${activeClass}" title="Lieblingserfolg" onclick="toggleFavorite('${achievementId}')">${symbol}</button>`;
 }
 
 function mistakeCountTemplate(count) {
@@ -309,6 +323,16 @@ function questRowTemplate(quest, progress, percent, doneClass) {
             <div class="quest-bar"><div class="quest-fill" style="width: ${percent}%"></div></div>
             <span class="quest-progress">${progress} / ${quest.goal}</span>
             <span class="quest-reward"><span class="coin-icon"></span>${quest.reward}</span>
+        </div>
+    `;
+}
+
+function loginBonusToastTemplate(toastId, streak, coins) {
+    return `
+        <div id="${toastId}" class="toast toast-quest">
+            <span class="toast-label">Login-Bonus</span>
+            <span class="toast-title">+${coins} Coins</span>
+            <span class="toast-text">Tag ${streak} in Folge – morgen gibt es mehr (bis ${LOGIN_BONUS_MAX}).</span>
         </div>
     `;
 }

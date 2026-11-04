@@ -167,7 +167,7 @@ function streakEndTemplate(streak, highscore, recordText) {
     `;
 }
 
-function geodleTemplate() {
+function geodleTemplate(hintBarHtml) {
     return `
         <section class="panel">
             ${gameHeaderTemplate('Geodle', 'Errate das gesuchte Land. Jedes Feld, das grün wird, gibt Punkte: im 1. Versuch 10, im 2. Versuch 9 usw. (mindestens 1). Wer das Land findet, bekommt einen Bonus: je früher, desto mehr (bis 50).')}
@@ -177,6 +177,7 @@ function geodleTemplate() {
             </form>
             <div id="suggestions" class="suggestions"></div>
             <div id="message" class="message"></div>
+            ${hintBarHtml}
             <div class="geodle-table">
                 <div class="geodle-row geodle-head">
                     <span>Land</span>
@@ -389,7 +390,7 @@ function distanceResultTemplate(round, totalRounds, score, action, label) {
     `;
 }
 
-function borderChainTemplate(seconds) {
+function borderChainTemplate(seconds, hintBarHtml) {
     return `
         <div class="map-layout">
         <section class="panel">
@@ -406,11 +407,26 @@ function borderChainTemplate(seconds) {
             </form>
             <div id="suggestions" class="suggestions"></div>
             <div id="message" class="message"></div>
+            ${hintBarHtml}
             <div id="chain-found" class="route-guesses"></div>
         </section>
         <div id="map" class="map"></div>
         </div>
     `;
+}
+
+function hintBarTemplate(buttonsHtml) {
+    return `
+        <div class="hint-bar">
+            <span class="hint-title">Tipp kaufen:</span>
+            ${buttonsHtml}
+            <span id="hint-text" class="hint-text"></span>
+        </div>
+    `;
+}
+
+function hintButtonTemplate(hint) {
+    return `<button class="hint-button" type="button" onclick="currentGame.useHint('${hint.key}')">${hint.label} · ${hint.price} Coins</button>`;
 }
 
 function chainProgressTemplate(foundCount, score) {

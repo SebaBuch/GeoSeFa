@@ -13,7 +13,7 @@ function buildPublicSummary() {
         values[COMPARE_ROWS[i].id] = getCompareValue(profile, COMPARE_ROWS[i]);
     }
     const summary = { name: profile.name, title: profile.title, frame: profile.frame, outfit: profile.outfit, values: values };
-    return { ...summary, ...getDailySummary(), achievements: storageService.load('achievements', {}), updatedAt: Date.now() };
+    return { ...summary, ...getDailySummary(), achievements: storageService.load('achievements', {}), favorites: getFavorites(), updatedAt: Date.now() };
 }
 
 function getDailySummary() {
@@ -252,7 +252,8 @@ function renderPlayerProfile(uid) {
     const achievements = player.achievements || {};
     const achievementsHtml = buildAchievementCategories(achievements, false);
     const duelHtml = player.uid === authService.getUid() ? '' : duelButtonTemplate(player.uid);
-    showContent(playerProfileTemplate(player, avatarHtml, getPlayerRank(player), Object.keys(achievements).length, buildPlayerCompare(player), achievementsHtml, duelHtml));
+    const favoritesHtml = buildFavoritesHtml(player.favorites || {}, achievements);
+    showContent(playerProfileTemplate(player, avatarHtml, getPlayerRank(player), Object.keys(achievements).length, buildPlayerCompare(player), achievementsHtml, duelHtml, favoritesHtml));
 }
 
 function buildPlayerCompare(player) {

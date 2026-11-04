@@ -14,7 +14,7 @@ class Geodle extends BaseGame {
         this.firstGreen = {};
         this.rowsHtml = '';
         this.finished = false;
-        this.showScreen(geodleTemplate());
+        this.showScreen(geodleTemplate(this.buildHintBar()));
         this.updateInfo();
     }
 
@@ -44,6 +44,13 @@ class Geodle extends BaseGame {
         } else {
             this.updateInfo();
         }
+    }
+
+    getHintText(key) {
+        if (key === 'geodle-letter') {
+            return 'Das Land beginnt mit „' + this.target.name.charAt(0) + '“.';
+        }
+        return this.target.capital ? 'Die Hauptstadt heißt ' + this.target.capital + '.' : 'Das Land hat keine Hauptstadt.';
     }
 
     showGuessRow(country) {

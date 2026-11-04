@@ -89,6 +89,7 @@ function profilePageTemplate(cardHtml, sectionsHtml, accountHtml, settingsHtml) 
                 <button class="button" onclick="showPlayers()">Spieler</button>
                 <button class="button" onclick="showDuels()">Duelle</button>
                 <button class="button" onclick="showAchievements()">Erfolge</button>
+                <button class="button" onclick="showStats()">Statistik</button>
             </div>
             ${sectionsHtml}
             ${settingsHtml}
@@ -131,12 +132,12 @@ function profileOptionTemplate(option, previewHtml, selectedClass) {
     `;
 }
 
-function profileOptionLockedTemplate(option, previewHtml) {
+function profileOptionLockedTemplate(option, previewHtml, lockText) {
     return `
         <div class="profile-option locked">
             ${previewHtml}
             <span class="profile-option-label">${option.label}</span>
-            <span class="profile-option-lock">ab Level ${option.level}</span>
+            <span class="profile-option-lock">${lockText}</span>
         </div>
     `;
 }

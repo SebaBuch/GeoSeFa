@@ -13,7 +13,42 @@ function showAchievements() {
     stopCurrentGame();
     setTheme('home');
     const unlockedCount = achievementService.getUnlockedCount();
-    showContent(achievementsPageTemplate(unlockedCount, ACHIEVEMENTS.length, buildAchievementCategories(achievementService.unlocked, true)));
+    const favoritesHtml = buildFavoritesHtml(getFavorites(), achievementService.unlocked);
+    showContent(achievementsPageTemplate(unlockedCount, ACHIEVEMENTS.length, favoritesHtml, buildAchievementCategories(achievementService.unlocked, true)));
+}
+
+function getFavorites() {
+    return storageService.load('favorite-achievements', {});
+}
+
+function toggleFavorite(id) {
+    const favorites = getFavorites();
+    if (favorites[id]) {
+        delete favorites[id];
+    } else if (Object.keys(favorites).length < FAVORITE_COUNT && achievementService.isUnlocked(id)) {
+        favorites[id] = true;
+    }
+    storageService.save('favorite-achievements', favorites);
+    const scrollPosition = window.scrollY;
+    showAchievements();
+    window.scrollTo(0, scrollPosition);
+}
+
+function buildFavoritesHtml(favorites, unlockedMap) {
+    const shown = ACHIEVEMENTS.filter(achievement => favorites[achievement.id] && unlockedMap[achievement.id] !== undefined);
+    let html = '';
+    for (let i = 0; i < shown.length; i++) {
+        html += achievementItemTemplate(shown[i], 'unlocked achievement-' + shown[i].tier, 'Lieblingserfolg', '');
+    }
+    return html === '' ? '' : favoritesTemplate(html);
+}
+
+function buildFavoriteButton(achievement, isUnlocked, isOwn) {
+    if (!isOwn || !isUnlocked) {
+        return '';
+    }
+    const isFavorite = getFavorites()[achievement.id] === true;
+    return favoriteButtonTemplate(achievement.id, isFavorite ? 'active' : '', isFavorite ? '★' : '☆');
 }
 
 function buildAchievementCategories(unlockedMap, isOwn) {
@@ -34,7 +69,7 @@ function buildAchievementItems(items, unlockedMap, isOwn) {
         const className = isUnlocked ? 'unlocked achievement-' + items[i].tier : 'locked';
         const lockedText = isOwn ? getProgressText(items[i]) : (items[i].hidden ? 'Versteckt' : 'Gesperrt');
         const statusText = isUnlocked ? 'Seit ' + formatDateGerman(unlockedMap[items[i].id]) : lockedText;
-        html += achievementItemTemplate(getShownAchievement(items[i], isUnlocked), className, statusText);
+        html += achievementItemTemplate(getShownAchievement(items[i], isUnlocked), className, statusText, buildFavoriteButton(items[i], isUnlocked, isOwn));
     }
     return html;
 }
@@ -49,6 +84,9 @@ function getShownAchievement(achievement, isUnlocked) {
 function getProgressText(achievement) {
     if (achievement.hidden) {
         return 'Versteckt';
+    }
+    if (achievement.id === 'all-done') {
+        return 'Fortschritt: ' + achievementService.getUnlockedCount() + ' / ' + (ACHIEVEMENTS.length - 1);
     }
     if (!achievement.counter) {
         return 'Gesperrt';

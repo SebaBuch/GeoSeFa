@@ -26,6 +26,12 @@ class AchievementService {
         this.profiles.addXp(XP_PER_TIER[matches[0].tier]);
         this.profiles.addCoins(COINS_PER_TIER[matches[0].tier]);
         updateHeader();
+        this.unlockIf(id !== 'all-done' && this.hasAllOthers(), 'all-done');
+    }
+
+    hasAllOthers() {
+        const others = ACHIEVEMENTS.filter(achievement => achievement.id !== 'all-done' && !this.isUnlocked(achievement.id));
+        return others.length === 0;
     }
 
     unlockIf(condition, id) {

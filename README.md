@@ -28,9 +28,11 @@ Dazu acht **Quiz-Modi** (Länder auf der Karte, Eintippen, Umrisse, Flaggen, Hau
 ### Fortschritt
 - **Tages-Challenge** mit drei Aufgaben, für alle Spieler gleich (deterministischer Zufall über einen Seed), Serie, Kalender und Countdown.
 - **Wochenaufgaben** mit Coins als Belohnung.
-- **113 Erfolge** in Bronze, Silber, Gold und Platin – darunter versteckte Erfolge.
+- **117 Erfolge** in Bronze, Silber, Gold und Platin – darunter versteckte Erfolge. Wer alle schafft, bekommt ein exklusives Legenden-Set.
+- **Statistik-Seite** mit Trefferquote pro Kontinent und den häufigsten Fehlern, **Lieblingserfolge** im Profil und ein **täglicher Login-Bonus**.
 - **Level, XP und Ränge** (nach bester Tages-Serie).
-- **Avatar-Shop** mit über 140 Teilen (Haare, Kleidung, Hüte, Brillen, Accessoires, Hintergründe, Flaggen), Special- und Saison-Items. Die Figur ist komplett als SVG gezeichnet.
+- **Avatar-Shop** mit über 220 Teilen (Haare, Kleidung, Hüte, Brillen, Accessoires, Begleiter, Hintergründe, Flaggen), Special- und Saison-Items. Haare und Kleidung sind frei färbbar (33 Farben). Die Figur ist komplett als SVG gezeichnet.
+- **Tipps** gegen Coins in Geodle und Grenz-Kette.
 
 ![Shop](img/readme/shop.jpg)
 ![Erfolge](img/readme/erfolge.jpg)
@@ -39,7 +41,8 @@ Dazu acht **Quiz-Modi** (Länder auf der Karte, Eintippen, Umrisse, Flaggen, Hau
 - **Konto** mit E-Mail und Passwort, Spielstand wird automatisch online gespeichert und auf allen Geräten geladen.
 - **Rangliste** (Top 3 pro Kategorie, Tages- und Monatswertung, Tagessieger) mit automatischer Aktualisierung.
 - **Spielerprofile** mit Rekord-Vergleich und Erfolgsliste.
-- **Duelle**: live gegeneinander mit Live-Punktestand oder als Herausforderung, die der andere später spielt. Beide bekommen exakt dieselben Fragen.
+- **Duelle**: live gegeneinander mit Live-Punktestand oder als Herausforderung, die der andere später spielt. Beide bekommen exakt dieselben Fragen. Mit Revanche-Knopf; alte Duelle werden nach 30 Tagen gelöscht.
+- **Eindeutige Spielernamen** über ein Namensregister in der Datenbank.
 
 ![Rangliste](img/readme/rangliste.jpg)
 

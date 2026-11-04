@@ -5,7 +5,8 @@ class CloudService {
 
     async buildUrl(path) {
         const token = await this.auth.getToken();
-        return FIREBASE_DB_URL + '/' + path + '.json?auth=' + token;
+        const authText = token === '' ? '' : '?auth=' + token;
+        return FIREBASE_DB_URL + '/' + path + '.json' + authText;
     }
 
     async get(path) {

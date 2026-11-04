@@ -19,6 +19,7 @@ function selectStartAvatar(skinId) {
 function changeProfileData() {
     achievementService = new AchievementService(storageService, profileService);
     startInviteWatcher();
+    nameService.claim(profileService.getCurrent().name);
     lastQuizSettings = null;
     showHome();
 }
@@ -30,7 +31,8 @@ function showProfile() {
     stopCurrentGame();
     setTheme('home');
     const accountHtml = accountTemplate(authService.session.email);
-    showContent(profilePageTemplate(buildProfileCard(), buildOptionSections(), accountHtml, settingsTemplate(soundService.settings.percent)));
+    const cardHtml = buildProfileCard() + buildFavoritesHtml(getFavorites(), achievementService.unlocked);
+    showContent(profilePageTemplate(cardHtml, buildOptionSections(), accountHtml, settingsTemplate(soundService.settings.percent)));
 }
 
 function buildProfileCard() {
@@ -71,9 +73,13 @@ function buildOptionButtons(options) {
         const preview = buildOptionPreview(options[i], profile);
         const selectedClass = profile[options[i].type] === options[i].value ? 'selected' : '';
         const isUnlocked = profileService.isOptionUnlocked(options[i]);
-        html += isUnlocked ? profileOptionTemplate(options[i], preview, selectedClass) : profileOptionLockedTemplate(options[i], preview);
+        html += isUnlocked ? profileOptionTemplate(options[i], preview, selectedClass) : profileOptionLockedTemplate(options[i], preview, getOptionLockText(options[i]));
     }
     return html;
+}
+
+function getOptionLockText(option) {
+    return option.achievement ? 'Alle Erfolge' : 'ab Level ' + option.level;
 }
 
 function buildOptionPreview(option, profile) {

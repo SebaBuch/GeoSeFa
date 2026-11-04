@@ -51,7 +51,7 @@ async function finishLogin() {
     showContent(loadingTemplate('Lade deinen Spielstand ...'));
     const state = await syncService.startSession();
     if (state === 'empty') {
-        const name = escapeHtml(authService.session.email.split('@')[0]);
+        const name = await nameService.findFreeName(escapeHtml(authService.session.email.split('@')[0]));
         profileService.createAccountProfile(authService.getUid(), name, 'skin-1', '');
     }
     if (!profileService.hasProfile()) {
@@ -67,7 +67,7 @@ async function submitRegister(event) {
         return setFormMessage('register-message', 'Bitte gib einen Namen ein.', 'red');
     }
     isLoginBusy = true;
-    const result = await authService.signUp(readValue('register-email'), readValue('register-password'));
+    const result = await registerAccount(name);
     isLoginBusy = false;
     if (result.error) {
         return setFormMessage('register-message', result.error, 'red');
@@ -75,10 +75,18 @@ async function submitRegister(event) {
     await finishRegister(result.uid, name);
 }
 
+async function registerAccount(name) {
+    if (!await nameService.isFree(name)) {
+        return { error: 'Der Name „' + name + '“ ist schon vergeben.' };
+    }
+    return await authService.signUp(readValue('register-email'), readValue('register-password'));
+}
+
 async function finishRegister(uid, name) {
     const legacyId = readValue('register-legacy');
     showContent(loadingTemplate('Speichere deinen Spielstand ...'));
     profileService.createAccountProfile(uid, name, selectedStartAvatar, legacyId);
+    await nameService.claim(name);
     await syncService.upload();
     changeProfileData();
 }
@@ -135,6 +143,7 @@ async function deleteAccountData(password) {
     if (login.error) {
         return login.error;
     }
+    await nameService.release(profileService.getCurrent().name);
     if (!await syncService.deleteCloudData(uid)) {
         return 'Die Daten konnten nicht gelöscht werden. Bist du online?';
     }

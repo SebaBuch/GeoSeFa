@@ -28,8 +28,22 @@ function buildDuelGameOptions() {
 }
 
 async function createDuel() {
-    const gameKey = readValue('duel-game');
-    const mode = readValue('duel-mode');
+    await startNewDuel(readValue('duel-game'), readValue('duel-mode'));
+}
+
+async function rematchDuel(id) {
+    const match = await duelService.getMatch(id);
+    if (!match) {
+        return showDuels();
+    }
+    const uid = duelService.getOpponentUid(match);
+    duelOpponent = { uid: uid, name: match.players[uid].name };
+    closeDuelPanel();
+    stopCurrentGame();
+    await startNewDuel(match.game, match.mode);
+}
+
+async function startNewDuel(gameKey, mode) {
     showContent(loadingTemplate('Erstelle Duell ...'));
     const match = await duelService.createMatch(duelOpponent, gameKey, mode);
     if (!match) {
@@ -110,7 +124,8 @@ function renderDuelPanel(match, outcome) {
     const config = getDuelGame(match.game);
     const opponentStatus = opponent.finished ? 'fertig' : 'spielt noch';
     const panel = document.getElementById('duel-panel');
-    panel.innerHTML = duelPanelTemplate(config.title, me, opponent, opponentStatus, getOutcomeText(outcome, me, opponent));
+    const rematchHtml = outcome ? duelRematchTemplate(match.id) : '';
+    panel.innerHTML = duelPanelTemplate(config.title, me, opponent, opponentStatus, getOutcomeText(outcome, me, opponent), rematchHtml);
     panel.classList.remove('hidden');
 }
 
@@ -203,7 +218,8 @@ function buildDuelItem(match, group) {
     if (group === 'toPlay') {
         return duelItemTemplate(title, modeText, duelPlayActionTemplate(match.id));
     }
-    return duelItemTemplate(title, getDuelStateText(match, opponent), '');
+    const actionsHtml = duelService.getOutcome(match) ? duelRematchTemplate(match.id) : '';
+    return duelItemTemplate(title, getDuelStateText(match, opponent), actionsHtml);
 }
 
 function getDuelStateText(match, opponent) {

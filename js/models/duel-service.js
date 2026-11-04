@@ -47,8 +47,22 @@ class DuelService {
         for (let i = 0; i < ids.length; i++) {
             entries.push({ ...result.data[ids[i]], id: ids[i] });
         }
-        const sorted = this.sortNewestFirst(entries);
+        const fresh = await this.removeOldEntries(entries);
+        const sorted = this.sortNewestFirst(fresh);
         return sorted.slice(0, 20);
+    }
+
+    async removeOldEntries(entries) {
+        const fresh = [];
+        for (let i = 0; i < entries.length; i++) {
+            if (Date.now() - entries[i].createdAt > DUEL_KEEP_DAYS * 86400000) {
+                await this.cloud.remove('matches/' + entries[i].id);
+                await this.cloud.remove('inbox/' + this.auth.getUid() + '/' + entries[i].id);
+            } else {
+                fresh.push(entries[i]);
+            }
+        }
+        return fresh;
     }
 
     sortNewestFirst(entries) {
