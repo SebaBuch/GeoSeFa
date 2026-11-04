@@ -170,7 +170,7 @@ function streakEndTemplate(streak, highscore, recordText) {
 function geodleTemplate() {
     return `
         <section class="panel">
-            ${gameHeaderTemplate('Geodle', 'Errate das gesuchte Land. Jeder Versuch zeigt dir, wie nah du dran bist.')}
+            ${gameHeaderTemplate('Geodle', 'Errate das gesuchte Land. Jedes Feld, das grün wird, gibt Punkte: im 1. Versuch 10, im 2. Versuch 9 usw. (mindestens 1). Wer das Land findet, bekommt einen Bonus: je früher, desto mehr (bis 50).')}
             <form class="guess-form" onsubmit="currentGame.submitGuess(event)">
                 <input id="geodle-input" oninput="currentGame.showSuggestions(this)" placeholder="Land eingeben ..." autocomplete="off">
                 <button class="button" type="submit">Raten</button>
@@ -206,15 +206,19 @@ function geodleRowTemplate(row) {
     `;
 }
 
-function geodleInfoTemplate(guessesLeft) {
-    return `<span>Versuche übrig: <b>${guessesLeft}</b></span>`;
+function geodleInfoTemplate(guessesLeft, points) {
+    return `
+        <span>Versuche übrig: <b>${guessesLeft}</b></span>
+        <span>Punkte bisher: <b>${points}</b></span>
+    `;
 }
 
-function geodleEndTemplate(text, target) {
+function geodleEndTemplate(text, target, points) {
     return `
         <div class="end-box">
             <p><b>${text}</b></p>
             <p class="geodle-solution"><img src="${target.flag}" alt="">${target.name}</p>
+            <p class="big-number">${points} / 100 Punkte</p>
             <div class="button-row">
                 <button class="button" onclick="startGame('geodle')">Neues Spiel</button>
                 <button class="button button-secondary" onclick="showHome()">Startseite</button>

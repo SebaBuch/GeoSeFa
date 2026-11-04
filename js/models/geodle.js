@@ -1,3 +1,5 @@
+const GEODLE_FIELDS = ['continent', 'landlocked', 'neighbor', 'population', 'area'];
+
 class Geodle extends BaseGame {
     constructor() {
         super();
@@ -9,6 +11,7 @@ class Geodle extends BaseGame {
         const pool = this.getPlayableCountries().filter(country => country.population > 0);
         this.target = this.pickItem(pool);
         this.guesses = [];
+        this.firstGreen = {};
         this.rowsHtml = '';
         this.finished = false;
         this.showScreen(geodleTemplate());
@@ -33,15 +36,30 @@ class Geodle extends BaseGame {
     addGuess(country) {
         this.guesses.push(country.code);
         this.achievements.unlockIf(this.guesses.length === 1 && country.code === 'DEU', 'hidden-patriot');
-        this.rowsHtml += geodleRowTemplate(this.compare(country));
-        document.getElementById('geodle-rows').innerHTML = this.rowsHtml;
-        this.setMessage('', '');
+        this.showGuessRow(country);
         if (country.code === this.target.code) {
             this.finish(true);
         } else if (this.guesses.length >= this.maxGuesses) {
             this.finish(false);
         } else {
             this.updateInfo();
+        }
+    }
+
+    showGuessRow(country) {
+        const result = this.compare(country);
+        this.recordGreens(result);
+        this.rowsHtml += geodleRowTemplate(result);
+        document.getElementById('geodle-rows').innerHTML = this.rowsHtml;
+        this.setMessage('', '');
+    }
+
+    recordGreens(result) {
+        for (let i = 0; i < GEODLE_FIELDS.length; i++) {
+            const field = GEODLE_FIELDS[i];
+            if (result[field].className === 'cell-correct' && this.firstGreen[field] === undefined) {
+                this.firstGreen[field] = this.guesses.length - 1;
+            }
         }
     }
 
@@ -79,7 +97,7 @@ class Geodle extends BaseGame {
 
     updateInfo() {
         const guessesLeft = this.maxGuesses - this.guesses.length;
-        document.getElementById('geodle-info').innerHTML = geodleInfoTemplate(guessesLeft);
+        document.getElementById('geodle-info').innerHTML = geodleInfoTemplate(guessesLeft, this.getFieldPoints());
     }
 
     finish(won) {
@@ -89,12 +107,12 @@ class Geodle extends BaseGame {
             this.finishGeodleDaily(won);
             return;
         }
-        this.storage.saveGameResult('geodle', won, 0);
+        this.storage.saveGameResult('geodle', won, this.getGeodleScore(won));
         this.achievements.unlockIf(this.storage.getGameStats('geodle').streak >= 10, 'geodle-streak-10');
         this.storage.saveTopScore('geodle', this.getGeodleScore(won), this.target.name);
         this.playEndSound(won, !won);
         const text = won ? 'Richtig! Gesucht war:' : 'Leider nicht geschafft. Gesucht war:';
-        document.getElementById('geodle-info').innerHTML = geodleEndTemplate(text, this.target);
+        document.getElementById('geodle-info').innerHTML = geodleEndTemplate(text, this.target, this.getGeodleScore(won));
     }
 
     checkGeodleAchievements(won) {
@@ -112,7 +130,17 @@ class Geodle extends BaseGame {
     }
 
     getGeodleScore(won) {
-        return won ? (this.maxGuesses - this.guesses.length + 1) * 10 : 0;
+        const winBonus = won ? (this.maxGuesses - this.guesses.length + 1) * 5 : 0;
+        return this.getFieldPoints() + winBonus;
+    }
+
+    getFieldPoints() {
+        let points = 0;
+        for (let i = 0; i < GEODLE_FIELDS.length; i++) {
+            const index = this.firstGreen[GEODLE_FIELDS[i]];
+            points += index === undefined ? 0 : Math.max(1, 10 - index);
+        }
+        return points;
     }
 
     finishGeodleDaily(won) {
