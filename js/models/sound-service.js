@@ -1,23 +1,56 @@
 class SoundService {
-    constructor() {
-        this.sounds = {
+    constructor(storage) {
+        this.storage = storage;
+        this.settings = storage.loadGlobal('sound-settings', { percent: 33, muted: false });
+        this.sounds = this.createSounds();
+        this.volume = this.getVolume();
+        this.winSeconds = 2;
+        this.stopTimeoutId = null;
+        this.fadeIntervalId = null;
+    }
+
+    createSounds() {
+        return {
             win: new Audio('sounds/hsv-torhymne.mp3'),
             wrong: new Audio('sounds/laughing.mp3'),
             low: new Audio('sounds/what-meme.mp3'),
             correct: new Audio('sounds/goat.mp3'),
             decideCorrect: new Audio('sounds/bing.mp3')
         };
-        this.volume = 0.1;
-        this.winSeconds = 2;
-        this.stopTimeoutId = null;
-        this.fadeIntervalId = null;
+    }
+
+    getVolume() {
+        return this.settings.percent / 100 * 0.3;
+    }
+
+    setPercent(percent) {
+        this.settings.percent = percent;
+        this.volume = this.getVolume();
+        this.saveSettings();
+    }
+
+    toggleMute() {
+        this.settings.muted = !this.settings.muted;
+        this.stop();
+        this.saveSettings();
+    }
+
+    saveSettings() {
+        this.storage.saveGlobal('sound-settings', this.settings);
     }
 
     async play(name) {
         this.stop();
+        if (this.settings.muted) {
+            return false;
+        }
         const sound = this.sounds[name];
         sound.currentTime = 0;
         sound.volume = this.volume;
+        return await this.tryPlay(sound);
+    }
+
+    async tryPlay(sound) {
         try {
             await sound.play();
             return true;

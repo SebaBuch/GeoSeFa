@@ -9,6 +9,8 @@ const QUIZ_MODES = {
     'capital-match': { category: 'capitals', title: 'Hauptstädte zuordnen', requirement: 'capital', usesAmount: true }
 };
 
+const TRAINING_REGION = 'Meine Fehler';
+
 class QuizBase extends BaseGame {
     start(settings) {
         this.achievementKey = 'quiz';
@@ -24,9 +26,20 @@ class QuizBase extends BaseGame {
     }
 
     getPool() {
-        const regionCountries = this.countries.getByRegion(this.settings.region);
+        const isTraining = this.settings.region === TRAINING_REGION;
+        const regionCountries = isTraining ? this.getMistakeCountries() : this.countries.getByRegion(this.settings.region);
         const pool = regionCountries.filter(country => this.meetsRequirement(country));
         return pool;
+    }
+
+    getMistakeCountries() {
+        const codes = this.storage.getMistakeCodes(this.mode.category);
+        const countries = codes.map(code => this.countries.getCountry(code));
+        return countries.filter(country => country !== undefined);
+    }
+
+    trackQuizAnswer(code, isCorrect) {
+        this.trackAnswer(this.mode.category, code, isCorrect);
     }
 
     meetsRequirement(country) {
@@ -44,7 +57,8 @@ class QuizBase extends BaseGame {
     }
 
     createQuestions() {
-        const amount = this.mode.usesAmount ? this.settings.amount : 100;
+        const usesAmount = this.mode.usesAmount && this.settings.region !== TRAINING_REGION;
+        const amount = usesAmount ? this.settings.amount : 100;
         const count = Math.max(1, Math.round(this.pool.length * amount / 100));
         return shuffle(this.pool).slice(0, count);
     }

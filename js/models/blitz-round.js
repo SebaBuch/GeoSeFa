@@ -1,7 +1,7 @@
 const BLITZ_CATEGORIES = {
-    flags: { title: 'Flaggen', question: 'Welches Land hat diese Flagge?' },
-    capitals: { title: 'Hauptstädte', question: 'Zu welchem Land gehört diese Hauptstadt?' },
-    outlines: { title: 'Umrisse', question: 'Welches Land ist das?' }
+    flags: { title: 'Flaggen', question: 'Welches Land hat diese Flagge?', mistakeCategory: 'flags' },
+    capitals: { title: 'Hauptstädte', question: 'Zu welchem Land gehört diese Hauptstadt?', mistakeCategory: 'capitals' },
+    outlines: { title: 'Umrisse', question: 'Welches Land ist das?', mistakeCategory: 'countries' }
 };
 
 class BlitzRound extends BaseGame {
@@ -98,6 +98,7 @@ class BlitzRound extends BaseGame {
 
     markAnswer(code) {
         document.getElementById('option-' + this.question.code).classList.add('correct');
+        this.trackAnswer(BLITZ_CATEGORIES[this.category].mistakeCategory, this.question.code, code === this.question.code);
         if (code === this.question.code) {
             this.score++;
             this.playCorrectSoundIf(true);

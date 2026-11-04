@@ -74,3 +74,18 @@ function escapeHtml(text) {
     result = result.replaceAll('>', '&gt;');
     return result.replaceAll('"', '&quot;');
 }
+
+function toRadians(degrees) {
+    return degrees * Math.PI / 180;
+}
+
+function getDistanceKm(lat1, lng1, lat2, lng2) {
+    const deltaLat = toRadians(lat2 - lat1);
+    const deltaLng = toRadians(lng2 - lng1);
+    const a = Math.pow(Math.sin(deltaLat / 2), 2) + Math.cos(toRadians(lat1)) * Math.cos(toRadians(lat2)) * Math.pow(Math.sin(deltaLng / 2), 2);
+    return 6371 * 2 * Math.atan2(Math.sqrt(a), Math.sqrt(1 - a));
+}
+
+function normalizeLongitude(lng) {
+    return ((lng + 540) % 360) - 180;
+}

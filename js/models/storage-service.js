@@ -34,6 +34,33 @@ class StorageService {
         }
     }
 
+    loadForProfile(profileId, key, fallback) {
+        return this.loadGlobal('profile-' + profileId + '-' + key, fallback);
+    }
+
+    getProfileData(profileId) {
+        const prefix = this.prefix + 'profile-' + profileId + '-';
+        const keys = Object.keys(localStorage);
+        const data = {};
+        for (let i = 0; i < keys.length; i++) {
+            if (keys[i].startsWith(prefix)) {
+                data[keys[i].slice(prefix.length)] = localStorage.getItem(keys[i]);
+            }
+        }
+        return data;
+    }
+
+    setProfileData(profileId, data) {
+        const oldKeys = Object.keys(this.getProfileData(profileId));
+        for (let i = 0; i < oldKeys.length; i++) {
+            localStorage.removeItem(this.prefix + 'profile-' + profileId + '-' + oldKeys[i]);
+        }
+        const keys = Object.keys(data);
+        for (let i = 0; i < keys.length; i++) {
+            localStorage.setItem(this.prefix + 'profile-' + profileId + '-' + keys[i], data[keys[i]]);
+        }
+    }
+
     migrateOldData(profileId) {
         const keys = Object.keys(localStorage);
         for (let i = 0; i < keys.length; i++) {
@@ -89,6 +116,23 @@ class StorageService {
         }
         this.save('quiz-' + quizKey, best);
         return isRecord;
+    }
+
+    trackMistake(category, code, isWrong) {
+        const mistakes = this.load('mistakes-' + category, {});
+        if (isWrong) {
+            mistakes[code] = (mistakes[code] || 0) + 1;
+        } else if (mistakes[code]) {
+            mistakes[code]--;
+        }
+        if (mistakes[code] === 0) {
+            delete mistakes[code];
+        }
+        this.save('mistakes-' + category, mistakes);
+    }
+
+    getMistakeCodes(category) {
+        return Object.keys(this.load('mistakes-' + category, {}));
     }
 
     getTopScores(listKey) {

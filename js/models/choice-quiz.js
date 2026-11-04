@@ -47,6 +47,7 @@ class ChoiceQuiz extends QuizBase {
 
     markOptions(code, correctCode) {
         this.playCorrectSoundIf(code === correctCode);
+        this.trackQuizAnswer(correctCode, code === correctCode);
         document.getElementById('option-' + correctCode).classList.add('correct');
         if (code !== correctCode) {
             this.playWrongSoundIf(true);

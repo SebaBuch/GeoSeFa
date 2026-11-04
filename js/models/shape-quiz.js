@@ -32,6 +32,7 @@ class ShapeQuiz extends QuizBase {
 
     handleCorrect(question) {
         this.playCorrectSoundIf(true);
+        this.trackQuizAnswer(question.code, this.attempts === 0);
         const result = this.attempts === 0 ? 'green' : 'yellow';
         this.score += POINTS[result];
         this.setMessage('Richtig: ' + question.name, result);
@@ -45,6 +46,7 @@ class ShapeQuiz extends QuizBase {
             this.setMessage('Falsch, du hast noch einen Versuch.', 'yellow');
             return;
         }
+        this.trackQuizAnswer(question.code, false);
         this.setMessage('Leider falsch. Richtig war ' + question.name + '.', 'red');
         this.goToNext();
     }

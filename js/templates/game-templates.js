@@ -343,3 +343,32 @@ function blitzEndTemplate(categoryTitle, score, highscore, recordText, category)
         </section>
     `;
 }
+
+function geoDistanceTemplate(totalRounds) {
+    return `
+        <div class="map-layout">
+        <section class="panel">
+            ${gameHeaderTemplate('GeoDistanz', 'Klicke auf der Karte dorthin, wo das Land liegt. Je näher du dran bist, desto mehr Punkte. Ein Treffer im Land gibt 100 Punkte.')}
+            <p class="quiz-task">Wo liegt: <b id="distance-prompt"></b></p>
+            <div id="message" class="message"></div>
+            <div id="distance-info" class="distance-info"></div>
+        </section>
+        <div id="map" class="map"></div>
+        </div>
+    `;
+}
+
+function distanceInfoTemplate(round, totalRounds, score) {
+    return `
+        <span class="info-pill">Land ${round} / ${totalRounds}</span>
+        <span class="info-pill">Punkte: ${score}</span>
+    `;
+}
+
+function distanceResultTemplate(round, totalRounds, score, action, label) {
+    return `
+        <span class="info-pill">Land ${round} / ${totalRounds}</span>
+        <span class="info-pill">Punkte: ${score}</span>
+        <button class="button" onclick="currentGame.${action}()">${label}</button>
+    `;
+}

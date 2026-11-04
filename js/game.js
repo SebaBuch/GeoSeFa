@@ -5,11 +5,9 @@ let worldMap;
 let soundService;
 let achievementService;
 let profileService;
+let questService;
 let toastCounter = 0;
-let selectedStartAvatar = 'skin-1';
 let shopService;
-let previewOutfit = null;
-let shopSlot = 'hair';
 let currentGame = null;
 let lastQuizSettings = null;
 
@@ -19,6 +17,7 @@ const GAMES = [
     { key: 'geodecide', title: 'GeoDecide', description: 'Mehr oder weniger? Halte deine Serie so lange wie möglich.', statsType: 'streak' },
     { key: 'geodle', title: 'Geodle', description: 'Finde das gesuchte Land mit Hilfe von Hinweisen.', statsType: 'win' },
     { key: 'geoconnections', title: 'GeoConnections', description: 'Finde die 4 Gruppen, die zum selben Land gehören.', statsType: 'win' },
+    { key: 'geodistance', title: 'GeoDistanz', description: 'Klicke auf der Karte, wo ein Land liegt. Punkte nach Entfernung.', statsType: 'score' },
     { key: 'blitz', title: 'Blitzrunde', description: '60 Sekunden: so viele Flaggen, Hauptstädte oder Umrisse wie möglich.', statsType: 'blitz' }
 ];
 
@@ -35,7 +34,9 @@ async function init() {
     shapeService = new ShapeService(countryService);
     worldMap = new WorldMap(shapeService);
     shopService = new ShopService(profileService, countryService);
-    soundService = new SoundService();
+    questService = new QuestService(storageService, profileService);
+    soundService = new SoundService(storageService);
+    updateSoundButton();
     achievementService = new AchievementService(storageService, profileService);
     await loadData(false);
 }
@@ -86,7 +87,7 @@ function showHome() {
     stopCurrentGame();
     setTheme('home');
     updateHeader();
-    showContent(homeTemplate(buildDailyCard(), buildGameCards(), buildQuizCards(), countryService.countries.length));
+    showContent(homeTemplate(buildDailyCard() + buildWeeklyCard(), buildGameCards(), buildQuizCards(), countryService.countries.length));
 }
 
 function setTheme(name) {
@@ -98,6 +99,25 @@ function setTheme(name) {
 function updateHeader() {
     updateAchievementButton();
     updateProfileButton();
+    updateSoundButton();
+}
+
+function updateSoundButton() {
+    document.getElementById('sound-button').innerHTML = soundService.settings.muted ? 'Ton: aus' : 'Ton: an';
+}
+
+function toggleSound() {
+    soundService.toggleMute();
+    updateSoundButton();
+}
+
+function changeVolume(percent) {
+    soundService.setPercent(Number(percent));
+    document.getElementById('volume-value').innerHTML = percent + ' %';
+}
+
+function testSound() {
+    soundService.playCorrectSound();
 }
 
 function updateProfileButton() {
@@ -110,38 +130,6 @@ function updateProfileButton() {
     button.classList.remove('hidden');
     const level = profileService.getLevelInfo(profile.xp).level;
     button.innerHTML = profileChipTemplate(buildProfileAvatar(profile, profile.frame, 'avatar-small'), profile.name, level, profile.coins);
-}
-
-function buildProfileAvatar(profile, frame, sizeClass) {
-    return avatarTemplate(buildAvatarSvg(profile.outfit, false), frame, sizeClass);
-}
-
-function buildAvatarSvg(outfit, isFullBody) {
-    const hair = shopService.getOutfitItem(outfit, 'hair');
-    const accessory = shopService.getOutfitItem(outfit, 'accessory');
-    const parts = {
-        background: shopService.getOutfitItem(outfit, 'background').svg,
-        accessoryBack: accessory.svgBack || '',
-        hairBack: hair.svgBack || '',
-        skin: shopService.getOutfitItem(outfit, 'skin').color,
-        hair: hair.svg,
-        accessory: accessory.svg,
-        flag: buildFlagPin(shopService.getOutfitItem(outfit, 'flag'))
-    };
-    return avatarSvgTemplate(addClothingParts(parts, outfit), isFullBody ? '0 0 100 168' : '0 0 100 100');
-}
-
-function addClothingParts(parts, outfit) {
-    const slots = ['top', 'pants', 'shoes', 'glasses', 'hat'];
-    for (let i = 0; i < slots.length; i++) {
-        parts[slots[i]] = shopService.getOutfitItem(outfit, slots[i]).svg;
-    }
-    return parts;
-}
-
-function buildFlagPin(flagItem) {
-    const country = flagItem.code ? countryService.getCountry(flagItem.code) : null;
-    return country && country.flag ? flagPinTemplate(country.flag) : '';
 }
 
 function createToastId() {
@@ -161,160 +149,6 @@ function removeToast(toastId) {
     }
 }
 
-function showProfileCreate() {
-    stopCurrentGame();
-    setTheme('home');
-    updateHeader();
-    selectedStartAvatar = 'skin-1';
-    const cancelHtml = profileService.hasProfile() ? profileCancelTemplate() : '';
-    showContent(profileCreateTemplate(buildStartAvatarOptions(), cancelHtml));
-}
-
-function buildStartAvatarOptions() {
-    const skins = SHOP_ITEMS.filter(item => item.slot === 'skin' && item.price === 0);
-    let html = '';
-    for (let i = 0; i < skins.length; i++) {
-        const selectedClass = skins[i].id === selectedStartAvatar ? 'selected' : '';
-        const outfit = { ...DEFAULT_OUTFIT, skin: skins[i].id };
-        html += startAvatarTemplate(skins[i], bodyTemplate(buildAvatarSvg(outfit, true), 'body-small'), selectedClass);
-    }
-    return html;
-}
-
-function selectStartAvatar(skinId) {
-    selectedStartAvatar = skinId;
-    document.getElementById('start-avatars').innerHTML = buildStartAvatarOptions();
-}
-
-function createProfile(event) {
-    event.preventDefault();
-    const name = escapeHtml(document.getElementById('profile-name').value.trim());
-    if (name === '') {
-        document.getElementById('message').innerHTML = 'Bitte gib einen Namen ein.';
-        return;
-    }
-    profileService.createProfile(name, selectedStartAvatar);
-    changeProfileData();
-    achievementService.unlockIf(profileService.profiles.length >= 2, 'hidden-family');
-}
-
-function switchProfile(profileId) {
-    profileService.select(profileId);
-    changeProfileData();
-}
-
-function changeProfileData() {
-    achievementService = new AchievementService(storageService, profileService);
-    lastQuizSettings = null;
-    showHome();
-}
-
-function showProfile() {
-    if (!profileService.hasProfile()) {
-        return;
-    }
-    stopCurrentGame();
-    setTheme('home');
-    showContent(profilePageTemplate(buildProfileCard(), buildOptionSections(), buildProfileList()));
-}
-
-function buildProfileCard() {
-    const profile = profileService.getCurrent();
-    const info = profileService.getLevelInfo(profile.xp);
-    const isMax = info.level >= MAX_LEVEL;
-    const percent = isMax ? 100 : Math.round(info.current / info.needed * 100);
-    const xpText = isMax ? 'Maximales Level erreicht · ' + profile.xp + ' XP' : info.current + ' / ' + info.needed + ' XP bis Level ' + (info.level + 1);
-    const bestStreak = profileService.getBestStreak();
-    const rankIndex = profileService.getRankIndex(bestStreak);
-    const avatarHtml = bodyTemplate(buildAvatarSvg(profile.outfit, true), 'body-profile');
-    return profileCardTemplate(profile, avatarHtml, RANKS[rankIndex].title, getRankText(rankIndex, bestStreak), info.level, percent, xpText);
-}
-
-function getRankText(rankIndex, bestStreak) {
-    const bestText = 'Beste Tages-Serie: ' + formatDays(bestStreak);
-    if (rankIndex === RANKS.length - 1) {
-        return bestText + ' · Höchster Rang erreicht';
-    }
-    const nextRank = RANKS[rankIndex + 1];
-    return bestText + ' · Nächster Rang: ' + nextRank.title + ' ab ' + formatDays(nextRank.days);
-}
-
-function buildOptionSections() {
-    let html = '';
-    for (let i = 0; i < PROFILE_OPTION_TYPES.length; i++) {
-        const type = PROFILE_OPTION_TYPES[i];
-        const options = PROFILE_OPTIONS.filter(option => option.type === type.key);
-        html += profileSectionTemplate(type.title, buildOptionButtons(options));
-    }
-    return html;
-}
-
-function buildOptionButtons(options) {
-    const profile = profileService.getCurrent();
-    let html = '';
-    for (let i = 0; i < options.length; i++) {
-        const preview = buildOptionPreview(options[i], profile);
-        const selectedClass = profile[options[i].type] === options[i].value ? 'selected' : '';
-        const isUnlocked = profileService.isOptionUnlocked(options[i]);
-        html += isUnlocked ? profileOptionTemplate(options[i], preview, selectedClass) : profileOptionLockedTemplate(options[i], preview);
-    }
-    return html;
-}
-
-function buildOptionPreview(option, profile) {
-    if (option.type === 'frame') {
-        return buildProfileAvatar(profile, option.value, 'avatar-medium');
-    }
-    return option.type === 'theme' ? themePreviewTemplate(option.value) : '';
-}
-
-function chooseProfileOption(type, value) {
-    profileService.chooseOption(type, value);
-    updateHeader();
-    showProfile();
-}
-
-function buildProfileList() {
-    let html = '';
-    for (let i = 0; i < profileService.profiles.length; i++) {
-        const profile = profileService.profiles[i];
-        const avatarHtml = buildProfileAvatar(profile, profile.frame, 'avatar-small');
-        const level = profileService.getLevelInfo(profile.xp).level;
-        const isCurrent = profile.id === profileService.currentId;
-        html += isCurrent ? profileListCurrentTemplate(profile, avatarHtml, level) : profileListItemTemplate(profile, avatarHtml, level);
-    }
-    return html + profileNewButtonTemplate();
-}
-
-function showLeaderboard() {
-    if (!profileService.hasProfile()) {
-        return;
-    }
-    stopCurrentGame();
-    setTheme('home');
-    showContent(leaderboardTemplate(buildTopLists()));
-}
-
-function buildTopLists() {
-    let html = '';
-    for (let i = 0; i < TOP_LISTS.length; i++) {
-        const entries = storageService.getTopScores(TOP_LISTS[i].key);
-        html += topListTemplate(TOP_LISTS[i].title, buildTopRows(entries, TOP_LISTS[i].unit));
-    }
-    return html;
-}
-
-function buildTopRows(entries, unit) {
-    if (entries.length === 0) {
-        return topEmptyTemplate();
-    }
-    let html = '';
-    for (let i = 0; i < entries.length; i++) {
-        html += topRowTemplate(i + 1, entries[i].score + ' ' + unit, entries[i].detail, formatDateGerman(entries[i].date));
-    }
-    return html;
-}
-
 function showDaily() {
     stopCurrentGame();
     setTheme('daily');
@@ -328,68 +162,27 @@ function buildDailyCard() {
     return dailyCardTemplate(daily.countDone(results), daily.getTotal(results), formatDays(daily.updateBestStreak()));
 }
 
+function buildWeeklyCard() {
+    const quests = questService.getQuests();
+    const state = questService.getState();
+    let html = '';
+    for (let i = 0; i < quests.length; i++) {
+        const progress = Math.min(state.progress[quests[i].id] || 0, quests[i].goal);
+        const percent = Math.round(progress / quests[i].goal * 100);
+        const doneClass = state.done.includes(quests[i].id) ? 'done' : '';
+        html += questRowTemplate(quests[i], progress, percent, doneClass);
+    }
+    return weeklyCardTemplate(html, formatDays(questService.getDaysLeft()), getWeeklyBonusText(state));
+}
+
+function getWeeklyBonusText(state) {
+    return state.bonus ? 'Bonus abgeholt' : 'Alle geschafft: +' + WEEKLY_BONUS_COINS + ' Coins';
+}
+
 function showImpressum() {
     stopCurrentGame();
     setTheme('home');
     showContent(impressumTemplate());
-}
-
-function updateAchievementButton() {
-    const button = document.getElementById('achievement-button');
-    if (button) {
-        button.classList.toggle('hidden', !profileService.hasProfile());
-        button.innerHTML = 'Erfolge ' + achievementService.getUnlockedCount() + ' / ' + ACHIEVEMENTS.length;
-    }
-}
-
-function showAchievements() {
-    if (!profileService.hasProfile()) {
-        return;
-    }
-    stopCurrentGame();
-    setTheme('home');
-    const unlockedCount = achievementService.getUnlockedCount();
-    showContent(achievementsPageTemplate(unlockedCount, ACHIEVEMENTS.length, buildAchievementCategories()));
-}
-
-function buildAchievementCategories() {
-    let html = '';
-    for (let i = 0; i < ACHIEVEMENT_CATEGORIES.length; i++) {
-        const category = ACHIEVEMENT_CATEGORIES[i];
-        const items = ACHIEVEMENTS.filter(achievement => achievement.category === category);
-        const unlocked = items.filter(achievement => achievementService.isUnlocked(achievement.id));
-        html += achievementCategoryTemplate(category, unlocked.length, items.length, buildAchievementItems(items));
-    }
-    return html;
-}
-
-function buildAchievementItems(items) {
-    let html = '';
-    for (let i = 0; i < items.length; i++) {
-        const isUnlocked = achievementService.isUnlocked(items[i].id);
-        const className = isUnlocked ? 'unlocked achievement-' + items[i].tier : 'locked';
-        const statusText = isUnlocked ? 'Seit ' + formatDateGerman(achievementService.unlocked[items[i].id]) : getProgressText(items[i]);
-        html += achievementItemTemplate(getShownAchievement(items[i], isUnlocked), className, statusText);
-    }
-    return html;
-}
-
-function getShownAchievement(achievement, isUnlocked) {
-    if (achievement.hidden && !isUnlocked) {
-        return { title: '???', description: 'Versteckter Erfolg. Spiel weiter, um ihn zu finden.' };
-    }
-    return achievement;
-}
-
-function getProgressText(achievement) {
-    if (achievement.hidden) {
-        return 'Versteckt';
-    }
-    if (!achievement.counter) {
-        return 'Gesperrt';
-    }
-    const current = Math.min(achievementService.getCounter(achievement.counter), achievement.goal);
-    return 'Fortschritt: ' + current + ' / ' + achievement.goal;
 }
 
 function buildGameCards() {
@@ -443,10 +236,17 @@ function createGame(key) {
         return new GeoSize();
     } else if (key === 'geodecide') {
         return new GeoDecide();
-    } else if (key === 'geodle') {
+    }
+    return createOtherGame(key);
+}
+
+function createOtherGame(key) {
+    if (key === 'geodle') {
         return new Geodle();
     } else if (key === 'blitz') {
         return new BlitzRound();
+    } else if (key === 'geodistance') {
+        return new GeoDistance();
     }
     return new GeoConnections();
 }
@@ -487,7 +287,7 @@ function buildRegionOptions() {
     for (let i = 0; i < REGIONS.length; i++) {
         html += selectOptionTemplate(REGIONS[i], REGIONS[i]);
     }
-    return html;
+    return html + selectOptionTemplate(TRAINING_REGION, 'Meine Fehler (Training)');
 }
 
 function readQuizSettings() {
@@ -505,11 +305,20 @@ function updateQuizBest() {
     document.getElementById('setting-amount').disabled = !usesAmount;
     settings.amount = usesAmount ? settings.amount : 100;
     const best = storageService.getQuizBest(settings.mode + '-' + settings.region + '-' + settings.amount);
-    document.getElementById('quiz-best').innerHTML = quizBestTemplate(best.played, best.bestPercent, formatTime(best.bestTime));
+    const trainingHtml = settings.region === TRAINING_REGION ? mistakeCountTemplate(getMistakeCount(settings.mode)) : '';
+    document.getElementById('quiz-best').innerHTML = quizBestTemplate(best.played, best.bestPercent, formatTime(best.bestTime)) + trainingHtml;
+}
+
+function getMistakeCount(mode) {
+    return storageService.getMistakeCodes(QUIZ_MODES[mode].category).length;
 }
 
 function startQuiz() {
     const settings = readQuizSettings();
+    if (settings.region === TRAINING_REGION && getMistakeCount(settings.mode) === 0) {
+        document.getElementById('quiz-best').innerHTML = mistakeEmptyTemplate();
+        return;
+    }
     settings.amount = QUIZ_MODES[settings.mode].usesAmount ? settings.amount : 100;
     lastQuizSettings = settings;
     restartQuiz();
@@ -537,141 +346,4 @@ function createQuiz(mode) {
 
 function backToQuizSetup() {
     showQuizSetup(QUIZ_MODES[lastQuizSettings.mode].category);
-}
-
-function showShop() {
-    if (!profileService.hasProfile()) {
-        return;
-    }
-    stopCurrentGame();
-    setTheme('home');
-    previewOutfit = { ...profileService.getCurrent().outfit };
-    shopSlot = 'hair';
-    renderShop();
-}
-
-function renderShop() {
-    const profile = profileService.getCurrent();
-    const previewHtml = bodyTemplate(buildAvatarSvg(previewOutfit, true), 'body-large');
-    const flagPickerHtml = shopSlot === 'flag' ? shopFlagPickerTemplate(buildFlagOptions()) : '';
-    showContent(shopPageTemplate(previewHtml, profile.coins, buildBuyArea(), buildShopTabs(), buildShopItems(), flagPickerHtml));
-}
-
-function buildShopTabs() {
-    let html = '';
-    for (let i = 0; i < SHOP_SLOTS.length; i++) {
-        html += shopTabTemplate(SHOP_SLOTS[i], SHOP_SLOTS[i].key === shopSlot ? 'active' : '');
-    }
-    return html;
-}
-
-function buildShopItems() {
-    const items = shopService.getItemsForSlot(shopSlot);
-    let html = '';
-    for (let i = 0; i < items.length; i++) {
-        const outfit = { ...previewOutfit };
-        outfit[shopSlot] = items[i].id;
-        const previewHtml = buildShopPreview(outfit);
-        html += shopItemTemplate(items[i], previewHtml, getItemStateText(items[i]), getItemStateClass(items[i]));
-    }
-    return html;
-}
-
-function buildShopPreview(outfit) {
-    const portraitSlots = ['skin', 'hair', 'hat', 'glasses', 'flag'];
-    if (portraitSlots.includes(shopSlot)) {
-        return avatarTemplate(buildAvatarSvg(outfit, false), 'none', 'avatar-medium');
-    }
-    return bodyTemplate(buildAvatarSvg(outfit, true), 'body-small');
-}
-
-function getItemStateText(item) {
-    if (profileService.getCurrent().outfit[item.slot] === item.id) {
-        return 'Angelegt';
-    }
-    if (shopService.isOwned(item)) {
-        return item.price === 0 ? 'Gratis' : 'Im Besitz';
-    }
-    if (item.achievement) {
-        return 'Geheimer Erfolg';
-    }
-    return shopService.isLevelReached(item) ? item.price + ' Coins' : 'ab Level ' + item.level;
-}
-
-function getItemStateClass(item) {
-    const triedClass = previewOutfit[item.slot] === item.id ? 'tried ' : '';
-    const specialClass = item.special ? 'special ' : '';
-    if (shopService.isOwned(item)) {
-        return triedClass + specialClass + 'owned';
-    }
-    const isBuyable = shopService.isLevelReached(item) && !item.achievement;
-    return triedClass + specialClass + (isBuyable ? 'buyable' : 'locked');
-}
-
-function buildFlagOptions() {
-    const names = countryService.getSortedNames();
-    const owned = profileService.getCurrent().owned;
-    let html = '';
-    for (let i = 0; i < names.length; i++) {
-        const country = countryService.findByName(names[i]);
-        if (country && country.flag && !owned.includes('flag-' + country.code)) {
-            html += selectOptionTemplate('flag-' + country.code, names[i]);
-        }
-    }
-    return html;
-}
-
-function buildBuyArea() {
-    const pending = shopService.getPendingItems(previewOutfit);
-    if (pending.length === 0) {
-        return shopSavedTemplate();
-    }
-    let names = '';
-    for (let i = 0; i < pending.length; i++) {
-        names += (i > 0 ? ', ' : '') + pending[i].name;
-    }
-    const total = shopService.getTotalPrice(pending);
-    const disabledText = shopService.canBuyAll(pending) ? '' : 'disabled';
-    return shopBuyTemplate(names, total, disabledText, getBuyHint(pending, total));
-}
-
-function getBuyHint(pending, total) {
-    const secretItems = pending.filter(item => item.achievement);
-    if (secretItems.length > 0) {
-        return secretItems[0].name + ' gibt es nur über einen geheimen Erfolg.';
-    }
-    const lockedItems = pending.filter(item => !shopService.isLevelReached(item));
-    if (lockedItems.length > 0) {
-        return lockedItems[0].name + ' gibt es erst ab Level ' + lockedItems[0].level + '.';
-    }
-    const missing = total - profileService.getCurrent().coins;
-    return missing > 0 ? 'Dir fehlen noch ' + missing + ' Coins.' : '';
-}
-
-function selectShopSlot(slotKey) {
-    shopSlot = slotKey;
-    renderShop();
-}
-
-function tryShopItem(itemId) {
-    if (itemId === '') {
-        return;
-    }
-    const item = shopService.getItem(itemId);
-    previewOutfit[item.slot] = item.id;
-    shopService.wearOwned(previewOutfit);
-    updateHeader();
-    renderShop();
-}
-
-function buyPreviewOutfit() {
-    if (shopService.buyAndWear(previewOutfit)) {
-        updateHeader();
-    }
-    renderShop();
-}
-
-function resetPreviewOutfit() {
-    previewOutfit = { ...profileService.getCurrent().outfit };
-    renderShop();
 }

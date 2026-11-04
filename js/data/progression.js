@@ -48,9 +48,29 @@ const TOP_LISTS = [
     { key: 'geodecide', title: 'GeoDecide', unit: 'in Serie' },
     { key: 'geodle', title: 'Geodle', unit: 'Punkte' },
     { key: 'geoconnections', title: 'GeoConnections', unit: 'Punkte' },
+    { key: 'geodistance', title: 'GeoDistanz', unit: 'Punkte' },
     { key: 'blitz-flags', title: 'Blitzrunde Flaggen', unit: 'Richtige' },
     { key: 'blitz-capitals', title: 'Blitzrunde Hauptstädte', unit: 'Richtige' },
     { key: 'blitz-outlines', title: 'Blitzrunde Umrisse', unit: 'Richtige' },
     { key: 'quiz', title: 'Quiz', unit: '%' },
     { key: 'daily', title: 'Tages-Challenge', unit: 'Punkte' }
+];
+
+const COMPARE_ROWS = [
+    { label: 'Level', source: 'level' },
+    { label: 'XP gesamt', source: 'profile', key: 'xp' },
+    { label: 'Coins', source: 'profile', key: 'coins' },
+    { label: 'Erfolge', source: 'achievements' },
+    { label: 'Beste Tages-Serie', source: 'storage', key: 'best-daily-streak' },
+    { label: 'Spiele beendet', source: 'counter', key: 'games' },
+    { label: 'Richtige Antworten', source: 'counter', key: 'correct' },
+    { label: 'GeoRoute gewonnen', source: 'stats', key: 'georoute', field: 'won' },
+    { label: 'GeoSize Highscore', source: 'stats', key: 'geosize', field: 'highscore' },
+    { label: 'GeoDecide Rekord', source: 'stats', key: 'geodecide', field: 'highscore' },
+    { label: 'Geodle gewonnen', source: 'stats', key: 'geodle', field: 'won' },
+    { label: 'GeoConnections gewonnen', source: 'stats', key: 'geoconnections', field: 'won' },
+    { label: 'GeoDistanz Highscore', source: 'stats', key: 'geodistance', field: 'highscore' },
+    { label: 'Blitz Flaggen', source: 'stats', key: 'blitz-flags', field: 'highscore' },
+    { label: 'Blitz Hauptstädte', source: 'stats', key: 'blitz-capitals', field: 'highscore' },
+    { label: 'Blitz Umrisse', source: 'stats', key: 'blitz-outlines', field: 'highscore' }
 ];

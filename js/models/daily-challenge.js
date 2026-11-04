@@ -46,10 +46,15 @@ class DailyChallenge extends BaseGame {
         this.achievements.increase('daily-perfects', total >= 300 ? 1 : 0);
         this.checkDailyStreak(streak);
         if (isComplete) {
-            this.achievements.unlockIf(new Date().getHours() < 7, 'hidden-early');
-            this.profiles.addCoins(DAILY_COMPLETE_COINS);
-            this.storage.saveTopScore('daily', total, '');
+            this.rewardCompleteDay(total);
         }
+    }
+
+    rewardCompleteDay(total) {
+        this.achievements.increase('daily-completed', 1);
+        this.achievements.unlockIf(new Date().getHours() < 7, 'hidden-early');
+        this.profiles.addCoins(DAILY_COMPLETE_COINS);
+        this.storage.saveTopScore('daily', total, '');
     }
 
     checkDailyStreak(streak) {
@@ -88,12 +93,19 @@ class DailyChallenge extends BaseGame {
         if (this.getResults(this.dateKey)[taskKey] !== undefined) {
             return;
         }
+        this.markStarted(taskKey);
         setTheme(task.theme);
         const game = this.createTaskGame(taskKey);
         game.daily = this;
         game.seeded = new SeededRandom(this.dateKey + '-' + taskKey);
         currentGame = game;
         this.launchTask(game, taskKey);
+    }
+
+    markStarted(taskKey) {
+        const results = this.getResults(this.dateKey);
+        results[taskKey] = 0;
+        this.storage.save('daily-' + this.dateKey, results);
     }
 
     createTaskGame(taskKey) {

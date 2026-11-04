@@ -15,12 +15,14 @@
     <link rel="stylesheet" href="css/achievements.css">
     <link rel="stylesheet" href="css/profile.css">
     <link rel="stylesheet" href="css/shop.css">
+    <link rel="stylesheet" href="css/extras.css">
 </head>
 <body onload="init()">
     <header class="header">
         <button class="logo" onclick="showHome()">Geo<span>SeFa</span></button>
         <div class="header-buttons">
             <button id="profile-button" class="profile-button hidden" onclick="showProfile()"></button>
+            <button id="sound-button" class="header-button sound-button" onclick="toggleSound()">Ton: an</button>
             <button id="achievement-button" class="header-button" onclick="showAchievements()">Erfolge</button>
             <button class="header-button" onclick="showHome()">Startseite</button>
         </div>
@@ -36,6 +38,7 @@
     <script src="js/data/achievements.js"></script>
     <script src="js/data/progression.js"></script>
     <script src="js/data/shop-items.js"></script>
+    <script src="js/data/quests.js"></script>
     <script src="js/helpers.js"></script>
     <script src="js/templates/menu-templates.js"></script>
     <script src="js/templates/game-templates.js"></script>
@@ -50,6 +53,7 @@
     <script src="js/models/sound-service.js"></script>
     <script src="js/models/profile-service.js"></script>
     <script src="js/models/shop-service.js"></script>
+    <script src="js/models/quest-service.js"></script>
     <script src="js/models/achievement-service.js"></script>
     <script src="js/models/base-game.js"></script>
     <script src="js/models/geo-route.js"></script>
@@ -58,6 +62,7 @@
     <script src="js/models/geodle.js"></script>
     <script src="js/models/geo-connections.js"></script>
     <script src="js/models/blitz-round.js"></script>
+    <script src="js/models/geo-distance.js"></script>
     <script src="js/models/seeded-random.js"></script>
     <script src="js/models/daily-challenge.js"></script>
     <script src="js/models/quiz-base.js"></script>
@@ -65,6 +70,9 @@
     <script src="js/models/choice-quiz.js"></script>
     <script src="js/models/shape-quiz.js"></script>
     <script src="js/models/match-quiz.js"></script>
+    <script src="js/pages/avatar-page.js"></script>
+    <script src="js/pages/profile-page.js"></script>
+    <script src="js/pages/achievement-page.js"></script>
     <script src="js/game.js"></script>
 </body>
 </html>

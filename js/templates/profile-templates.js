@@ -60,7 +60,27 @@ function startAvatarTemplate(item, avatarHtml, selectedClass) {
     `;
 }
 
-function profilePageTemplate(cardHtml, sectionsHtml, profileListHtml) {
+function settingsTemplate(percent) {
+    return `
+        <h2 class="profile-section-title">Einstellungen &amp; Sicherung</h2>
+        <div class="settings-row">
+            <label class="setting volume-setting">Lautstärke: <span id="volume-value">${percent} %</span>
+                <input type="range" min="0" max="100" value="${percent}" oninput="changeVolume(this.value)">
+            </label>
+            <button class="button button-secondary" onclick="testSound()">Ton testen</button>
+        </div>
+        <div class="settings-row">
+            <button class="button" onclick="exportProfile()">Profil sichern</button>
+            <label class="button button-secondary">Profil laden
+                <input class="hidden" type="file" accept=".json,application/json" onchange="importProfile(this)">
+            </label>
+        </div>
+        <p class="settings-hint">„Profil sichern“ lädt eine Datei mit allem herunter (Coins, Erfolge, Rekorde, Avatar). Mit „Profil laden“ holst du es zurück, auch auf einem anderen Gerät.</p>
+        <div id="settings-message" class="message"></div>
+    `;
+}
+
+function profilePageTemplate(cardHtml, sectionsHtml, profileListHtml, settingsHtml) {
     return `
         <section class="panel">
             <div class="title-row">
@@ -71,11 +91,13 @@ function profilePageTemplate(cardHtml, sectionsHtml, profileListHtml) {
             <div class="button-row">
                 <button class="button" onclick="showShop()">Avatar &amp; Shop</button>
                 <button class="button" onclick="showLeaderboard()">Meine Bestenliste</button>
+                <button class="button" onclick="showCompare()">Profilvergleich</button>
                 <button class="button" onclick="showAchievements()">Erfolge</button>
             </div>
             ${sectionsHtml}
             <h2 class="profile-section-title">Profile auf diesem Gerät</h2>
             <div class="profile-list">${profileListHtml}</div>
+            ${settingsHtml}
         </section>
     `;
 }
@@ -184,4 +206,49 @@ function topRowTemplate(place, scoreText, detail, dateText) {
 
 function topEmptyTemplate() {
     return `<p class="top-empty">Noch keine Einträge.</p>`;
+}
+
+function compareTemplate(headHtml, rowsHtml, hintHtml) {
+    return `
+        <section class="panel">
+            <div class="title-row">
+                <h1>Profilvergleich</h1>
+                ${backButtonTemplate()}
+            </div>
+            ${hintHtml}
+            <div class="compare-table">
+                <div class="compare-row compare-head">
+                    <span class="compare-label"></span>
+                    ${headHtml}
+                </div>
+                ${rowsHtml}
+            </div>
+        </section>
+    `;
+}
+
+function compareHeadTemplate(profile, avatarHtml) {
+    return `
+        <span class="compare-cell compare-profile">
+            ${avatarHtml}
+            <b>${profile.name}</b>
+        </span>
+    `;
+}
+
+function compareRowTemplate(label, cellsHtml) {
+    return `
+        <div class="compare-row">
+            <span class="compare-label">${label}</span>
+            ${cellsHtml}
+        </div>
+    `;
+}
+
+function compareCellTemplate(value, className) {
+    return `<span class="compare-cell ${className}">${value}</span>`;
+}
+
+function compareHintTemplate() {
+    return `<p class="message">Auf diesem Gerät gibt es nur ein Profil. Lege über die Profilseite ein zweites an (oder lade die Sicherung deines Bruders), um zu vergleichen.</p>`;
 }

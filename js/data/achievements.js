@@ -1,8 +1,8 @@
-const ACHIEVEMENT_CATEGORIES = ['Allgemein', 'Meilensteine', 'GeoRoute', 'GeoSize', 'GeoDecide', 'Geodle', 'GeoConnections', 'Blitzrunde', 'Quiz', 'Tages-Challenge', 'Avatar & Shop', 'Versteckt'];
+const ACHIEVEMENT_CATEGORIES = ['Allgemein', 'Meilensteine', 'GeoRoute', 'GeoSize', 'GeoDecide', 'Geodle', 'GeoConnections', 'GeoDistanz', 'Blitzrunde', 'Quiz', 'Tages-Challenge', 'Avatar & Shop', 'Versteckt'];
 
 const ACHIEVEMENTS = [
     { id: 'first-game', category: 'Allgemein', tier: 'bronze', title: 'Erste Schritte', description: 'Beende dein erstes Spiel.', counter: 'games', goal: 1 },
-    { id: 'all-games', category: 'Allgemein', tier: 'silver', title: 'Weltenbummler', description: 'Beende jedes der 6 Spiele und ein Quiz mindestens einmal.' },
+    { id: 'all-games', category: 'Allgemein', tier: 'silver', title: 'Weltenbummler', description: 'Beende jedes der 7 Spiele und ein Quiz mindestens einmal.' },
     { id: 'games-10', category: 'Allgemein', tier: 'bronze', title: 'Stammgast', description: 'Beende 10 Spiele.', counter: 'games', goal: 10 },
     { id: 'games-50', category: 'Allgemein', tier: 'silver', title: 'Geo-Fan', description: 'Beende 50 Spiele.', counter: 'games', goal: 50 },
     { id: 'games-200', category: 'Allgemein', tier: 'gold', title: 'Geo-Süchtig', description: 'Beende 200 Spiele.', counter: 'games', goal: 200 },
@@ -88,6 +88,12 @@ const ACHIEVEMENTS = [
     { id: 'conn-50', category: 'GeoConnections', tier: 'gold', title: 'Verknüpfungsprofi', description: 'Gewinne 50 GeoConnections.', counter: 'conn-wins', goal: 50 },
     { id: 'conn-perfect-10', category: 'GeoConnections', tier: 'platinum', title: 'Fehlerlos-Serie', description: 'Gewinne 10-mal ohne einen Fehler.', counter: 'conn-perfects', goal: 10 },
 
+    { id: 'distance-first', category: 'GeoDistanz', tier: 'bronze', title: 'Erste Peilung', description: 'Beende dein erstes GeoDistanz.', counter: 'end-geodistance', goal: 1 },
+    { id: 'distance-400', category: 'GeoDistanz', tier: 'silver', title: 'Ortskundig', description: 'Hol 400 Punkte in einem Spiel.' },
+    { id: 'distance-450', category: 'GeoDistanz', tier: 'gold', title: 'Navigationsgerät', description: 'Hol 450 Punkte in einem Spiel.' },
+    { id: 'distance-500', category: 'GeoDistanz', tier: 'platinum', title: 'Satellit', description: 'Triff alle 5 Länder in einem Spiel.' },
+    { id: 'distance-hits-10', category: 'GeoDistanz', tier: 'gold', title: 'Treffsicher', description: 'Triff insgesamt 10-mal genau das gesuchte Land.', counter: 'distance-hits', goal: 10 },
+
     { id: 'blitz-40', category: 'Blitzrunde', tier: 'platinum', title: 'Überschall', description: 'Hol 40 Punkte in einer Blitzrunde.' },
     { id: 'blitz-perfect-20', category: 'Blitzrunde', tier: 'gold', title: 'Eiskalt', description: 'Hol mindestens 20 Punkte ohne einen Fehler.' },
 
@@ -123,4 +129,4 @@ const ACHIEVEMENTS = [
     { id: 'hidden-early', category: 'Versteckt', tier: 'silver', hidden: true, title: 'Frühaufsteher', description: 'Schließe die Tages-Challenge vor 7 Uhr morgens ab.' }
 ];
 
-const ACHIEVEMENT_GAME_KEYS = ['georoute', 'geosize', 'geodecide', 'geodle', 'geoconnections', 'blitz', 'quiz'];
+const ACHIEVEMENT_GAME_KEYS = ['georoute', 'geosize', 'geodecide', 'geodle', 'geoconnections', 'geodistance', 'blitz', 'quiz'];

@@ -72,6 +72,7 @@ class MatchQuiz extends QuizBase {
 
     markResult(code, result) {
         this.playCorrectSoundIf(result !== 'red');
+        this.trackQuizAnswer(code, result === 'green');
         this.results[code] = result;
         this.score += POINTS[result];
         this.selectedCode = null;

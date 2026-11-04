@@ -42,6 +42,24 @@ class ProfileService {
         this.select(id);
     }
 
+    createBackup() {
+        const profile = this.getCurrent();
+        return { app: 'GeoSeFa', version: 1, profile: profile, data: this.storage.getProfileData(profile.id) };
+    }
+
+    importBackup(backup) {
+        if (!backup || backup.app !== 'GeoSeFa' || !backup.profile || !backup.data) {
+            return false;
+        }
+        const others = this.profiles.filter(profile => profile.id !== backup.profile.id);
+        this.profiles = [...others, backup.profile];
+        this.prepareProfiles();
+        this.saveProfiles();
+        this.storage.setProfileData(backup.profile.id, backup.data);
+        this.select(backup.profile.id);
+        return true;
+    }
+
     select(id) {
         this.currentId = id;
         this.storage.saveGlobal('current-profile', id);

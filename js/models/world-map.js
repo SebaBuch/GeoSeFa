@@ -14,7 +14,33 @@ class WorldMap {
             style: () => this.getStyle(MAP_COLORS.default),
             onEachFeature: (feature, layer) => this.registerLayer(feature, layer)
         }).addTo(this.map);
+        this.extras = L.layerGroup().addTo(this.map);
+        this.map.on('click', event => this.handlePointClick(event.latlng));
         this.showRegion(region);
+    }
+
+    handlePointClick(latlng) {
+        if (currentGame && currentGame.handleMapPoint) {
+            currentGame.handleMapPoint(latlng.lat, normalizeLongitude(latlng.lng));
+        }
+    }
+
+    addMarker(lat, lng, color) {
+        L.circleMarker([lat, lng], { radius: 7, color: '#ffffff', weight: 2, fillColor: color, fillOpacity: 1 }).addTo(this.extras);
+    }
+
+    addLine(from, to) {
+        L.polyline([from, to], { color: '#1d3557', weight: 3, dashArray: '6 6' }).addTo(this.extras);
+    }
+
+    clearExtras() {
+        if (this.extras) {
+            this.extras.clearLayers();
+        }
+    }
+
+    resetCountry(code) {
+        this.colorCountry(code, MAP_COLORS.default);
     }
 
     registerLayer(feature, layer) {

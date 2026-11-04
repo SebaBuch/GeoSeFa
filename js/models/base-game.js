@@ -111,6 +111,10 @@ class BaseGame {
         }
     }
 
+    trackAnswer(category, code, isCorrect) {
+        this.storage.trackMistake(category, code, !isCorrect);
+    }
+
     getRecordText(isRecord) {
         return isRecord ? 'Neuer Rekord!' : '';
     }

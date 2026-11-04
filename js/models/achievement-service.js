@@ -39,6 +39,7 @@ class AchievementService {
         this.storage.save('achievement-counters', this.counters);
         this.profiles.addXp((XP_PER_COUNTER[name] || 0) * amount);
         this.profiles.addCoins((COINS_PER_COUNTER[name] || 0) * amount);
+        questService.track(name, amount);
         this.checkCounter(name);
     }
 

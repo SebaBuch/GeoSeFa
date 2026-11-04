@@ -162,7 +162,7 @@ function dailyTemplate(dateText, tasksHtml, total, streakText, calendarHtml) {
                 <h1>Tages-Challenge vom ${dateText}</h1>
                 ${backButtonTemplate()}
             </div>
-            <p>Drei Aufgaben, jede einmal pro Tag. Alle Spieler bekommen am selben Tag dieselben Aufgaben.</p>
+            <p>Drei Aufgaben, jede einmal pro Tag. Alle Spieler bekommen am selben Tag dieselben Aufgaben. Wer eine Aufgabe startet und abbricht, bekommt dafür 0 Punkte.</p>
             <div class="status-row">
                 <span>Punkte heute: <b>${total} / 300</b></span>
                 <span>Serie: <b>${streakText}</b></span>
@@ -270,6 +270,47 @@ function achievementItemTemplate(achievement, className, statusText) {
             <span class="achievement-tier">${statusText}</span>
             <span class="achievement-title">${achievement.title}</span>
             <span class="achievement-text">${achievement.description}</span>
+        </div>
+    `;
+}
+
+function mistakeCountTemplate(count) {
+    return `<span class="mistake-info">In deiner Fehlerliste: <b>${count}</b> (jede richtige Antwort streicht einen Fehler)</span>`;
+}
+
+function mistakeEmptyTemplate() {
+    return `<span class="mistake-info">Du hast in dieser Kategorie noch keine Fehler gesammelt. Spiel erst ein normales Quiz oder eine Blitzrunde.</span>`;
+}
+
+function weeklyCardTemplate(questsHtml, daysLeftText, bonusText) {
+    return `
+        <section class="weekly-card">
+            <div class="weekly-head">
+                <span class="weekly-title">Wochenaufgaben</span>
+                <span class="weekly-info">Noch ${daysLeftText} · ${bonusText}</span>
+            </div>
+            <div class="weekly-list">${questsHtml}</div>
+        </section>
+    `;
+}
+
+function questRowTemplate(quest, progress, percent, doneClass) {
+    return `
+        <div class="quest-row ${doneClass}">
+            <span class="quest-text">${quest.text}</span>
+            <div class="quest-bar"><div class="quest-fill" style="width: ${percent}%"></div></div>
+            <span class="quest-progress">${progress} / ${quest.goal}</span>
+            <span class="quest-reward"><span class="coin-icon"></span>${quest.reward}</span>
+        </div>
+    `;
+}
+
+function questToastTemplate(toastId, text, reward) {
+    return `
+        <div id="${toastId}" class="toast toast-quest">
+            <span class="toast-label">Wochenaufgabe geschafft!</span>
+            <span class="toast-title">${text}</span>
+            <span class="toast-text">+${reward} Coins</span>
         </div>
     `;
 }

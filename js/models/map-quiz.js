@@ -55,10 +55,15 @@ class MapQuiz extends QuizBase {
     markAnswer(result) {
         this.playCorrectSoundIf(result !== 'red');
         const question = this.questions[this.index];
+        this.trackQuizAnswer(question.code, result === 'green');
         this.worldMap.colorCountry(question.code, MAP_COLORS[result]);
         this.answeredCodes.push(question.code);
         this.score += POINTS[result];
         this.setMessage(this.getResultMessage(result, question), result);
+        this.showNextOrFinish();
+    }
+
+    showNextOrFinish() {
         this.index++;
         if (this.index >= this.questions.length) {
             this.finishQuiz();
@@ -86,6 +91,7 @@ class MapQuiz extends QuizBase {
 
     markTyped(country) {
         this.answeredCodes.push(country.code);
+        this.trackQuizAnswer(country.code, true);
         this.worldMap.colorCountry(country.code, MAP_COLORS.green);
         this.score++;
         this.playCorrectSoundIf(true);
