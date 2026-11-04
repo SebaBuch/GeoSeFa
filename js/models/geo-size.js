@@ -26,8 +26,8 @@ class GeoSize extends BaseGame {
     createPair() {
         const pool = this.getPlayableCountries().filter(country => country.area >= 1000);
         for (let attempt = 0; attempt < 200; attempt++) {
-            const first = randomItem(pool);
-            const second = randomItem(pool);
+            const first = this.pickItem(pool);
+            const second = this.pickItem(pool);
             const ratio = Math.max(first.area, second.area) / Math.min(first.area, second.area);
             if (first.code !== second.code && ratio <= 12) {
                 this.left = first;

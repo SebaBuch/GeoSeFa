@@ -63,6 +63,7 @@ function rankingTemplate(dailyHtml, listsHtml, playerCount) {
                 ${backButtonTemplate()}
             </div>
             <p>${playerCount} Spieler · Gezeigt werden die Top 3. Bist du nicht dabei, siehst du deinen Platz darunter. Klick auf einen Spieler für sein Profil.</p>
+            <span class="online-updated">Aktualisiert: <b id="online-updated">gerade eben</b> · lädt alle 30 Sekunden neu</span>
             <div class="top-lists">
                 ${dailyHtml}
                 ${listsHtml}
@@ -103,6 +104,7 @@ function playersTemplate(cardsHtml, playerCount) {
                 ${backButtonTemplate()}
             </div>
             <p>${playerCount} Spieler angemeldet. Klick auf einen Spieler, um sein Profil zu sehen und dich zu vergleichen.</p>
+            <span class="online-updated">Aktualisiert: <b id="online-updated">gerade eben</b> · lädt alle 30 Sekunden neu</span>
             <form class="guess-form" onsubmit="event.preventDefault()">
                 <input id="player-search" placeholder="Spieler suchen ..." autocomplete="off" oninput="filterPlayers(this.value)">
             </form>
@@ -124,13 +126,15 @@ function playerCardTemplate(player, avatarHtml, level, rankTitle, meClass) {
     `;
 }
 
-function playerProfileTemplate(player, avatarHtml, rankTitle, achievementCount, compareHtml, achievementsHtml) {
+function playerProfileTemplate(player, avatarHtml, rankTitle, achievementCount, compareHtml, achievementsHtml, duelButtonHtml) {
     return `
         <section class="panel">
             <div class="title-row">
                 <h1>Profil von ${player.name}</h1>
                 <button class="back-button" onclick="showPlayers()">← Alle Spieler</button>
             </div>
+            ${duelButtonHtml}
+            <span class="online-updated">Aktualisiert: <b id="online-updated">gerade eben</b> · lädt alle 30 Sekunden neu</span>
             <div class="profile-card">
                 ${avatarHtml}
                 <div class="profile-card-info">
@@ -169,4 +173,16 @@ function compareRowTemplate(label, cellsHtml) {
 
 function compareCellTemplate(value, className) {
     return `<span class="compare-cell ${className}">${value}</span>`;
+}
+
+function championsTemplate(dayText, monthName, monthText, lastMonthName, lastMonthText) {
+    return `
+        <span class="champion"><span class="champion-label">Tagessieger gestern</span><b>${dayText}</b></span>
+        <span class="champion"><span class="champion-label">Führend im ${monthName}</span><b>${monthText}</b></span>
+        <span class="champion"><span class="champion-label">Sieger im ${lastMonthName}</span><b>${lastMonthText}</b></span>
+    `;
+}
+
+function duelButtonTemplate(uid) {
+    return `<button class="button" onclick="showDuelSetup('${uid}')">Zum Duell herausfordern</button>`;
 }

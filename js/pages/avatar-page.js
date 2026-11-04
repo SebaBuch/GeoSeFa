@@ -66,7 +66,7 @@ function buildShopItems() {
         const outfit = { ...previewOutfit };
         outfit[shopSlot] = items[i].id;
         const previewHtml = buildShopPreview(outfit);
-        html += shopItemTemplate(items[i], previewHtml, getItemStateText(items[i]), getItemStateClass(items[i]));
+        html += shopItemTemplate(items[i], previewHtml, getItemStateText(items[i]), getItemStateClass(items[i]), getSeasonText(items[i]));
     }
     return html;
 }
@@ -92,14 +92,23 @@ function getItemStateText(item) {
     return shopService.isLevelReached(item) ? item.price + ' Coins' : 'ab Level ' + item.level;
 }
 
+function getSeasonText(item) {
+    if (!item.seasonStart) {
+        return '';
+    }
+    const parts = item.seasonEnd.split('-');
+    return item.seasonName + ' · bis ' + parts[1] + '.' + parts[0] + '.';
+}
+
 function getItemStateClass(item) {
     const triedClass = previewOutfit[item.slot] === item.id ? 'tried ' : '';
     const specialClass = item.special ? 'special ' : '';
+    const seasonClass = item.seasonStart ? 'seasonal ' : '';
     if (shopService.isOwned(item)) {
-        return triedClass + specialClass + 'owned';
+        return triedClass + specialClass + seasonClass + 'owned';
     }
     const isBuyable = shopService.isLevelReached(item) && !item.achievement;
-    return triedClass + specialClass + (isBuyable ? 'buyable' : 'locked');
+    return triedClass + specialClass + seasonClass + (isBuyable ? 'buyable' : 'locked');
 }
 
 function buildFlagOptions() {

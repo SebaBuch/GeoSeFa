@@ -97,3 +97,17 @@ function formatCountdown(seconds) {
     const minutes = Math.floor(seconds % 3600 / 60);
     return padNumber(hours) + ':' + padNumber(minutes) + ':' + padNumber(seconds % 60);
 }
+
+const MONTH_NAMES = ['Januar', 'Februar', 'März', 'April', 'Mai', 'Juni', 'Juli', 'August', 'September', 'Oktober', 'November', 'Dezember'];
+
+function getMonthKey(date) {
+    return date.getFullYear() + '-' + padNumber(date.getMonth() + 1);
+}
+
+function getMonthName(monthKey) {
+    return MONTH_NAMES[Number(monthKey.split('-')[1]) - 1];
+}
+
+function getPreviousMonthKey(date) {
+    return getMonthKey(new Date(date.getFullYear(), date.getMonth() - 1, 1));
+}

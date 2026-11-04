@@ -251,6 +251,10 @@ class GeoRoute extends BaseGame {
         this.checkRouteStreak();
     }
 
+    getDuelScore() {
+        return this.distances ? this.getRouteScore(this.distances[this.current] <= 1) : 0;
+    }
+
     getRouteScore(won) {
         const extraGuesses = this.guesses.length - this.neededCountries;
         return won ? Math.max(20, 100 - extraGuesses * 20) : 0;

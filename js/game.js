@@ -9,6 +9,7 @@ let questService;
 let authService;
 let cloudService;
 let syncService;
+let duelService;
 let toastCounter = 0;
 let countdownIntervalId = null;
 let shopService;
@@ -22,6 +23,7 @@ const GAMES = [
     { key: 'geodle', title: 'Geodle', description: 'Finde das gesuchte Land mit Hilfe von Hinweisen.', statsType: 'win' },
     { key: 'geoconnections', title: 'GeoConnections', description: 'Finde die 4 Gruppen, die zum selben Land gehören.', statsType: 'win' },
     { key: 'geodistance', title: 'GeoDistanz', description: 'Finde ein Land, dessen Hauptstadt so weit von der Start-Hauptstadt entfernt ist wie angegeben.', statsType: 'score' },
+    { key: 'borderchain', title: 'Grenz-Kette', description: 'Nenne in 90 Sekunden so viele Nachbarländer wie möglich.', statsType: 'score' },
     { key: 'blitz', title: 'Blitzrunde', description: '60 Sekunden: so viele Flaggen, Hauptstädte oder Umrisse wie möglich.', statsType: 'blitz' }
 ];
 
@@ -40,12 +42,17 @@ async function init() {
     await loadData(false);
 }
 
-function createServices() {
-    storageService = new StorageService();
-    profileService = new ProfileService(storageService);
+function createOnlineServices() {
     authService = new AuthService(storageService);
     cloudService = new CloudService(authService);
     syncService = new SyncService(storageService, profileService, cloudService, authService);
+    duelService = new DuelService(cloudService, authService, profileService);
+}
+
+function createServices() {
+    storageService = new StorageService();
+    profileService = new ProfileService(storageService);
+    createOnlineServices();
     countryService = new CountryService(storageService);
     shapeService = new ShapeService(countryService);
     worldMap = new WorldMap(shapeService);
@@ -102,6 +109,8 @@ function showError(text) {
 
 function stopCurrentGame() {
     soundService.stop();
+    stopOnlineView();
+    stopDuelWaiting();
     if (currentGame) {
         currentGame.stop();
         currentGame = null;
@@ -120,6 +129,7 @@ function showHome() {
     updateHeader();
     showContent(homeTemplate(buildDailyCard() + buildWeeklyCard(), buildGameCards(), buildQuizCards(), countryService.countries.length));
     startDailyCountdown();
+    loadChampions();
 }
 
 function startDailyCountdown() {
@@ -309,6 +319,8 @@ function createOtherGame(key) {
         return new BlitzRound();
     } else if (key === 'geodistance') {
         return new GeoDistance();
+    } else if (key === 'borderchain') {
+        return new BorderChain();
     }
     return new GeoConnections();
 }

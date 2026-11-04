@@ -79,6 +79,10 @@ class BaseGame {
         return this.seeded ? this.seeded.pickText(codes) : randomItem(codes);
     }
 
+    randomNumber() {
+        return this.seeded ? this.seeded.next() : Math.random();
+    }
+
     shuffleItems(list) {
         return this.seeded ? this.seeded.shuffle(list) : shuffle(list);
     }
@@ -90,6 +94,7 @@ class BaseGame {
 
     playEndSound(isWin, isBad) {
         this.achievements.recordGameEnd(this.achievementKey);
+        this.reportDuelEnd();
         if (isWin) {
             this.sound.playWinSound();
         } else if (isBad) {
@@ -119,8 +124,20 @@ class BaseGame {
         return isRecord ? 'Neuer Rekord!' : '';
     }
 
+    reportDuelEnd() {
+        if (this.duel && !this.duelReported) {
+            this.duelReported = true;
+            this.duel.finish(this.getDuelScore());
+        }
+    }
+
+    getDuelScore() {
+        return this.score || 0;
+    }
+
     stop() {
         clearTimeout(this.timeoutId);
         this.worldMap.destroy();
+        this.reportDuelEnd();
     }
 }

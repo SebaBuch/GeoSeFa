@@ -32,8 +32,10 @@ function homeTemplate(dailyCardHtml, gameCardsHtml, quizCardsHtml, countryCount)
             <div class="intro-buttons">
                 <button class="intro-button" onclick="showRanking()">Rangliste</button>
                 <button class="intro-button" onclick="showPlayers()">Spieler</button>
+                <button class="intro-button" onclick="showDuels()">Duelle</button>
             </div>
         </section>
+        <section id="champions" class="champions"><span class="champion">Lade Bestenliste ...</span></section>
         ${dailyCardHtml}
         <h2 class="section-title">Spiele</h2>
         <section class="card-list">${gameCardsHtml}</section>

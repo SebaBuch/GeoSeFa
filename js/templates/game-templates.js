@@ -384,3 +384,50 @@ function distanceResultTemplate(round, totalRounds, score, action, label) {
         <button class="button" onclick="currentGame.${action}()">${label}</button>
     `;
 }
+
+function borderChainTemplate(seconds) {
+    return `
+        <div class="map-layout">
+        <section class="panel">
+            ${gameHeaderTemplate('Grenz-Kette', 'Nenne alle Nachbarländer des grünen Landes. Jeder Nachbar gibt 1 Punkt, alle gefunden gibt 3 Bonuspunkte. Du hast ' + seconds + ' Sekunden.')}
+            <div class="distance-task">
+                <span class="route-end start">Land: <b id="chain-country"></b></span>
+                <span class="info-pill">Zeit: <b id="chain-timer"></b></span>
+                <span id="chain-progress" class="distance-info"></span>
+            </div>
+            <form class="guess-form" onsubmit="currentGame.submitGuess(event)">
+                <input id="chain-input" oninput="currentGame.showSuggestions(this)" placeholder="Nachbarland eingeben ..." autocomplete="off">
+                <button class="button" type="submit">Eingeben</button>
+                <button class="button button-secondary" type="button" onclick="currentGame.skip()">Nächstes Land</button>
+            </form>
+            <div id="suggestions" class="suggestions"></div>
+            <div id="message" class="message"></div>
+            <div id="chain-found" class="route-guesses"></div>
+        </section>
+        <div id="map" class="map"></div>
+        </div>
+    `;
+}
+
+function chainProgressTemplate(foundCount, total, score) {
+    return `
+        <span class="info-pill">Gefunden: ${foundCount} / ${total}</span>
+        <span class="info-pill">Punkte: ${score}</span>
+    `;
+}
+
+function chainEndTemplate(score, completeCount, highscore, recordText) {
+    return `
+        <section class="panel center">
+            <h1>Grenz-Kette beendet</h1>
+            <p class="big-number">${score} Punkte</p>
+            <p>${completeCount}-mal alle Nachbarn gefunden</p>
+            <p class="record">${recordText}</p>
+            <p>Highscore: ${highscore}</p>
+            <div class="button-row">
+                <button class="button" onclick="startGame('borderchain')">Nochmal spielen</button>
+                <button class="button button-secondary" onclick="showHome()">Startseite</button>
+            </div>
+        </section>
+    `;
+}

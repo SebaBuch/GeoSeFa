@@ -1,8 +1,8 @@
-const ACHIEVEMENT_CATEGORIES = ['Allgemein', 'Meilensteine', 'GeoRoute', 'GeoSize', 'GeoDecide', 'Geodle', 'GeoConnections', 'GeoDistanz', 'Blitzrunde', 'Quiz', 'Tages-Challenge', 'Avatar & Shop', 'Versteckt'];
+const ACHIEVEMENT_CATEGORIES = ['Allgemein', 'Meilensteine', 'GeoRoute', 'GeoSize', 'GeoDecide', 'Geodle', 'GeoConnections', 'GeoDistanz', 'Grenz-Kette', 'Blitzrunde', 'Quiz', 'Tages-Challenge', 'Duelle', 'Avatar & Shop', 'Versteckt'];
 
 const ACHIEVEMENTS = [
     { id: 'first-game', category: 'Allgemein', tier: 'bronze', title: 'Erste Schritte', description: 'Beende dein erstes Spiel.', counter: 'games', goal: 1 },
-    { id: 'all-games', category: 'Allgemein', tier: 'silver', title: 'Weltenbummler', description: 'Beende jedes der 7 Spiele und ein Quiz mindestens einmal.' },
+    { id: 'all-games', category: 'Allgemein', tier: 'silver', title: 'Weltenbummler', description: 'Beende jedes der 8 Spiele und ein Quiz mindestens einmal.' },
     { id: 'games-10', category: 'Allgemein', tier: 'bronze', title: 'Stammgast', description: 'Beende 10 Spiele.', counter: 'games', goal: 10 },
     { id: 'games-50', category: 'Allgemein', tier: 'silver', title: 'Geo-Fan', description: 'Beende 50 Spiele.', counter: 'games', goal: 50 },
     { id: 'games-200', category: 'Allgemein', tier: 'gold', title: 'Geo-Süchtig', description: 'Beende 200 Spiele.', counter: 'games', goal: 200 },
@@ -94,6 +94,12 @@ const ACHIEVEMENTS = [
     { id: 'distance-500', category: 'GeoDistanz', tier: 'platinum', title: 'Satellit', description: 'Hol in allen 5 Runden 100 Punkte.' },
     { id: 'distance-hits-10', category: 'GeoDistanz', tier: 'gold', title: 'Treffsicher', description: 'Hol insgesamt 10-mal 100 Punkte in einer Runde (höchstens 200 km daneben).', counter: 'distance-hits', goal: 10 },
 
+    { id: 'chain-first', category: 'Grenz-Kette', tier: 'bronze', title: 'Grenzgänger', description: 'Beende deine erste Grenz-Kette.', counter: 'end-borderchain', goal: 1 },
+    { id: 'chain-20', category: 'Grenz-Kette', tier: 'silver', title: 'Nachbarschaftshilfe', description: 'Hol 20 Punkte in einer Grenz-Kette.' },
+    { id: 'chain-40', category: 'Grenz-Kette', tier: 'gold', title: 'Zollbeamter', description: 'Hol 40 Punkte in einer Grenz-Kette.' },
+    { id: 'chain-60', category: 'Grenz-Kette', tier: 'platinum', title: 'Grenzenlos', description: 'Hol 60 Punkte in einer Grenz-Kette.' },
+    { id: 'chain-complete-10', category: 'Grenz-Kette', tier: 'gold', title: 'Lückenlos', description: 'Finde insgesamt 10-mal alle Nachbarn eines Landes.', counter: 'chain-complete', goal: 10 },
+
     { id: 'blitz-40', category: 'Blitzrunde', tier: 'platinum', title: 'Überschall', description: 'Hol 40 Punkte in einer Blitzrunde.' },
     { id: 'blitz-perfect-20', category: 'Blitzrunde', tier: 'gold', title: 'Eiskalt', description: 'Hol mindestens 20 Punkte ohne einen Fehler.' },
 
@@ -102,6 +108,10 @@ const ACHIEVEMENTS = [
 
     { id: 'daily-streak-100', category: 'Tages-Challenge', tier: 'platinum', title: 'Legende des Alltags', description: 'Spiele 100 Tage am Stück.' },
     { id: 'daily-perfect-5', category: 'Tages-Challenge', tier: 'platinum', title: 'Perfektionist', description: 'Hol 5-mal 300 von 300 Punkten.', counter: 'daily-perfects', goal: 5 },
+
+    { id: 'duel-first', category: 'Duelle', tier: 'bronze', title: 'Fehdehandschuh', description: 'Spiel dein erstes Duell zu Ende.', counter: 'duels-played', goal: 1 },
+    { id: 'duel-win', category: 'Duelle', tier: 'silver', title: 'Duellant', description: 'Gewinne ein Duell.', counter: 'duel-wins', goal: 1 },
+    { id: 'duel-win-10', category: 'Duelle', tier: 'gold', title: 'Champion', description: 'Gewinne 10 Duelle.', counter: 'duel-wins', goal: 10 },
 
     { id: 'shop-first', category: 'Avatar & Shop', tier: 'bronze', title: 'Erster Einkauf', description: 'Kauf dein erstes Teil im Shop.', counter: 'items-bought', goal: 1 },
     { id: 'shop-10', category: 'Avatar & Shop', tier: 'silver', title: 'Shoppingtour', description: 'Kauf 10 Teile im Shop.', counter: 'items-bought', goal: 10 },
@@ -129,4 +139,4 @@ const ACHIEVEMENTS = [
     { id: 'hidden-early', category: 'Versteckt', tier: 'silver', hidden: true, title: 'Frühaufsteher', description: 'Schließe die Tages-Challenge vor 7 Uhr morgens ab.' }
 ];
 
-const ACHIEVEMENT_GAME_KEYS = ['georoute', 'geosize', 'geodecide', 'geodle', 'geoconnections', 'geodistance', 'blitz', 'quiz'];
+const ACHIEVEMENT_GAME_KEYS = ['georoute', 'geosize', 'geodecide', 'geodle', 'geoconnections', 'geodistance', 'borderchain', 'blitz', 'quiz'];

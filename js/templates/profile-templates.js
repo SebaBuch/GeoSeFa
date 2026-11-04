@@ -87,6 +87,7 @@ function profilePageTemplate(cardHtml, sectionsHtml, accountHtml, settingsHtml) 
                 <button class="button" onclick="showLeaderboard()">Meine Bestenliste</button>
                 <button class="button" onclick="showRanking()">Rangliste</button>
                 <button class="button" onclick="showPlayers()">Spieler</button>
+                <button class="button" onclick="showDuels()">Duelle</button>
                 <button class="button" onclick="showAchievements()">Erfolge</button>
             </div>
             ${sectionsHtml}

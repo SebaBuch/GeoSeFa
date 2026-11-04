@@ -49,6 +49,7 @@ const TOP_LISTS = [
     { key: 'geodle', title: 'Geodle', unit: 'Punkte' },
     { key: 'geoconnections', title: 'GeoConnections', unit: 'Punkte' },
     { key: 'geodistance', title: 'GeoDistanz', unit: 'Punkte' },
+    { key: 'borderchain', title: 'Grenz-Kette', unit: 'Punkte' },
     { key: 'blitz-flags', title: 'Blitzrunde Flaggen', unit: 'Richtige' },
     { key: 'blitz-capitals', title: 'Blitzrunde Hauptstädte', unit: 'Richtige' },
     { key: 'blitz-outlines', title: 'Blitzrunde Umrisse', unit: 'Richtige' },
@@ -69,6 +70,7 @@ const COMPARE_ROWS = [
     { id: 'geodle-won', label: 'Geodle gewonnen', source: 'stats', key: 'geodle', field: 'won' },
     { id: 'conn-won', label: 'GeoConnections gewonnen', source: 'stats', key: 'geoconnections', field: 'won' },
     { id: 'distance-best', label: 'GeoDistanz Highscore', source: 'stats', key: 'geodistance', field: 'highscore' },
+    { id: 'chain-best', label: 'Grenz-Kette Highscore', source: 'stats', key: 'borderchain', field: 'highscore' },
     { id: 'blitz-flags', label: 'Blitz Flaggen', source: 'stats', key: 'blitz-flags', field: 'highscore' },
     { id: 'blitz-capitals', label: 'Blitz Hauptstädte', source: 'stats', key: 'blitz-capitals', field: 'highscore' },
     { id: 'blitz-outlines', label: 'Blitz Umrisse', source: 'stats', key: 'blitz-outlines', field: 'highscore' }

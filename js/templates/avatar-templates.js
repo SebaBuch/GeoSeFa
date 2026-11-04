@@ -68,10 +68,11 @@ function shopTabTemplate(slot, activeClass) {
     return `<button class="shop-tab ${activeClass}" onclick="selectShopSlot('${slot.key}')">${slot.title}</button>`;
 }
 
-function shopItemTemplate(item, previewHtml, stateText, stateClass) {
+function shopItemTemplate(item, previewHtml, stateText, stateClass, seasonText) {
     return `
         <button class="shop-item ${stateClass}" onclick="tryShopItem('${item.id}')">
             <span class="shop-item-special">Special</span>
+            <span class="shop-item-season">${seasonText}</span>
             ${previewHtml}
             <span class="shop-item-name">${item.name}</span>
             <span class="shop-item-state">${stateText}</span>

@@ -107,6 +107,10 @@ class Geodle extends BaseGame {
         this.achievements.unlockIf(this.guesses.length === this.maxGuesses, 'geodle-last');
     }
 
+    getDuelScore() {
+        return this.target ? this.getGeodleScore(this.guesses.includes(this.target.code)) : 0;
+    }
+
     getGeodleScore(won) {
         return won ? (this.maxGuesses - this.guesses.length + 1) * 10 : 0;
     }

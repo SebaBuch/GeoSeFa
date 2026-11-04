@@ -18,6 +18,7 @@ function selectStartAvatar(skinId) {
 
 function changeProfileData() {
     achievementService = new AchievementService(storageService, profileService);
+    startInviteWatcher();
     lastQuizSettings = null;
     showHome();
 }

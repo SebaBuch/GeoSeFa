@@ -11,14 +11,14 @@ class GeoDecide extends BaseGame {
         this.streak = 0;
         this.finished = false;
         this.pool = this.countries.countries.filter(country => country.population > 0 && country.area > 0);
-        this.known = randomItem(this.pool);
+        this.known = this.pickItem(this.pool);
         this.nextRound();
     }
 
     nextRound() {
         this.answered = false;
-        this.category = randomItem(DECIDE_CATEGORIES);
-        this.askMore = Math.random() < 0.5;
+        this.category = DECIDE_CATEGORIES[Math.floor(this.randomNumber() * DECIDE_CATEGORIES.length)];
+        this.askMore = this.randomNumber() < 0.5;
         this.unknown = this.pickOpponent();
         const question = this.askMore ? this.category.more : this.category.less;
         const knownValue = this.formatValue(this.known);
@@ -29,12 +29,16 @@ class GeoDecide extends BaseGame {
     pickOpponent() {
         const knownValue = this.getValue(this.known);
         for (let attempt = 0; attempt < 200; attempt++) {
-            const candidate = randomItem(this.pool);
+            const candidate = this.pickItem(this.pool);
             if (candidate.code !== this.known.code && this.getValue(candidate) !== knownValue) {
                 return candidate;
             }
         }
-        return randomItem(this.pool);
+        return this.pickItem(this.pool);
+    }
+
+    getDuelScore() {
+        return this.streak;
     }
 
     getValue(country) {

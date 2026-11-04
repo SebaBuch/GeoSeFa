@@ -18,5 +18,8 @@ const QUEST_POOL = [
     { id: 'q-bullseye', text: 'Hol bei GeoSize 5-mal 98 oder mehr Punkte', counter: 'size-bullseyes', goal: 5, reward: 350 },
     { id: 'q-quiz-perfect', text: 'Beende 3 Quiz mit 100 %', counter: 'quiz-perfects', goal: 3, reward: 350 },
     { id: 'q-distance-hit', text: 'Hol bei GeoDistanz 10-mal 100 Punkte in einer Runde', counter: 'distance-hits', goal: 10, reward: 350 },
+    { id: 'q-chain-10', text: 'Spiele 10-mal Grenz-Kette', counter: 'end-borderchain', goal: 10, reward: 250 },
+    { id: 'q-chain-complete', text: 'Finde bei Grenz-Kette 8-mal alle Nachbarn', counter: 'chain-complete', goal: 8, reward: 300 },
+    { id: 'q-duels-3', text: 'Spiele 3 Duelle zu Ende', counter: 'duels-played', goal: 3, reward: 300 },
     { id: 'q-shop', text: 'Kauf 3 Teile im Shop', counter: 'items-bought', goal: 3, reward: 150 }
 ];

@@ -27,7 +27,20 @@ class ShopService {
         if (slot === 'flag') {
             return this.getOwnedFlagItems();
         }
-        return SHOP_ITEMS.filter(item => item.slot === slot);
+        const items = SHOP_ITEMS.filter(item => item.slot === slot);
+        return items.filter(item => this.isAvailable(item));
+    }
+
+    isAvailable(item) {
+        return !item.seasonStart || this.isOwned(item) || this.isSeasonActive(item);
+    }
+
+    isSeasonActive(item) {
+        const today = getDateKey(new Date()).slice(5);
+        if (item.seasonStart <= item.seasonEnd) {
+            return today >= item.seasonStart && today <= item.seasonEnd;
+        }
+        return today >= item.seasonStart || today <= item.seasonEnd;
     }
 
     getOwnedFlagItems() {
@@ -72,7 +85,7 @@ class ShopService {
     }
 
     canBuyAll(items) {
-        const blocked = items.filter(item => !this.isLevelReached(item) || item.achievement);
+        const blocked = items.filter(item => !this.isLevelReached(item) || item.achievement || !this.isAvailable(item));
         return blocked.length === 0 && this.getTotalPrice(items) <= this.profiles.getCurrent().coins;
     }
 

@@ -256,3 +256,33 @@
         height: 235px;
     }
 }
+
+/* Saison-Artikel */
+
+.shop-item-season {
+    display: none;
+}
+
+.shop-item.seasonal {
+    position: relative;
+    border-color: #f77f00;
+    background: linear-gradient(160deg, #fff1e0 0%, #ffffff 60%);
+}
+
+.shop-item.seasonal .shop-item-season {
+    display: block;
+    position: absolute;
+    top: -10px;
+    left: -6px;
+    padding: 2px 8px;
+    border-radius: 999px;
+    background-color: #f77f00;
+    color: #ffffff;
+    font-size: 0.6875rem;
+    font-weight: 800;
+    white-space: nowrap;
+}
+
+.shop-item.seasonal.tried {
+    border-color: #2a9d8f;
+}
