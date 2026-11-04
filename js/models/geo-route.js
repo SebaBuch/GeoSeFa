@@ -148,15 +148,41 @@ class GeoRoute extends BaseGame {
         const color = this.getGuessColor(country.code);
         this.checkKaliningrad(color, country.code);
         this.guesses.push({ code: country.code, name: country.name, color: color });
-        this.worldMap.colorCountry(country.code, MAP_COLORS[color]);
-        this.playWrongSoundIf(color === 'red');
-        this.playCorrectSoundIf(color === 'green');
+        this.showGuessColor(color, country.code);
         const previousName = this.countries.getCountry(this.current).name;
         this.current = color === 'red' ? this.current : country.code;
         this.setMessage(this.getColorMessage(color, country.name, previousName), color);
+        this.scheduleHideWrong(color, country.code);
         this.renderGuesses();
         this.updateMapView();
         this.checkEnd(color);
+    }
+
+    showGuessColor(color, code) {
+        this.worldMap.colorCountry(code, MAP_COLORS[color]);
+        this.playWrongSoundIf(color === 'red');
+        this.playCorrectSoundIf(color === 'green');
+    }
+
+    scheduleHideWrong(color, code) {
+        if (this.flashCode) {
+            clearTimeout(this.timeoutId);
+            this.hideWrong(this.flashCode);
+        }
+        if (color === 'red') {
+            this.flashCode = code;
+            this.timeoutId = setTimeout(() => this.hideWrong(code), 1500);
+        }
+    }
+
+    hideWrong(code) {
+        this.flashCode = null;
+        if (code === this.targetCountry.code) {
+            this.worldMap.colorCountry(code, MAP_COLORS.target);
+        } else if (!this.isUsed(code)) {
+            this.worldMap.hideCountry(code);
+        }
+        this.renderGuesses();
     }
 
     checkKaliningrad(color, code) {
@@ -225,7 +251,8 @@ class GeoRoute extends BaseGame {
     renderGuesses() {
         let html = routeChipTemplate(this.startCountry.name, 'start');
         for (let i = 0; i < this.guesses.length; i++) {
-            html += routeChipTemplate(this.guesses[i].name, this.guesses[i].color);
+            const isVisible = this.guesses[i].color !== 'red' || this.guesses[i].code === this.flashCode;
+            html += isVisible ? routeChipTemplate(this.guesses[i].name, this.guesses[i].color) : '';
         }
         document.getElementById('route-guesses').innerHTML = html;
     }

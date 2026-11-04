@@ -409,9 +409,9 @@ function borderChainTemplate(seconds) {
     `;
 }
 
-function chainProgressTemplate(foundCount, total, score) {
+function chainProgressTemplate(foundCount, score) {
     return `
-        <span class="info-pill">Gefunden: ${foundCount} / ${total}</span>
+        <span class="info-pill">Gefunden: ${foundCount}</span>
         <span class="info-pill">Punkte: ${score}</span>
     `;
 }

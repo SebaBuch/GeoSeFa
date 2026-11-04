@@ -76,6 +76,12 @@ class WorldMap {
         }
     }
 
+    hideCountry(code) {
+        if (this.layers[code]) {
+            this.layers[code].setStyle({ opacity: 0, fillOpacity: 0 });
+        }
+    }
+
     fitCountries(codes) {
         const bounds = this.shapeService.getMapBounds(codes[0]);
         for (let i = 1; i < codes.length; i++) {

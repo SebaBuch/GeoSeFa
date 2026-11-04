@@ -15,6 +15,7 @@ class BorderChain extends BaseGame {
         this.pool = this.getPlayableCountries().filter(country => this.getNeighbors(country).length >= 2);
         this.showScreen(borderChainTemplate(this.seconds));
         this.worldMap.create('map', 'Welt');
+        this.worldMap.hideAll();
         this.timer = new Timer('chain-timer');
         this.timer.start(this.seconds, this);
         this.nextCountry();
@@ -40,7 +41,7 @@ class BorderChain extends BaseGame {
 
     showCurrent() {
         this.worldMap.colorCountry(this.current.code, MAP_COLORS.start);
-        this.worldMap.fitCountries([this.current.code, ...this.neighbors]);
+        this.worldMap.fitCountries([this.current.code]);
         this.setMessage('', '');
         this.updateInfo();
     }
@@ -51,7 +52,7 @@ class BorderChain extends BaseGame {
         }
         const codes = [this.current.code, ...this.neighbors];
         for (let i = 0; i < codes.length; i++) {
-            this.worldMap.resetCountry(codes[i]);
+            this.worldMap.hideCountry(codes[i]);
         }
     }
 
@@ -61,7 +62,7 @@ class BorderChain extends BaseGame {
             chipsHtml += routeChipTemplate(this.countries.getCountry(this.found[i]).name, 'green');
         }
         document.getElementById('chain-country').innerHTML = this.current.name;
-        document.getElementById('chain-progress').innerHTML = chainProgressTemplate(this.found.length, this.neighbors.length, this.score);
+        document.getElementById('chain-progress').innerHTML = chainProgressTemplate(this.found.length, this.score);
         document.getElementById('chain-found').innerHTML = chipsHtml;
     }
 
@@ -87,12 +88,17 @@ class BorderChain extends BaseGame {
         if (!isNeighbor) {
             return this.setMessage(country.name + ' grenzt nicht an ' + this.current.name + '.', 'red');
         }
-        this.found.push(country.code);
-        this.score++;
-        this.worldMap.colorCountry(country.code, MAP_COLORS.green);
+        this.markFound(country.code);
         this.setMessage(country.name + ' ist ein Nachbar. +1 Punkt', 'green');
         this.updateInfo();
         this.checkComplete();
+    }
+
+    markFound(code) {
+        this.found.push(code);
+        this.score++;
+        this.worldMap.colorCountry(code, MAP_COLORS.green);
+        this.worldMap.fitCountries([this.current.code, ...this.found]);
     }
 
     checkComplete() {
@@ -117,6 +123,7 @@ class BorderChain extends BaseGame {
         for (let i = 0; i < missing.length; i++) {
             this.worldMap.colorCountry(missing[i], MAP_COLORS.red);
         }
+        this.worldMap.fitCountries([this.current.code, ...this.neighbors]);
         this.setMessage('Gefehlt haben: ' + this.getNames(missing), 'red');
         this.timeoutId = setTimeout(() => this.nextCountry(), 2000);
     }
