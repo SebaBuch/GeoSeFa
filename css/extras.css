@@ -319,3 +319,77 @@ body.theme-geodistance {
 .ranking-row.me {
     outline: 3px solid #2a9d8f;
 }
+
+.ranking-gap {
+    padding: 2px 10px;
+    color: #7a8590;
+    font-weight: 800;
+    text-align: center;
+}
+
+/* Spieler */
+
+.player-cards {
+    display: flex;
+    flex-wrap: wrap;
+    gap: 12px;
+    margin-top: 16px;
+}
+
+.player-card {
+    display: flex;
+    align-items: center;
+    gap: 12px;
+    flex: 1 1 260px;
+    padding: 12px 16px;
+    border: 2px solid #dfe5ea;
+    border-radius: 16px;
+    background-color: #ffffff;
+    font-family: inherit;
+    font-size: 0.9375rem;
+    color: #1d2b36;
+    text-align: left;
+    cursor: pointer;
+}
+
+.player-card:hover {
+    border-color: #f4a261;
+}
+
+.player-card.me {
+    border-color: #2a9d8f;
+}
+
+.player-card-info {
+    display: flex;
+    flex-direction: column;
+    gap: 2px;
+}
+
+.ranking-row {
+    cursor: pointer;
+}
+
+/* Konto löschen */
+
+.button-danger {
+    background: #c1121f;
+    border-color: #c1121f;
+    color: #ffffff;
+}
+
+.button-danger:hover {
+    background: #8a0c16;
+}
+
+.delete-box {
+    margin-top: 16px;
+    padding: 16px 20px;
+    border: 2px solid #c1121f;
+    border-radius: 16px;
+    background-color: #fff0f0;
+}
+
+.delete-box h3 {
+    color: #c1121f;
+}

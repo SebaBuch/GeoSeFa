@@ -100,3 +100,54 @@ async function logout() {
     profileService.clearCurrent();
     showLogin();
 }
+
+function showDeleteAccount() {
+    document.getElementById('delete-area').innerHTML = deleteAccountTemplate();
+}
+
+function hideDeleteAccount() {
+    document.getElementById('delete-area').innerHTML = '';
+}
+
+async function confirmDeleteAccount(event) {
+    event.preventDefault();
+    if (isLoginBusy) {
+        return;
+    }
+    isLoginBusy = true;
+    setFormMessage('delete-message', 'Lösche Konto ...', '');
+    const errorText = await deleteAccountData(readValue('delete-password'));
+    isLoginBusy = false;
+    if (errorText !== '') {
+        return setFormMessage('delete-message', errorText, 'red');
+    }
+    showLoginWithMessage('Dein Konto wurde gelöscht.');
+}
+
+function showLoginWithMessage(text) {
+    showLogin();
+    setFormMessage('login-message', text, 'green');
+}
+
+async function deleteAccountData(password) {
+    const uid = authService.getUid();
+    const login = await authService.signIn(authService.session.email, password);
+    if (login.error) {
+        return login.error;
+    }
+    if (!await syncService.deleteCloudData(uid)) {
+        return 'Die Daten konnten nicht gelöscht werden. Bist du online?';
+    }
+    return await removeAccount(uid);
+}
+
+async function removeAccount(uid) {
+    const result = await authService.deleteAccount();
+    if (result.error) {
+        return result.error;
+    }
+    profileService.removeProfile(uid);
+    authService.logout();
+    profileService.clearCurrent();
+    return '';
+}

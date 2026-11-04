@@ -10,6 +10,7 @@ let authService;
 let cloudService;
 let syncService;
 let toastCounter = 0;
+let countdownIntervalId = null;
 let shopService;
 let currentGame = null;
 let lastQuizSettings = null;
@@ -118,6 +119,36 @@ function showHome() {
     setTheme('home');
     updateHeader();
     showContent(homeTemplate(buildDailyCard() + buildWeeklyCard(), buildGameCards(), buildQuizCards(), countryService.countries.length));
+    startDailyCountdown();
+}
+
+function startDailyCountdown() {
+    clearInterval(countdownIntervalId);
+    updateDailyCountdown();
+    countdownIntervalId = setInterval(() => updateDailyCountdown(), 1000);
+}
+
+function updateDailyCountdown() {
+    const elements = document.getElementsByClassName('daily-countdown');
+    if (elements.length === 0) {
+        return clearInterval(countdownIntervalId);
+    }
+    const seconds = getSecondsUntilMidnight();
+    for (let i = 0; i < elements.length; i++) {
+        elements[i].innerHTML = formatCountdown(seconds);
+    }
+    if (seconds === 0) {
+        clearInterval(countdownIntervalId);
+        setTimeout(() => refreshAfterMidnight(), 2000);
+    }
+}
+
+function refreshAfterMidnight() {
+    if (currentGame instanceof DailyChallenge) {
+        showDaily();
+    } else if (currentGame === null) {
+        showHome();
+    }
 }
 
 function setTheme(name) {
@@ -184,6 +215,7 @@ function showDaily() {
     setTheme('daily');
     currentGame = new DailyChallenge();
     currentGame.start();
+    startDailyCountdown();
 }
 
 function buildDailyCard() {

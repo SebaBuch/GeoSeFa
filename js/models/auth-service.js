@@ -9,7 +9,8 @@ const AUTH_ERRORS = {
     INVALID_EMAIL: 'Die E-Mail-Adresse ist ungültig.',
     WEAK_PASSWORD: 'Das Passwort muss mindestens 6 Zeichen haben.',
     MISSING_PASSWORD: 'Bitte gib ein Passwort ein.',
-    TOO_MANY_ATTEMPTS_TRY_LATER: 'Zu viele Versuche. Warte kurz und versuch es nochmal.'
+    TOO_MANY_ATTEMPTS_TRY_LATER: 'Zu viele Versuche. Warte kurz und versuch es nochmal.',
+    CREDENTIAL_TOO_OLD_LOGIN_AGAIN: 'Bitte gib dein Passwort nochmal ein.'
 };
 
 class AuthService {
@@ -63,6 +64,18 @@ class AuthService {
             return response.ok ? { ok: true } : { error: this.translateError(data) };
         } catch (error) {
             console.error('Passwort-Mail fehlgeschlagen:', error);
+            return { error: 'Keine Verbindung zum Server. Bist du online?' };
+        }
+    }
+
+    async deleteAccount() {
+        try {
+            const body = { idToken: await this.getToken() };
+            const response = await fetch(AUTH_URL + 'delete?key=' + FIREBASE_API_KEY, this.createJsonOptions(body));
+            const data = await response.json();
+            return response.ok ? { ok: true } : { error: this.translateError(data) };
+        } catch (error) {
+            console.error('Konto konnte nicht gelöscht werden:', error);
             return { error: 'Keine Verbindung zum Server. Bist du online?' };
         }
     }

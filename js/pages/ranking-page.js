@@ -1,15 +1,20 @@
+const RANKING_TOP_COUNT = 3;
+let playersCache = [];
+
 function buildPublicSummary() {
     const profile = profileService.getCurrent();
     const values = {};
     for (let i = 0; i < COMPARE_ROWS.length; i++) {
         values[COMPARE_ROWS[i].id] = getCompareValue(profile, COMPARE_ROWS[i]);
     }
+    const summary = { name: profile.name, title: profile.title, frame: profile.frame, outfit: profile.outfit, values: values };
+    return { ...summary, ...getDailySummary(), achievements: storageService.load('achievements', {}), updatedAt: Date.now() };
+}
+
+function getDailySummary() {
     const dailyResults = storageService.load('daily-' + getDateKey(new Date()), {});
     const daily = new DailyChallenge();
-    return {
-        name: profile.name, title: profile.title, frame: profile.frame, outfit: profile.outfit, values: values,
-        dailyDate: getDateKey(new Date()), dailyTotal: daily.getTotal(dailyResults), dailyDone: daily.countDone(dailyResults), updatedAt: Date.now()
-    };
+    return { dailyDate: getDateKey(new Date()), dailyTotal: daily.getTotal(dailyResults), dailyDone: daily.countDone(dailyResults) };
 }
 
 function getCompareValue(profile, row) {
@@ -44,10 +49,8 @@ async function loadPlayers(loadingText) {
     showContent(loadingTemplate(loadingText));
     await syncService.publishSummary();
     const players = await syncService.loadPublicProfiles();
-    if (!players) {
-        showContent(onlineErrorTemplate());
-    }
-    return players;
+    playersCache = players || [];
+    return players ? players : showContent(onlineErrorTemplate());
 }
 
 async function showRanking() {
@@ -83,11 +86,19 @@ function buildRankingRows(entries, suffix) {
     const sorted = sortByValue(entries);
     let html = '';
     for (let i = 0; i < sorted.length; i++) {
-        const player = sorted[i].player;
-        const meClass = player.uid === authService.getUid() ? 'me' : '';
-        html += rankingRowTemplate(i + 1, buildPlayerAvatar(player), player.name, formatNumber(sorted[i].value) + suffix, meClass);
+        html += buildRankingRow(sorted[i], i + 1, suffix);
     }
     return html;
+}
+
+function buildRankingRow(entry, place, suffix) {
+    const player = entry.player;
+    const isMe = player.uid === authService.getUid();
+    if (place > RANKING_TOP_COUNT && !isMe) {
+        return '';
+    }
+    const gapHtml = place > RANKING_TOP_COUNT ? rankingGapTemplate() : '';
+    return gapHtml + rankingRowTemplate(player.uid, place, buildPlayerAvatar(player), player.name, formatNumber(entry.value) + suffix, isMe ? 'me' : '');
 }
 
 function sortByValue(entries) {
@@ -107,28 +118,65 @@ function buildPlayerAvatar(player) {
     return avatarTemplate(buildAvatarSvg(outfit, false), player.frame || 'none', 'avatar-small');
 }
 
-async function showCompare() {
-    const players = await loadPlayers('Lade Profilvergleich ...');
-    if (!players) {
-        return;
+async function showPlayers() {
+    const players = await loadPlayers('Lade Spieler ...');
+    if (players) {
+        showContent(playersTemplate(buildPlayerCards(''), players.length));
     }
-    let headHtml = '';
-    for (let i = 0; i < players.length; i++) {
-        headHtml += compareHeadTemplate(players[i], buildPlayerAvatar(players[i]));
-    }
-    showContent(compareTemplate(headHtml, buildCompareRows(players)));
 }
 
-function buildCompareRows(players) {
+function filterPlayers(text) {
+    document.getElementById('player-cards').innerHTML = buildPlayerCards(normalizeText(text));
+}
+
+function buildPlayerCards(search) {
+    const players = playersCache.filter(player => normalizeText(player.name).includes(search));
     let html = '';
+    for (let i = 0; i < players.length; i++) {
+        const level = players[i].values ? players[i].values.level : 1;
+        const meClass = players[i].uid === authService.getUid() ? 'me' : '';
+        html += playerCardTemplate(players[i], buildPlayerAvatar(players[i]), level, getPlayerRank(players[i]), meClass);
+    }
+    return html === '' ? topEmptyTemplate() : html;
+}
+
+function getPlayerRank(player) {
+    const bestStreak = player.values ? player.values['best-streak'] || 0 : 0;
+    return RANKS[profileService.getRankIndex(bestStreak)].title;
+}
+
+function findPlayer(uid) {
+    const matches = playersCache.filter(player => player.uid === uid);
+    return matches[0];
+}
+
+function showPlayerProfile(uid) {
+    const player = findPlayer(uid);
+    if (!player) {
+        return showPlayers();
+    }
+    stopCurrentGame();
+    setTheme('home');
+    const avatarHtml = bodyTemplate(buildAvatarSvg(player.outfit || DEFAULT_OUTFIT, true), 'body-profile');
+    const achievements = player.achievements || {};
+    const achievementsHtml = buildAchievementCategories(achievements, false);
+    showContent(playerProfileTemplate(player, avatarHtml, getPlayerRank(player), Object.keys(achievements).length, buildPlayerCompare(player), achievementsHtml));
+}
+
+function buildPlayerCompare(player) {
+    const me = { ...buildPublicSummary(), uid: authService.getUid() };
+    const isMe = me.uid === player.uid;
+    let html = isMe ? '' : compareHeadRowTemplate(player.name, me.name);
     for (let i = 0; i < COMPARE_ROWS.length; i++) {
-        const values = players.map(player => player.values ? player.values[COMPARE_ROWS[i].id] || 0 : 0);
-        const best = Math.max(...values);
-        let cellsHtml = '';
-        for (let j = 0; j < values.length; j++) {
-            cellsHtml += compareCellTemplate(formatNumber(values[j]), values[j] === best && best > 0 ? 'best' : '');
-        }
-        html += compareRowTemplate(COMPARE_ROWS[i].label, cellsHtml);
+        const value = player.values ? player.values[COMPARE_ROWS[i].id] || 0 : 0;
+        const myValue = me.values[COMPARE_ROWS[i].id] || 0;
+        html += isMe ? compareRowTemplate(COMPARE_ROWS[i].label, compareCellTemplate(formatNumber(value), '')) : buildCompareRow(COMPARE_ROWS[i].label, value, myValue);
     }
     return html;
+}
+
+function buildCompareRow(label, value, myValue) {
+    const valueClass = value > myValue ? 'best' : '';
+    const myClass = myValue > value ? 'best' : '';
+    return compareRowTemplate(label, compareCellTemplate(formatNumber(value), valueClass) + compareCellTemplate(formatNumber(myValue), myClass));
 }

@@ -74,6 +74,13 @@ class SyncService {
         return state;
     }
 
+    async deleteCloudData(uid) {
+        clearTimeout(this.timeoutId);
+        const userOk = await this.cloud.remove('users/' + uid);
+        const publicOk = await this.cloud.remove('public/' + uid);
+        return userOk && publicOk;
+    }
+
     async publishSummary() {
         await this.upload();
         await this.cloud.put('public/' + this.auth.getUid(), buildPublicSummary());

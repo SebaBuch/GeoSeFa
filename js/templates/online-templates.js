@@ -62,7 +62,7 @@ function rankingTemplate(dailyHtml, listsHtml, playerCount) {
                 <h1>Rangliste</h1>
                 ${backButtonTemplate()}
             </div>
-            <p>${playerCount} Spieler · Deine Zeile ist markiert. Die Werte werden nach jedem Spiel automatisch aktualisiert.</p>
+            <p>${playerCount} Spieler · Gezeigt werden die Top 3. Bist du nicht dabei, siehst du deinen Platz darunter. Klick auf einen Spieler für sein Profil.</p>
             <div class="top-lists">
                 ${dailyHtml}
                 ${listsHtml}
@@ -80,9 +80,9 @@ function rankingListTemplate(title, rowsHtml) {
     `;
 }
 
-function rankingRowTemplate(place, avatarHtml, name, valueText, meClass) {
+function rankingRowTemplate(uid, place, avatarHtml, name, valueText, meClass) {
     return `
-        <div class="top-row ranking-row place-${place} ${meClass}">
+        <div class="top-row ranking-row place-${place} ${meClass}" onclick="showPlayerProfile('${uid}')">
             <span class="top-place">${place}.</span>
             ${avatarHtml}
             <span class="ranking-name">${name}</span>
@@ -91,30 +91,70 @@ function rankingRowTemplate(place, avatarHtml, name, valueText, meClass) {
     `;
 }
 
-function compareTemplate(headHtml, rowsHtml) {
+function rankingGapTemplate() {
+    return `<div class="ranking-gap">…</div>`;
+}
+
+function playersTemplate(cardsHtml, playerCount) {
     return `
         <section class="panel">
             <div class="title-row">
-                <h1>Profilvergleich</h1>
+                <h1>Spieler</h1>
                 ${backButtonTemplate()}
             </div>
-            <div class="compare-table">
-                <div class="compare-row compare-head">
-                    <span class="compare-label"></span>
-                    ${headHtml}
-                </div>
-                ${rowsHtml}
-            </div>
+            <p>${playerCount} Spieler angemeldet. Klick auf einen Spieler, um sein Profil zu sehen und dich zu vergleichen.</p>
+            <form class="guess-form" onsubmit="event.preventDefault()">
+                <input id="player-search" placeholder="Spieler suchen ..." autocomplete="off" oninput="filterPlayers(this.value)">
+            </form>
+            <div id="player-cards" class="player-cards">${cardsHtml}</div>
         </section>
     `;
 }
 
-function compareHeadTemplate(player, avatarHtml) {
+function playerCardTemplate(player, avatarHtml, level, rankTitle, meClass) {
     return `
-        <span class="compare-cell compare-profile">
+        <button class="player-card ${meClass}" onclick="showPlayerProfile('${player.uid}')">
             ${avatarHtml}
-            <b>${player.name}</b>
-        </span>
+            <span class="player-card-info">
+                <b>${player.name}</b>
+                <span>${player.title || ''}</span>
+                <span>Level ${level} · ${rankTitle}</span>
+            </span>
+        </button>
+    `;
+}
+
+function playerProfileTemplate(player, avatarHtml, rankTitle, achievementCount, compareHtml, achievementsHtml) {
+    return `
+        <section class="panel">
+            <div class="title-row">
+                <h1>Profil von ${player.name}</h1>
+                <button class="back-button" onclick="showPlayers()">← Alle Spieler</button>
+            </div>
+            <div class="profile-card">
+                ${avatarHtml}
+                <div class="profile-card-info">
+                    <span class="profile-card-name">${player.name}</span>
+                    <span class="profile-card-title">${player.title || ''}</span>
+                    <span class="profile-rank">Rang: <b>${rankTitle}</b></span>
+                    <span class="profile-level">Erfolge: ${achievementCount} / ${ACHIEVEMENTS.length}</span>
+                </div>
+            </div>
+            <h2 class="profile-section-title">Rekorde</h2>
+            <div class="compare-table">${compareHtml}</div>
+            <h2 class="profile-section-title">Erfolge</h2>
+            ${achievementsHtml}
+        </section>
+    `;
+}
+
+function compareHeadRowTemplate(playerName, myName) {
+    return `
+        <div class="compare-row compare-head">
+            <span class="compare-label"></span>
+            <span class="compare-cell"><b>${playerName}</b></span>
+            <span class="compare-cell"><b>${myName} (du)</b></span>
+        </div>
     `;
 }
 

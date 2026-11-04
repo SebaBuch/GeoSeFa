@@ -59,7 +59,6 @@ const TOP_LISTS = [
 const COMPARE_ROWS = [
     { id: 'level', label: 'Level', source: 'level' },
     { id: 'xp', label: 'XP gesamt', source: 'profile', key: 'xp' },
-    { id: 'coins', label: 'Coins', source: 'profile', key: 'coins' },
     { id: 'achievements', label: 'Erfolge', source: 'achievements' },
     { id: 'best-streak', label: 'Beste Tages-Serie', source: 'storage', key: 'best-daily-streak' },
     { id: 'games', label: 'Spiele beendet', source: 'counter', key: 'games' },

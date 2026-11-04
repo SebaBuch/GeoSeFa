@@ -39,4 +39,14 @@ class CloudService {
     async patch(path, data) {
         return await this.send('PATCH', path, data);
     }
+
+    async remove(path) {
+        try {
+            const response = await fetch(await this.buildUrl(path), { method: 'DELETE' });
+            return response.ok;
+        } catch (error) {
+            console.error('Löschen in der Cloud fehlgeschlagen:', error);
+            return false;
+        }
+    }
 }

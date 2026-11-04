@@ -51,6 +51,25 @@ function accountTemplate(email) {
         <div class="account-row">
             <span>Angemeldet als <b>${email}</b>. Dein Spielstand wird automatisch online gespeichert.</span>
             <button class="button button-secondary" onclick="logout()">Abmelden</button>
+            <button class="button button-danger" onclick="showDeleteAccount()">Konto löschen</button>
+        </div>
+        <div id="delete-area"></div>
+    `;
+}
+
+function deleteAccountTemplate() {
+    return `
+        <div class="delete-box">
+            <h3>Konto wirklich löschen?</h3>
+            <p>Dein Spielstand, deine Erfolge, Coins und dein Eintrag in der Rangliste werden <b>endgültig</b> gelöscht. Danach ist deine E-Mail-Adresse wieder frei. Das kann nicht rückgängig gemacht werden.</p>
+            <form class="login-form" onsubmit="confirmDeleteAccount(event)">
+                <input id="delete-password" type="password" placeholder="Zur Bestätigung dein Passwort" autocomplete="current-password">
+                <div class="button-row">
+                    <button class="button button-danger" type="submit">Endgültig löschen</button>
+                    <button class="button button-secondary" type="button" onclick="hideDeleteAccount()">Abbrechen</button>
+                </div>
+            </form>
+            <div id="delete-message" class="message"></div>
         </div>
     `;
 }
@@ -67,7 +86,7 @@ function profilePageTemplate(cardHtml, sectionsHtml, accountHtml, settingsHtml) 
                 <button class="button" onclick="showShop()">Avatar &amp; Shop</button>
                 <button class="button" onclick="showLeaderboard()">Meine Bestenliste</button>
                 <button class="button" onclick="showRanking()">Rangliste</button>
-                <button class="button" onclick="showCompare()">Profilvergleich</button>
+                <button class="button" onclick="showPlayers()">Spieler</button>
                 <button class="button" onclick="showAchievements()">Erfolge</button>
             </div>
             ${sectionsHtml}

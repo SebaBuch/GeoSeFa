@@ -62,6 +62,13 @@ class ProfileService {
         return this.profiles.filter(profile => !profile.account);
     }
 
+    removeProfile(uid) {
+        this.profiles = this.profiles.filter(profile => profile.id !== uid);
+        this.writeProfiles();
+        this.storage.setProfileData(uid, {});
+        this.storage.saveGlobal('changed-' + uid, {});
+    }
+
     clearCurrent() {
         this.currentId = '';
         this.storage.saveGlobal('current-profile', '');

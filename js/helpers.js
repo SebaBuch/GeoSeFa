@@ -85,3 +85,15 @@ function getDistanceKm(lat1, lng1, lat2, lng2) {
     const a = Math.pow(Math.sin(deltaLat / 2), 2) + Math.cos(toRadians(lat1)) * Math.cos(toRadians(lat2)) * Math.pow(Math.sin(deltaLng / 2), 2);
     return 6371 * 2 * Math.atan2(Math.sqrt(a), Math.sqrt(1 - a));
 }
+
+function getSecondsUntilMidnight() {
+    const now = new Date();
+    const midnight = new Date(now.getFullYear(), now.getMonth(), now.getDate() + 1);
+    return Math.max(0, Math.floor((midnight - now) / 1000));
+}
+
+function formatCountdown(seconds) {
+    const hours = Math.floor(seconds / 3600);
+    const minutes = Math.floor(seconds % 3600 / 60);
+    return padNumber(hours) + ':' + padNumber(minutes) + ':' + padNumber(seconds % 60);
+}

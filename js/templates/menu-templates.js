@@ -31,7 +31,7 @@ function homeTemplate(dailyCardHtml, gameCardsHtml, quizCardsHtml, countryCount)
             <p>Geografie-Spiele und Quiz für zwischendurch. Spiel, so oft du willst.</p>
             <div class="intro-buttons">
                 <button class="intro-button" onclick="showRanking()">Rangliste</button>
-                <button class="intro-button" onclick="showCompare()">Profilvergleich</button>
+                <button class="intro-button" onclick="showPlayers()">Spieler</button>
             </div>
         </section>
         ${dailyCardHtml}
@@ -154,6 +154,7 @@ function dailyCardTemplate(doneCount, total, streakText) {
             <span class="daily-card-badge">Jeden Tag neu</span>
             <span class="daily-card-title">Tages-Challenge</span>
             <span class="daily-card-text">Heute erledigt: <b>${doneCount} / 3</b> · Punkte: <b>${total} / 300</b> · Serie: <b>${streakText}</b></span>
+            <span class="daily-card-text">Nächste Challenge in <b class="daily-countdown">--:--:--</b></span>
             <span class="card-play">Zur Challenge →</span>
         </button>
     `;
@@ -170,6 +171,7 @@ function dailyTemplate(dateText, tasksHtml, total, streakText, calendarHtml) {
             <div class="status-row">
                 <span>Punkte heute: <b>${total} / 300</b></span>
                 <span>Serie: <b>${streakText}</b></span>
+                <span>Nächste Challenge in <b class="daily-countdown">--:--:--</b></span>
             </div>
             <div class="daily-tasks">${tasksHtml}</div>
             <div class="button-row">
