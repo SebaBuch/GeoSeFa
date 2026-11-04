@@ -18,6 +18,7 @@ class ProfileService {
                 profile.owned = profile.avatar ? [flagId] : [];
                 profile.coins = START_COINS;
             }
+            profile.outfit = { ...DEFAULT_OUTFIT, ...profile.outfit };
         }
     }
 
@@ -69,6 +70,7 @@ class ProfileService {
             this.showLevelUp(level);
             this.addCoins(COINS_PER_LEVEL);
         }
+        achievementService.checkLevel(newLevel);
     }
 
     addCoins(amount) {
@@ -78,6 +80,8 @@ class ProfileService {
         }
         profile.coins += amount;
         this.saveProfiles();
+        achievementService.increase('coins-earned', amount);
+        achievementService.unlockIf(profile.coins >= 3000, 'hidden-rich');
         updateHeader();
     }
 

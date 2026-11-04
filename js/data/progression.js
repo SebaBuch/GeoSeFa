@@ -2,7 +2,7 @@ const MAX_LEVEL = 30;
 
 const XP_PER_COUNTER = { games: 10, correct: 2 };
 
-const XP_PER_TIER = { bronze: 50, silver: 100, gold: 200 };
+const XP_PER_TIER = { bronze: 50, silver: 100, gold: 200, platinum: 400 };
 
 const RANKS = [
     { days: 0, title: 'Tourist' },

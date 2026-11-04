@@ -113,22 +113,30 @@ function updateProfileButton() {
 }
 
 function buildProfileAvatar(profile, frame, sizeClass) {
-    return avatarTemplate(buildAvatarSvg(profile.outfit), frame, sizeClass);
+    return avatarTemplate(buildAvatarSvg(profile.outfit, false), frame, sizeClass);
 }
 
-function buildAvatarSvg(outfit) {
+function buildAvatarSvg(outfit, isFullBody) {
     const hair = shopService.getOutfitItem(outfit, 'hair');
-    return avatarSvgTemplate({
+    const accessory = shopService.getOutfitItem(outfit, 'accessory');
+    const parts = {
         background: shopService.getOutfitItem(outfit, 'background').svg,
+        accessoryBack: accessory.svgBack || '',
         hairBack: hair.svgBack || '',
-        top: shopService.getOutfitItem(outfit, 'top').svg,
         skin: shopService.getOutfitItem(outfit, 'skin').color,
         hair: hair.svg,
-        glasses: shopService.getOutfitItem(outfit, 'glasses').svg,
-        hat: shopService.getOutfitItem(outfit, 'hat').svg,
-        accessory: shopService.getOutfitItem(outfit, 'accessory').svg,
+        accessory: accessory.svg,
         flag: buildFlagPin(shopService.getOutfitItem(outfit, 'flag'))
-    });
+    };
+    return avatarSvgTemplate(addClothingParts(parts, outfit), isFullBody ? '0 0 100 168' : '0 0 100 100');
+}
+
+function addClothingParts(parts, outfit) {
+    const slots = ['top', 'pants', 'shoes', 'glasses', 'hat'];
+    for (let i = 0; i < slots.length; i++) {
+        parts[slots[i]] = shopService.getOutfitItem(outfit, slots[i]).svg;
+    }
+    return parts;
 }
 
 function buildFlagPin(flagItem) {
@@ -168,7 +176,7 @@ function buildStartAvatarOptions() {
     for (let i = 0; i < skins.length; i++) {
         const selectedClass = skins[i].id === selectedStartAvatar ? 'selected' : '';
         const outfit = { ...DEFAULT_OUTFIT, skin: skins[i].id };
-        html += startAvatarTemplate(skins[i], avatarTemplate(buildAvatarSvg(outfit), 'none', 'avatar-medium'), selectedClass);
+        html += startAvatarTemplate(skins[i], bodyTemplate(buildAvatarSvg(outfit, true), 'body-small'), selectedClass);
     }
     return html;
 }
@@ -187,6 +195,7 @@ function createProfile(event) {
     }
     profileService.createProfile(name, selectedStartAvatar);
     changeProfileData();
+    achievementService.unlockIf(profileService.profiles.length >= 2, 'hidden-family');
 }
 
 function switchProfile(profileId) {
@@ -217,7 +226,7 @@ function buildProfileCard() {
     const xpText = isMax ? 'Maximales Level erreicht · ' + profile.xp + ' XP' : info.current + ' / ' + info.needed + ' XP bis Level ' + (info.level + 1);
     const bestStreak = profileService.getBestStreak();
     const rankIndex = profileService.getRankIndex(bestStreak);
-    const avatarHtml = buildProfileAvatar(profile, profile.frame, 'avatar-large');
+    const avatarHtml = bodyTemplate(buildAvatarSvg(profile.outfit, true), 'body-profile');
     return profileCardTemplate(profile, avatarHtml, RANKS[rankIndex].title, getRankText(rankIndex, bestStreak), info.level, percent, xpText);
 }
 
@@ -360,12 +369,22 @@ function buildAchievementItems(items) {
         const isUnlocked = achievementService.isUnlocked(items[i].id);
         const className = isUnlocked ? 'unlocked achievement-' + items[i].tier : 'locked';
         const statusText = isUnlocked ? 'Seit ' + formatDateGerman(achievementService.unlocked[items[i].id]) : getProgressText(items[i]);
-        html += achievementItemTemplate(items[i], className, statusText);
+        html += achievementItemTemplate(getShownAchievement(items[i], isUnlocked), className, statusText);
     }
     return html;
 }
 
+function getShownAchievement(achievement, isUnlocked) {
+    if (achievement.hidden && !isUnlocked) {
+        return { title: '???', description: 'Versteckter Erfolg. Spiel weiter, um ihn zu finden.' };
+    }
+    return achievement;
+}
+
 function getProgressText(achievement) {
+    if (achievement.hidden) {
+        return 'Versteckt';
+    }
     if (!achievement.counter) {
         return 'Gesperrt';
     }
@@ -533,7 +552,7 @@ function showShop() {
 
 function renderShop() {
     const profile = profileService.getCurrent();
-    const previewHtml = avatarTemplate(buildAvatarSvg(previewOutfit), profile.frame, 'avatar-shop');
+    const previewHtml = bodyTemplate(buildAvatarSvg(previewOutfit, true), 'body-large');
     const flagPickerHtml = shopSlot === 'flag' ? shopFlagPickerTemplate(buildFlagOptions()) : '';
     showContent(shopPageTemplate(previewHtml, profile.coins, buildBuyArea(), buildShopTabs(), buildShopItems(), flagPickerHtml));
 }
@@ -552,10 +571,18 @@ function buildShopItems() {
     for (let i = 0; i < items.length; i++) {
         const outfit = { ...previewOutfit };
         outfit[shopSlot] = items[i].id;
-        const previewHtml = avatarTemplate(buildAvatarSvg(outfit), 'none', 'avatar-medium');
+        const previewHtml = buildShopPreview(outfit);
         html += shopItemTemplate(items[i], previewHtml, getItemStateText(items[i]), getItemStateClass(items[i]));
     }
     return html;
+}
+
+function buildShopPreview(outfit) {
+    const portraitSlots = ['skin', 'hair', 'hat', 'glasses', 'flag'];
+    if (portraitSlots.includes(shopSlot)) {
+        return avatarTemplate(buildAvatarSvg(outfit, false), 'none', 'avatar-medium');
+    }
+    return bodyTemplate(buildAvatarSvg(outfit, true), 'body-small');
 }
 
 function getItemStateText(item) {
@@ -565,15 +592,20 @@ function getItemStateText(item) {
     if (shopService.isOwned(item)) {
         return item.price === 0 ? 'Gratis' : 'Im Besitz';
     }
+    if (item.achievement) {
+        return 'Geheimer Erfolg';
+    }
     return shopService.isLevelReached(item) ? item.price + ' Coins' : 'ab Level ' + item.level;
 }
 
 function getItemStateClass(item) {
     const triedClass = previewOutfit[item.slot] === item.id ? 'tried ' : '';
+    const specialClass = item.special ? 'special ' : '';
     if (shopService.isOwned(item)) {
-        return triedClass + 'owned';
+        return triedClass + specialClass + 'owned';
     }
-    return triedClass + (shopService.isLevelReached(item) ? 'buyable' : 'locked');
+    const isBuyable = shopService.isLevelReached(item) && !item.achievement;
+    return triedClass + specialClass + (isBuyable ? 'buyable' : 'locked');
 }
 
 function buildFlagOptions() {
@@ -604,6 +636,10 @@ function buildBuyArea() {
 }
 
 function getBuyHint(pending, total) {
+    const secretItems = pending.filter(item => item.achievement);
+    if (secretItems.length > 0) {
+        return secretItems[0].name + ' gibt es nur über einen geheimen Erfolg.';
+    }
     const lockedItems = pending.filter(item => !shopService.isLevelReached(item));
     if (lockedItems.length > 0) {
         return lockedItems[0].name + ' gibt es erst ab Level ' + lockedItems[0].level + '.';

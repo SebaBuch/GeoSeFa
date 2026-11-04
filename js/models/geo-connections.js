@@ -205,11 +205,12 @@ class GeoConnections extends BaseGame {
 
     checkConnectionAchievements(won) {
         this.storage.saveTopScore('geoconnections', won ? 100 - this.mistakes * 20 : 0, this.mistakes + ' Fehler');
+        this.achievements.unlockIf(!won && this.solved.length === 0, 'hidden-totalausfall');
         if (!won) {
             return;
         }
         this.achievements.increase('conn-wins', 1);
-        this.achievements.unlockIf(this.mistakes === 0, 'conn-perfect');
+        this.achievements.increase('conn-perfects', this.mistakes === 0 ? 1 : 0);
         this.achievements.unlockIf(this.mistakes === 3, 'conn-close');
     }
 

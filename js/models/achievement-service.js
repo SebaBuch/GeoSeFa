@@ -64,6 +64,19 @@ class AchievementService {
         const hour = new Date().getHours();
         this.unlockIf(hour >= 0 && hour < 4, 'night-owl');
         this.unlockIf(this.hasPlayedAllGames(), 'all-games');
+        this.unlockIf(this.isHoliday(), 'hidden-holiday');
+    }
+
+    isHoliday() {
+        const dayKey = getDateKey(new Date()).slice(5);
+        return dayKey === '12-24' || dayKey === '12-31' || dayKey === '01-01';
+    }
+
+    checkLevel(level) {
+        this.unlockIf(level >= 5, 'level-5');
+        this.unlockIf(level >= 10, 'level-10');
+        this.unlockIf(level >= 20, 'level-20');
+        this.unlockIf(level >= 30, 'level-30');
     }
 
     hasPlayedAllGames() {

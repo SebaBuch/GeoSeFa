@@ -1,10 +1,17 @@
-function avatarSvgTemplate(parts) {
+function avatarSvgTemplate(parts, viewBox) {
     return `
-        <svg class="avatar-svg" viewBox="0 0 100 100" xmlns="http://www.w3.org/2000/svg">
+        <svg class="avatar-svg" viewBox="${viewBox}" xmlns="http://www.w3.org/2000/svg">
             ${parts.background}
+            ${parts.accessoryBack}
             ${parts.hairBack}
+            <path d="M34 118 L47 118 L46 157 L34 157 Z M53 118 L66 118 L66 157 L54 157 Z" fill="${parts.skin}"/>
+            ${parts.pants}
+            ${parts.shoes}
+            <path d="M14 84 L10 109 L19 110 L23 86 Z M86 84 L90 109 L81 110 L77 86 Z" fill="${parts.skin}"/>
             ${parts.top}
-            <rect x="44" y="58" width="12" height="14" fill="${parts.skin}"/>
+            <circle cx="14.5" cy="112" r="5" fill="${parts.skin}"/>
+            <circle cx="85.5" cy="112" r="5" fill="${parts.skin}"/>
+            <rect x="44" y="58" width="12" height="13" fill="${parts.skin}"/>
             <circle cx="30" cy="46" r="4" fill="${parts.skin}"/>
             <circle cx="70" cy="46" r="4" fill="${parts.skin}"/>
             <ellipse cx="50" cy="45" rx="20" ry="22" fill="${parts.skin}"/>
@@ -15,11 +22,15 @@ function avatarSvgTemplate(parts) {
             <path d="M43 53 Q50 59 57 53" stroke="#2b2b2b" stroke-width="2" fill="none" stroke-linecap="round"/>
             ${parts.hair}
             ${parts.glasses}
-            ${parts.hat}
             ${parts.accessory}
             ${parts.flag}
+            ${parts.hat}
         </svg>
     `;
+}
+
+function bodyTemplate(svgHtml, sizeClass) {
+    return `<span class="avatar-body ${sizeClass}">${svgHtml}</span>`;
 }
 
 function flagPinTemplate(flagUrl) {
@@ -48,7 +59,7 @@ function shopPageTemplate(previewHtml, coins, buyAreaHtml, tabsHtml, itemsHtml, 
                     <div class="shop-items">${itemsHtml}</div>
                 </div>
             </div>
-            <p class="shop-hint">Coins gibt es für jedes beendete Spiel (5), Erfolge (25 / 50 / 100), Tages-Aufgaben (bis 10 pro Aufgabe, +20 für alle drei) und jeden Level-Aufstieg (50).</p>
+            <p class="shop-hint">Coins gibt es für jedes beendete Spiel (5), Erfolge (25 / 50 / 100 / 250), Tages-Aufgaben (bis 10 pro Aufgabe, +20 für alle drei) und jeden Level-Aufstieg (50).</p>
         </section>
     `;
 }
@@ -60,6 +71,7 @@ function shopTabTemplate(slot, activeClass) {
 function shopItemTemplate(item, previewHtml, stateText, stateClass) {
     return `
         <button class="shop-item ${stateClass}" onclick="tryShopItem('${item.id}')">
+            <span class="shop-item-special">Special</span>
             ${previewHtml}
             <span class="shop-item-name">${item.name}</span>
             <span class="shop-item-state">${stateText}</span>

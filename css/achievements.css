@@ -178,3 +178,17 @@
         font-size: 0.8125rem;
     }
 }
+
+/* Platin */
+
+.toast-platinum {
+    border-left-color: #b9f2ff;
+    background: linear-gradient(135deg, #1d2b36 0%, #3a3f6b 100%);
+}
+
+.achievement-platinum {
+    background: linear-gradient(135deg, #f4f7fb 0%, #c9d6ff 50%, #e2c9ff 100%);
+    border-color: #8f9bd6;
+    color: #232a5c;
+    box-shadow: 0 6px 18px rgba(143, 155, 214, 0.45);
+}

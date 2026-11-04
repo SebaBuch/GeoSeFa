@@ -168,6 +168,13 @@ class GeoRoute extends BaseGame {
         this.achievements.increase('route-wins', 1);
         this.achievements.unlockIf(this.guesses.length === this.neededCountries, 'route-perfect');
         this.achievements.unlockIf(this.neededCountries >= 5, 'route-long');
+        this.achievements.unlockIf(this.targetCountry.code === 'DEU', 'hidden-heimweh');
+    }
+
+    checkRouteStreak() {
+        const streak = this.storage.getGameStats('georoute').streak;
+        this.achievements.unlockIf(streak >= 5, 'route-streak-5');
+        this.achievements.unlockIf(streak >= 10, 'route-streak-10');
     }
 
     updateMapView() {
@@ -241,6 +248,7 @@ class GeoRoute extends BaseGame {
     saveRouteResult(won) {
         this.storage.saveGameResult('georoute', won, 0);
         this.storage.saveTopScore('georoute', this.getRouteScore(won), this.startCountry.name + ' → ' + this.targetCountry.name);
+        this.checkRouteStreak();
     }
 
     getRouteScore(won) {

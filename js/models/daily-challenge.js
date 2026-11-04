@@ -43,13 +43,19 @@ class DailyChallenge extends BaseGame {
         const isComplete = this.countDone(results) === DAILY_TASKS.length;
         this.achievements.unlockIf(isComplete, 'daily-first');
         this.achievements.unlockIf(total >= 250, 'daily-250');
-        this.achievements.unlockIf(total >= 300, 'daily-perfect');
-        this.achievements.unlockIf(streak >= 7, 'daily-streak-7');
-        this.achievements.unlockIf(streak >= 30, 'daily-streak-30');
+        this.achievements.increase('daily-perfects', total >= 300 ? 1 : 0);
+        this.checkDailyStreak(streak);
         if (isComplete) {
+            this.achievements.unlockIf(new Date().getHours() < 7, 'hidden-early');
             this.profiles.addCoins(DAILY_COMPLETE_COINS);
             this.storage.saveTopScore('daily', total, '');
         }
+    }
+
+    checkDailyStreak(streak) {
+        this.achievements.unlockIf(streak >= 7, 'daily-streak-7');
+        this.achievements.unlockIf(streak >= 30, 'daily-streak-30');
+        this.achievements.unlockIf(streak >= 100, 'daily-streak-100');
     }
 
     buildTasksHtml(results) {

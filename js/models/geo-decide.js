@@ -112,6 +112,8 @@ class GeoDecide extends BaseGame {
         this.achievements.unlockIf(this.streak >= 15, 'decide-15');
         this.achievements.unlockIf(this.streak >= 30, 'decide-30');
         this.achievements.unlockIf(this.streak >= 50, 'decide-50');
+        this.achievements.unlockIf(this.streak >= 75, 'decide-75');
+        this.achievements.unlockIf(this.streak === 1, 'hidden-decide-one');
         this.achievements.unlockIf(this.streak === 0, 'decide-first-fail');
     }
 

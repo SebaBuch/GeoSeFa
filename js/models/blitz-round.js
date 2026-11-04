@@ -132,7 +132,15 @@ class BlitzRound extends BaseGame {
         this.achievements.unlockIf(this.score >= 10, 'blitz-10');
         this.achievements.unlockIf(this.score >= 20, 'blitz-20');
         this.achievements.unlockIf(this.score >= 30, 'blitz-30');
+        this.achievements.unlockIf(this.score >= 40, 'blitz-40');
         this.achievements.unlockIf(this.score >= 10 && this.wrongCount === 0, 'blitz-perfect');
+        this.achievements.unlockIf(this.score >= 20 && this.wrongCount === 0, 'blitz-perfect-20');
+        this.achievements.unlockIf(this.wrongCount >= 10, 'hidden-clown');
+        this.achievements.unlockIf(this.score === 0, 'hidden-blitz-zero');
+        this.checkBlitzAll();
+    }
+
+    checkBlitzAll() {
         this.achievements.saveBest('blitz-' + this.category, this.score);
         const flags = this.achievements.getCounter('blitz-flags');
         const capitals = this.achievements.getCounter('blitz-capitals');

@@ -99,7 +99,8 @@ class QuizBase extends BaseGame {
         const isFullWorld = this.settings.region === 'Welt' && this.settings.amount === 100;
         const category = this.mode.category;
         this.storage.saveTopScore('quiz', percent, this.getTopDetail());
-        this.achievements.unlockIf(percent === 100, 'quiz-perfect');
+        this.achievements.increase('quiz-perfects', percent === 100 ? 1 : 0);
+        this.achievements.unlockIf(mode === 'map-click' && isFullWorld && percent === 100, 'quiz-world-map-perfect');
         this.achievements.unlockIf(mode === 'map-click' && this.settings.region === 'Europa' && this.settings.amount === 100 && percent >= 90, 'quiz-europe-map');
         this.achievements.unlockIf(mode === 'map-click' && isFullWorld && percent >= 80, 'quiz-world-map');
         this.achievements.unlockIf(category === 'flags' && isFullWorld && percent >= 90, 'quiz-flags-world');

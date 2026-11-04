@@ -42,6 +42,9 @@ class ShopService {
     }
 
     isOwned(item) {
+        if (item.achievement) {
+            return achievementService.isUnlocked(item.achievement);
+        }
         return item.price === 0 || this.profiles.getCurrent().owned.includes(item.id);
     }
 
@@ -52,7 +55,7 @@ class ShopService {
     getPendingItems(outfit) {
         const pending = [];
         for (let i = 0; i < SHOP_SLOTS.length; i++) {
-            const item = this.getItem(outfit[SHOP_SLOTS[i].key]);
+            const item = this.getOutfitItem(outfit, SHOP_SLOTS[i].key);
             if (!this.isOwned(item)) {
                 pending.push(item);
             }
@@ -69,8 +72,8 @@ class ShopService {
     }
 
     canBuyAll(items) {
-        const levelOk = items.filter(item => !this.isLevelReached(item)).length === 0;
-        return levelOk && this.getTotalPrice(items) <= this.profiles.getCurrent().coins;
+        const blocked = items.filter(item => !this.isLevelReached(item) || item.achievement);
+        return blocked.length === 0 && this.getTotalPrice(items) <= this.profiles.getCurrent().coins;
     }
 
     buyAndWear(outfit) {
@@ -83,15 +86,34 @@ class ShopService {
         for (let i = 0; i < pending.length; i++) {
             profile.owned.push(pending[i].id);
         }
-        profile.outfit = { ...outfit };
-        this.profiles.saveProfiles();
+        this.recordPurchase(pending);
+        this.wearOwned(outfit);
         return true;
     }
 
+    recordPurchase(items) {
+        const flags = items.filter(item => item.slot === 'flag');
+        const specials = items.filter(item => item.special);
+        achievementService.increase('items-bought', items.length - flags.length);
+        achievementService.increase('flags-bought', flags.length);
+        achievementService.increase('specials-bought', specials.length);
+        achievementService.increase('coins-spent', this.getTotalPrice(items));
+    }
+
     wearOwned(outfit) {
-        if (this.getPendingItems(outfit).length === 0) {
-            this.profiles.getCurrent().outfit = { ...outfit };
-            this.profiles.saveProfiles();
+        const profile = this.profiles.getCurrent();
+        const isChanged = JSON.stringify(outfit) !== JSON.stringify(profile.outfit);
+        if (this.getPendingItems(outfit).length > 0 || !isChanged) {
+            return;
         }
+        profile.outfit = { ...outfit };
+        this.profiles.saveProfiles();
+        achievementService.increase('outfit-changes', 1);
+        achievementService.unlockIf(this.isMidasOutfit(outfit), 'hidden-midas');
+    }
+
+    isMidasOutfit(outfit) {
+        const isGold = outfit.top === 'top-gold' && outfit.pants === 'pants-gold' && outfit.shoes === 'shoes-gold';
+        return isGold && outfit.hat === 'hat-crown';
     }
 }

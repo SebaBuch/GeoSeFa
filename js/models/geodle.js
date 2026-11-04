@@ -32,6 +32,7 @@ class Geodle extends BaseGame {
 
     addGuess(country) {
         this.guesses.push(country.code);
+        this.achievements.unlockIf(this.guesses.length === 1 && country.code === 'DEU', 'hidden-patriot');
         this.rowsHtml += geodleRowTemplate(this.compare(country));
         document.getElementById('geodle-rows').innerHTML = this.rowsHtml;
         this.setMessage('', '');
@@ -89,6 +90,7 @@ class Geodle extends BaseGame {
             return;
         }
         this.storage.saveGameResult('geodle', won, 0);
+        this.achievements.unlockIf(this.storage.getGameStats('geodle').streak >= 10, 'geodle-streak-10');
         this.storage.saveTopScore('geodle', this.getGeodleScore(won), this.target.name);
         this.playEndSound(won, !won);
         const text = won ? 'Richtig! Gesucht war:' : 'Leider nicht geschafft. Gesucht war:';
@@ -100,7 +102,7 @@ class Geodle extends BaseGame {
             return;
         }
         this.achievements.increase('geodle-wins', 1);
-        this.achievements.unlockIf(this.guesses.length === 1, 'geodle-one');
+        this.achievements.increase('geodle-ones', this.guesses.length === 1 ? 1 : 0);
         this.achievements.unlockIf(this.guesses.length <= 3, 'geodle-three');
         this.achievements.unlockIf(this.guesses.length === this.maxGuesses, 'geodle-last');
     }
