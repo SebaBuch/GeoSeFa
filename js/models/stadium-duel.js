@@ -8,8 +8,8 @@ class StadiumDuel extends ValueDuel {
 
     createPool() {
         const stadiums = [];
-        for (let i = 0; i < this.football.clubs.length; i++) {
-            const club = this.football.clubs[i];
+        for (let i = 0; i < this.football.stadiumClubs.length; i++) {
+            const club = this.football.stadiumClubs[i];
             const existing = stadiums.filter(stadium => stadium.name === club.stadium)[0];
             if (existing) {
                 existing.clubs.push(club);

@@ -1,6 +1,7 @@
 class FootballService {
     constructor() {
         this.clubs = this.createList(FOOTBALL_CLUBS);
+        this.stadiumClubs = this.clubs.filter(club => club.stadium);
         this.players = this.createPlayerList();
     }
 

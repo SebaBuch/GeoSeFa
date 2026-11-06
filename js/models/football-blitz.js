@@ -50,8 +50,8 @@ class FootballBlitz extends FootballGame {
             this.club = this.football.getClub(player.club);
             return this.showPrompt(playerPromptTemplate(question, player));
         }
-        this.club = this.pickItem(this.football.clubs);
         const isCrest = this.category === 'crests';
+        this.club = this.pickItem(isCrest ? this.football.clubs : this.football.stadiumClubs);
         this.showPrompt(isCrest ? crestPromptTemplate(question, this.club.logo) : stadiumPromptTemplate(question, this.club.stadium));
     }
 
@@ -63,7 +63,7 @@ class FootballBlitz extends FootballGame {
         if (this.category !== 'stadiums') {
             return this.football.clubs;
         }
-        return this.football.clubs.filter(club => club.code === this.club.code || club.stadium !== this.club.stadium);
+        return this.football.stadiumClubs.filter(club => club.code === this.club.code || club.stadium !== this.club.stadium);
     }
 
     choose(code) {

@@ -12,8 +12,8 @@ class SquadDuel extends ValueDuel {
             const player = this.football.players[i];
             squads[player.club] = (squads[player.club] || 0) + player.value;
         }
-        const clubs = this.football.clubs.filter(club => squads[club.code] > 0);
-        return clubs.map(club => ({ ...club, squadValue: squads[club.code] }));
+        const pool = this.football.clubs.map(club => ({ ...club, squadValue: club.squadValue || squads[club.code] || 0 }));
+        return pool.filter(club => club.squadValue > 0);
     }
 
     getValue(club) {
