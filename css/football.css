@@ -43,6 +43,7 @@
 .card-stadiumduel,
 .card-playerwordle,
 .card-valueduel,
+.card-squadduel,
 .card-footballblitz {
     border-top-color: #2d6a4f;
     background: linear-gradient(180deg, #c7ecd5 0%, #f0fbf4 100%);
@@ -55,7 +56,9 @@
 .card-playerwordle .card-title,
 .card-playerwordle .card-stats,
 .card-valueduel .card-title,
+.card-squadduel .card-title,
 .card-valueduel .card-stats,
+.card-squadduel .card-stats,
 .card-footballblitz .card-title,
 .card-footballblitz .card-stats {
     color: #1b5e3b;
@@ -65,6 +68,7 @@
 .card-stadiumduel .card-play,
 .card-playerwordle .card-play,
 .card-valueduel .card-play,
+.card-squadduel .card-play,
 .card-footballblitz .card-play {
     background-color: #2d6a4f;
 }
@@ -75,6 +79,7 @@ body.theme-crestquiz,
 body.theme-stadiumduel,
 body.theme-playerwordle,
 body.theme-valueduel,
+body.theme-squadduel,
 body.theme-footballblitz {
     background-color: #2d6a4f;
     background-image:

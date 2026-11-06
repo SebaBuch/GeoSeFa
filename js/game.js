@@ -34,6 +34,7 @@ const FOOTBALL_GAMES = [
     { key: 'stadiumduel', title: 'Stadion-Quiz', description: 'Welches Stadion hat mehr oder weniger Plätze? Halte deine Serie.', statsType: 'streak' },
     { key: 'playerwordle', title: 'Spieler-Wordle', description: 'Finde den gesuchten Spieler mit Hinweisen zu Verein, Position, Nation und mehr.', statsType: 'win' },
     { key: 'valueduel', title: 'Wer ist mehr wert?', description: 'Welcher Spieler hat den höheren Marktwert? Halte deine Serie.', statsType: 'streak' },
+    { key: 'squadduel', title: 'Welcher Kader ist mehr wert?', description: 'Welcher Verein hat den wertvolleren Kader? Halte deine Serie.', statsType: 'streak' },
     { key: 'footballblitz', title: 'Blitzrunde Fußball', description: '60 Sekunden: Spieler, Wappen oder Stadien dem richtigen Verein zuordnen.', statsType: 'fbblitz' }
 ];
 
@@ -402,6 +403,8 @@ function createFootballGame(key) {
         return new PlayerWordle();
     } else if (key === 'valueduel') {
         return new ValueDuel();
+    } else if (key === 'squadduel') {
+        return new SquadDuel();
     }
     return new FootballBlitz();
 }

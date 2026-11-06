@@ -75,6 +75,9 @@ class FootballService {
     }
 
     formatValue(value) {
+        if (value >= 1000000000) {
+            return (value / 1000000000).toLocaleString('de-DE', { maximumFractionDigits: 2 }) + ' Mrd. €';
+        }
         if (value >= 1000000) {
             return (value / 1000000).toLocaleString('de-DE', { maximumFractionDigits: 2 }) + ' Mio. €';
         }

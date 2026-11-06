@@ -132,6 +132,17 @@ function stadiumCardTemplate(stadium, crestsHtml, clubNames, valueText) {
     `;
 }
 
+function squadCardTemplate(club, leagueName, valueText) {
+    return `
+        <button id="decide-${club.code}" class="decide-card value-card" onclick="currentGame.choose('${club.code}')">
+            <img class="value-crest" src="${club.logo}" alt="${club.name}">
+            <span class="decide-name">${club.name}</span>
+            <span class="value-club">${leagueName}</span>
+            <span id="value-${club.code}" class="decide-value">${valueText}</span>
+        </button>
+    `;
+}
+
 function footballBlitzSelectTemplate(playersBest, crestsBest, stadiumsBest) {
     return `
         <section class="panel">

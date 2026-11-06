@@ -155,6 +155,8 @@ const ACHIEVEMENTS = [
     { id: 'wordle-fast', category: 'Fußball', tier: 'gold', title: 'Kennt jeden', description: 'Finde einen Spieler in höchstens 3 Versuchen.' },
     { id: 'value-10', category: 'Fußball', tier: 'silver', title: 'Berater', description: 'Schaff eine Serie von 10 bei „Wer ist mehr wert?“.' },
     { id: 'value-25', category: 'Fußball', tier: 'gold', title: 'Sportdirektor', description: 'Schaff eine Serie von 25 bei „Wer ist mehr wert?“.' },
+    { id: 'squad-10', category: 'Fußball', tier: 'silver', title: 'Kaderplaner', description: 'Schaff eine Serie von 10 bei „Welcher Kader ist mehr wert?“.' },
+    { id: 'squad-25', category: 'Fußball', tier: 'gold', title: 'Vereinsboss', description: 'Schaff eine Serie von 25 bei „Welcher Kader ist mehr wert?“.' },
     { id: 'fbblitz-15', category: 'Fußball', tier: 'silver', title: 'Konter', description: 'Hol 15 Punkte in einer Blitzrunde Fußball.' },
     { id: 'fbblitz-30', category: 'Fußball', tier: 'gold', title: 'Tempofußball', description: 'Hol 30 Punkte in einer Blitzrunde Fußball.' },
     { id: 'fbblitz-perfect', category: 'Fußball', tier: 'gold', title: 'Fehlerfrei', description: 'Hol mindestens 15 Punkte in einer Blitzrunde Fußball ohne Fehler.' },

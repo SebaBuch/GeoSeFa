@@ -68,6 +68,7 @@ const TOP_LISTS = [
     { key: 'stadiumduel', title: 'Stadion-Quiz', unit: 'in Serie' },
     { key: 'playerwordle', title: 'Spieler-Wordle', unit: 'Punkte' },
     { key: 'valueduel', title: 'Wer ist mehr wert?', unit: 'in Serie' },
+    { key: 'squadduel', title: 'Welcher Kader ist mehr wert?', unit: 'in Serie' },
     { key: 'footballblitz-players', title: 'Blitzrunde Spieler', unit: 'Richtige' },
     { key: 'footballblitz-crests', title: 'Blitzrunde Wappen', unit: 'Richtige' },
     { key: 'footballblitz-stadiums', title: 'Blitzrunde Stadien', unit: 'Richtige' },
