@@ -1,4 +1,6 @@
 const WORDLE_FIELDS = ['league', 'club', 'position', 'nation', 'age', 'number', 'value'];
+const WORDLE_MIN_VALUES = [5, 10, 15, 20, 30, 50, 0];
+const TOP_FIVE_LEAGUES = ['bl1', 'pl', 'sa', 'll', 'l1'];
 
 class PlayerWordle extends FootballGame {
     constructor() {
@@ -8,13 +10,77 @@ class PlayerWordle extends FootballGame {
     }
 
     start() {
-        const pool = this.football.players.filter(player => player.value >= 5000000);
-        this.target = this.pickItem(pool);
+        const settings = this.storage.load('wordle-settings', { minValue: 5, league: 'all' });
+        this.showScreen(wordleSelectTemplate(this.buildValueOptions(), this.buildLeagueOptions()));
+        document.getElementById('wordle-value').value = String(settings.minValue);
+        document.getElementById('wordle-league').value = settings.league;
+        this.updatePoolInfo();
+    }
+
+    buildValueOptions() {
+        let html = '';
+        for (let i = 0; i < WORDLE_MIN_VALUES.length; i++) {
+            const minValue = WORDLE_MIN_VALUES[i];
+            html += selectOptionTemplate(minValue, minValue > 0 ? 'Mindestens ' + minValue + ' Mio. €' : 'Alle Marktwerte');
+        }
+        return html;
+    }
+
+    buildLeagueOptions() {
+        const leagueKeys = Object.keys(FOOTBALL_LEAGUES);
+        let html = selectOptionTemplate('all', 'Alle Ligen') + selectOptionTemplate('top5', 'Top 5 Ligen');
+        for (let i = 0; i < leagueKeys.length; i++) {
+            html += selectOptionTemplate(leagueKeys[i], FOOTBALL_LEAGUES[leagueKeys[i]].name);
+        }
+        return html;
+    }
+
+    readSettings() {
+        return {
+            minValue: Number(document.getElementById('wordle-value').value),
+            league: document.getElementById('wordle-league').value
+        };
+    }
+
+    updatePoolInfo() {
+        const settings = this.readSettings();
+        const count = this.getPool(settings.minValue, settings.league).length;
+        document.getElementById('wordle-pool').innerHTML = count > 0 ? count + ' Spieler möglich' : 'Keine Spieler mit diesen Einstellungen';
+        document.getElementById('wordle-start').disabled = count === 0;
+    }
+
+    startWithSettings() {
+        const settings = this.readSettings();
+        this.storage.save('wordle-settings', settings);
+        this.chooseCategory(settings.minValue, settings.league);
+    }
+
+    getPool(minValue, league) {
+        const byValue = this.football.players.filter(player => player.value > 0 && player.value >= minValue * 1000000);
+        if (league === 'all') {
+            return byValue;
+        }
+        return byValue.filter(player => this.isInLeague(player, league));
+    }
+
+    isInLeague(player, league) {
+        const clubLeague = this.football.getClub(player.club).league;
+        return league === 'top5' ? TOP_FIVE_LEAGUES.includes(clubLeague) : clubLeague === league;
+    }
+
+    getSettingsText(minValue, league) {
+        const valueText = minValue > 0 ? 'ab ' + minValue + ' Mio. €' : 'alle Marktwerte';
+        const leagueNames = { all: 'alle Ligen', top5: 'Top 5 Ligen' };
+        return valueText + ' · ' + (leagueNames[league] || FOOTBALL_LEAGUES[league].name);
+    }
+
+    chooseCategory(minValue, league = 'all') {
+        this.target = this.pickItem(this.getPool(minValue, league));
         this.guesses = [];
         this.firstGreen = {};
         this.rowsHtml = '';
         this.finished = false;
-        this.showScreen(playerWordleTemplate());
+        this.showScreen(playerWordleTemplate('Spieler-Wordle · ' + this.getSettingsText(minValue, league)));
         this.updateInfo();
     }
 

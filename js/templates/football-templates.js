@@ -31,10 +31,29 @@ function crestInfoTemplate(round, totalRounds, score, pointsText) {
     `;
 }
 
-function playerWordleTemplate() {
+function wordleSelectTemplate(valueOptionsHtml, leagueOptionsHtml) {
+    return `
+        <section class="panel setup">
+            ${gameHeaderTemplate('Spieler-Wordle', 'Stell ein, aus welchen Spielern der gesuchte Spieler kommt. Je höher der Marktwert, desto bekannter die Spieler.')}
+            <label class="setting">Marktwert
+                <select id="wordle-value" onchange="currentGame.updatePoolInfo()">${valueOptionsHtml}</select>
+            </label>
+            <label class="setting">Liga
+                <select id="wordle-league" onchange="currentGame.updatePoolInfo()">${leagueOptionsHtml}</select>
+            </label>
+            <div id="wordle-pool" class="quiz-best"></div>
+            <div class="button-row">
+                <button id="wordle-start" class="button" onclick="currentGame.startWithSettings()">Spiel starten</button>
+                <button class="button button-secondary" onclick="selectSection('football')">Zurück</button>
+            </div>
+        </section>
+    `;
+}
+
+function playerWordleTemplate(title) {
     return `
         <section class="panel">
-            ${gameHeaderTemplate('Spieler-Wordle', 'Errate den gesuchten Spieler in 8 Versuchen. Grün = richtig, Rot = falsch. Bei Alter, Nummer und Marktwert zeigt der Pfeil, ob der gesuchte Wert höher oder niedriger ist. Jedes Feld, das grün wird, gibt Punkte – je früher, desto mehr.')}
+            ${gameHeaderTemplate(title, 'Errate den gesuchten Spieler in 8 Versuchen. Grün = richtig, Rot = falsch. Bei Alter, Nummer und Marktwert zeigt der Pfeil, ob der gesuchte Wert höher oder niedriger ist. Jedes Feld, das grün wird, gibt Punkte – je früher, desto mehr.')}
             <form class="guess-form" onsubmit="currentGame.submitGuess(event)">
                 <input id="wordle-input" oninput="currentGame.showSuggestions(this)" placeholder="Spieler eingeben ..." autocomplete="off">
                 <button class="button" type="submit">Raten</button>
