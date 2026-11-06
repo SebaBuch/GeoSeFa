@@ -1,6 +1,6 @@
 # GeoSeFa
 
-GeoSeFa ist ein Geografie-Spiel im Browser – inspiriert von Geotrivia, aber ohne Tageslimit. Es gibt acht Spielmodi, Quiz, eine tägliche Challenge, Wochenaufgaben, Erfolge, einen Avatar-Shop, eine gemeinsame Rangliste und Duelle gegen andere Spieler (live oder als Herausforderung).
+GeoSeFa ist ein Geografie-Spiel im Browser – inspiriert von Geotrivia, aber ohne Tageslimit. Es gibt acht Geografie-Spielmodi, fünf Fußball-Modi, Quiz, eine tägliche Challenge, Wochenaufgaben, Erfolge, einen Avatar-Shop, eine gemeinsame Rangliste und Duelle gegen andere Spieler (live oder als Herausforderung).
 
 **Live spielen:** https://sebabuch.github.io/GeoSeFa/
 
@@ -20,6 +20,17 @@ GeoSeFa ist ein Geografie-Spiel im Browser – inspiriert von Geotrivia, aber oh
 | **Grenz-Kette** | In 90 Sekunden möglichst viele Nachbarländer nennen. |
 | **Blitzrunde** | 60 Sekunden Flaggen, Hauptstädte oder Umrisse. |
 
+### Fußball
+| Spiel | Worum es geht |
+| --- | --- |
+| **Wappen-Quiz** | Verein am verschwommenen Wappen erkennen – jeder Fehler macht es schärfer. |
+| **Stadion-Quiz** | Welcher Verein spielt hier, wie viele Plätze hat das Stadion? |
+| **Spieler-Wordle** | Spieler über Liga, Verein, Position, Nation, Alter, Nummer und Marktwert erraten. |
+| **Wer ist mehr wert?** | Den Spieler mit dem höheren Marktwert wählen. |
+| **Blitzrunde Fußball** | 60 Sekunden Wappen und Spieler zuordnen. |
+
+Die Fußballdaten (58 Vereine aus Bundesliga, Premier League und Serie A mit 1638 Spielern) liegen als eigene Datendateien im Projekt, eine Datei pro Liga.
+
 Dazu acht **Quiz-Modi** (Länder auf der Karte, Eintippen, Umrisse, Flaggen, Hauptstädte) mit Regionen, Zeitlimit und einem **Fehler-Training**, das gezielt die Länder abfragt, die man oft falsch hat.
 
 ![GeoRoute](img/readme/georoute.jpg)
@@ -28,10 +39,10 @@ Dazu acht **Quiz-Modi** (Länder auf der Karte, Eintippen, Umrisse, Flaggen, Hau
 ### Fortschritt
 - **Tages-Challenge** mit drei Aufgaben, für alle Spieler gleich (deterministischer Zufall über einen Seed), Serie, Kalender und Countdown.
 - **Wochenaufgaben** mit Coins als Belohnung.
-- **117 Erfolge** in Bronze, Silber, Gold und Platin – darunter versteckte Erfolge. Wer alle schafft, bekommt ein exklusives Legenden-Set.
+- **135 Erfolge** in Bronze, Silber, Gold und Platin – darunter versteckte Erfolge. Wer alle schafft, bekommt ein exklusives Legenden-Set.
 - **Statistik-Seite** mit Trefferquote pro Kontinent und den häufigsten Fehlern, **Lieblingserfolge** im Profil und ein **täglicher Login-Bonus**.
 - **Level, XP und Ränge** (nach bester Tages-Serie).
-- **Avatar-Shop** mit über 220 Teilen (Haare, Kleidung, Hüte, Brillen, Accessoires, Begleiter, Hintergründe, Flaggen), Special- und Saison-Items. Haare und Kleidung sind frei färbbar (33 Farben). Die Figur ist komplett als SVG gezeichnet.
+- **Avatar-Shop** mit über 240 Teilen (Haare, Kleidung, Hüte, Brillen, Accessoires, Begleiter, Hintergründe, Flaggen), Special- und Saison-Items. Haare und Kleidung sind frei färbbar (33 Farben). Die Figur ist komplett als SVG gezeichnet.
 - **Tipps** gegen Coins in Geodle und Grenz-Kette.
 
 ![Shop](img/readme/shop.jpg)

@@ -1,0 +1,167 @@
+/* Bereich wählen */
+
+.section-tabs {
+    display: flex;
+    flex-wrap: wrap;
+    gap: 10px;
+    margin: 24px 0 4px 0;
+}
+
+.section-tab {
+    flex: 1 1 200px;
+    padding: 14px 20px;
+    border: 3px solid #ffffff;
+    border-radius: 16px;
+    background-color: rgba(255, 255, 255, 0.75);
+    font-family: inherit;
+    font-size: 1.25rem;
+    font-weight: 800;
+    color: #14213d;
+    cursor: pointer;
+}
+
+.section-tab:hover {
+    background-color: #ffffff;
+}
+
+.section-tab.active {
+    border-color: #14213d;
+    background: linear-gradient(135deg, #14213d 0%, #1d3557 100%);
+    color: #ffffff;
+}
+
+.football-note {
+    margin-top: 12px;
+    font-size: 0.875rem;
+    color: #ffffff;
+    text-shadow: 0 1px 3px rgba(0, 0, 0, 0.5);
+}
+
+/* Karten */
+
+.card-crestquiz,
+.card-stadiumduel,
+.card-playerwordle,
+.card-valueduel,
+.card-footballblitz {
+    border-top-color: #2d6a4f;
+    background: linear-gradient(180deg, #c7ecd5 0%, #f0fbf4 100%);
+}
+
+.card-crestquiz .card-title,
+.card-crestquiz .card-stats,
+.card-stadiumduel .card-title,
+.card-stadiumduel .card-stats,
+.card-playerwordle .card-title,
+.card-playerwordle .card-stats,
+.card-valueduel .card-title,
+.card-valueduel .card-stats,
+.card-footballblitz .card-title,
+.card-footballblitz .card-stats {
+    color: #1b5e3b;
+}
+
+.card-crestquiz .card-play,
+.card-stadiumduel .card-play,
+.card-playerwordle .card-play,
+.card-valueduel .card-play,
+.card-footballblitz .card-play {
+    background-color: #2d6a4f;
+}
+
+/* Hintergrund */
+
+body.theme-crestquiz,
+body.theme-stadiumduel,
+body.theme-playerwordle,
+body.theme-valueduel,
+body.theme-footballblitz {
+    background-color: #2d6a4f;
+    background-image:
+        repeating-linear-gradient(90deg, rgba(255, 255, 255, 0.05) 0px, rgba(255, 255, 255, 0.05) 80px, rgba(0, 0, 0, 0.04) 80px, rgba(0, 0, 0, 0.04) 160px),
+        linear-gradient(180deg, #1b4332 0%, #40916c 100%);
+    background-attachment: fixed;
+}
+
+/* Wappen-Quiz */
+
+.crest-area {
+    display: flex;
+    justify-content: center;
+    margin: 16px 0;
+}
+
+.crest-image {
+    width: 220px;
+    height: 220px;
+    user-select: none;
+    pointer-events: none;
+}
+
+.crest-small {
+    display: block;
+    width: 160px;
+    height: 160px;
+    margin: 12px auto;
+}
+
+/* Spieler-Wordle */
+
+.wordle-row span {
+    flex: 1 1 100px;
+    font-size: 0.9375rem;
+}
+
+.wordle-crest {
+    width: 22px;
+    height: 22px;
+}
+
+/* Wer ist mehr wert */
+
+.value-card {
+    gap: 6px;
+}
+
+.value-crest {
+    width: 110px;
+    height: 110px;
+}
+
+.decide-card.value-card img {
+    height: 110px;
+    border-radius: 0;
+    box-shadow: none;
+}
+
+.value-club {
+    font-weight: 700;
+    color: #2d6a4f;
+}
+
+.value-details {
+    font-size: 0.9375rem;
+    color: #5c6b77;
+}
+
+.stadium-crests {
+    display: flex;
+    justify-content: center;
+    gap: 10px;
+}
+
+/* Blitzrunde */
+
+.football-prompt {
+    display: flex;
+    flex-direction: column;
+    align-items: center;
+    width: 100%;
+}
+
+.player-prompt {
+    margin: 12px 0;
+    font-size: 2rem;
+    font-weight: 800;
+    text-align: center;
+}

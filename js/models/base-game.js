@@ -49,8 +49,12 @@ class BaseGame {
         document.getElementById('suggestions').innerHTML = html;
     }
 
+    getSuggestionNames() {
+        return this.countries.getSortedNames();
+    }
+
     findSuggestions(text) {
-        const names = this.countries.getSortedNames();
+        const names = this.getSuggestionNames();
         const startMatches = names.filter(name => normalizeText(name).startsWith(text));
         const otherMatches = names.filter(name => !normalizeText(name).startsWith(text) && normalizeText(name).includes(text));
         return [...startMatches, ...otherMatches].slice(0, 6);

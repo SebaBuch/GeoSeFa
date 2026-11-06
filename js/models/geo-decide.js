@@ -12,6 +12,8 @@ class GeoDecide extends BaseGame {
         this.finished = false;
         this.pool = this.countries.countries.filter(country => country.population > 0 && country.area > 0);
         this.known = this.pickItem(this.pool);
+        this.knownSide = 'left';
+        this.isFirstRound = true;
         this.nextRound();
     }
 
@@ -21,9 +23,11 @@ class GeoDecide extends BaseGame {
         this.askMore = this.randomNumber() < 0.5;
         this.unknown = this.pickOpponent();
         const question = this.askMore ? this.category.more : this.category.less;
-        const knownValue = this.formatValue(this.known);
         const stats = this.storage.getGameStats('geodecide');
-        this.showScreen(geoDecideTemplate(question, this.known, knownValue, this.unknown, this.streak, stats.highscore));
+        const knownHtml = decideCardTemplate(this.known, this.formatValue(this.known));
+        const unknownHtml = decideCardTemplate(this.unknown, '?');
+        const isLeft = this.knownSide === 'left';
+        this.showScreen(geoDecideTemplate(question, isLeft ? knownHtml : unknownHtml, isLeft ? unknownHtml : knownHtml, this.streak, stats.highscore));
     }
 
     pickOpponent() {
@@ -107,7 +111,11 @@ class GeoDecide extends BaseGame {
     }
 
     continueWithWinner(code) {
-        this.known = this.countries.getCountry(code);
+        if (!this.isFirstRound || code === this.known.code) {
+            this.known = this.unknown;
+            this.knownSide = this.knownSide === 'left' ? 'right' : 'left';
+        }
+        this.isFirstRound = false;
         this.nextRound();
     }
 

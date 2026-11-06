@@ -127,28 +127,30 @@ function scoreEndTemplate(title, score, maxScore, highscore, recordText, gameKey
     `;
 }
 
-function geoDecideTemplate(question, known, knownValue, unknown, streak, highscore) {
+function geoDecideTemplate(question, leftHtml, rightHtml, streak, highscore) {
     return `
         <section class="panel">
-            ${gameHeaderTemplate('GeoDecide', 'Klicke auf das richtige Land. Ein Fehler und das Spiel ist vorbei.')}
+            ${gameHeaderTemplate('GeoDecide', 'Klicke auf das richtige Land. Jedes Land bleibt höchstens zwei Runden. Ein Fehler und das Spiel ist vorbei.')}
             <div class="status-row">
                 <span>Serie: ${streak}</span>
                 <span>Rekord: ${highscore}</span>
             </div>
             <h2 class="question">${question}</h2>
             <div class="decide-list">
-                <button id="decide-${known.code}" class="decide-card" onclick="currentGame.choose('${known.code}')">
-                    <img src="${known.flag}" alt="Flagge">
-                    <span class="decide-name">${known.name}</span>
-                    <span id="decide-value-${known.code}" class="decide-value">${knownValue}</span>
-                </button>
-                <button id="decide-${unknown.code}" class="decide-card" onclick="currentGame.choose('${unknown.code}')">
-                    <img src="${unknown.flag}" alt="Flagge">
-                    <span class="decide-name">${unknown.name}</span>
-                    <span id="decide-value-${unknown.code}" class="decide-value">?</span>
-                </button>
+                ${leftHtml}
+                ${rightHtml}
             </div>
         </section>
+    `;
+}
+
+function decideCardTemplate(country, valueText) {
+    return `
+        <button id="decide-${country.code}" class="decide-card" onclick="currentGame.choose('${country.code}')">
+            <img src="${country.flag}" alt="Flagge">
+            <span class="decide-name">${country.name}</span>
+            <span id="decide-value-${country.code}" class="decide-value">${valueText}</span>
+        </button>
     `;
 }
 

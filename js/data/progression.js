@@ -64,6 +64,13 @@ const TOP_LISTS = [
     { key: 'blitz-flags', title: 'Blitzrunde Flaggen', unit: 'Richtige' },
     { key: 'blitz-capitals', title: 'Blitzrunde Hauptstädte', unit: 'Richtige' },
     { key: 'blitz-outlines', title: 'Blitzrunde Umrisse', unit: 'Richtige' },
+    { key: 'crestquiz', title: 'Wappen-Quiz', unit: 'Punkte' },
+    { key: 'stadiumduel', title: 'Stadion-Quiz', unit: 'in Serie' },
+    { key: 'playerwordle', title: 'Spieler-Wordle', unit: 'Punkte' },
+    { key: 'valueduel', title: 'Wer ist mehr wert?', unit: 'in Serie' },
+    { key: 'footballblitz-players', title: 'Blitzrunde Spieler', unit: 'Richtige' },
+    { key: 'footballblitz-crests', title: 'Blitzrunde Wappen', unit: 'Richtige' },
+    { key: 'footballblitz-stadiums', title: 'Blitzrunde Stadien', unit: 'Richtige' },
     { key: 'quiz', title: 'Quiz', unit: '%' },
     { key: 'daily', title: 'Tages-Challenge', unit: 'Punkte' }
 ];

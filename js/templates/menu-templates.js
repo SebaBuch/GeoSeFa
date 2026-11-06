@@ -23,12 +23,12 @@ function errorTemplate(text) {
     `;
 }
 
-function homeTemplate(dailyCardHtml, gameCardsHtml, quizCardsHtml, countryCount) {
+function homeTemplate(tabsHtml, sectionHtml, countryCount) {
     return `
         <section class="intro">
             <span class="intro-badge">Ohne Tageslimit</span>
             <h1>Willkommen bei GeoSeFa</h1>
-            <p>Geografie-Spiele und Quiz für zwischendurch. Spiel, so oft du willst.</p>
+            <p>Geografie- und Fußball-Spiele für zwischendurch. Spiel, so oft du willst.</p>
             <div class="intro-buttons">
                 <button class="intro-button" onclick="showRanking()">Rangliste</button>
                 <button class="intro-button" onclick="showPlayers()">Spieler</button>
@@ -37,11 +37,8 @@ function homeTemplate(dailyCardHtml, gameCardsHtml, quizCardsHtml, countryCount)
             </div>
         </section>
         <section id="champions" class="champions"><span class="champion">Lade Bestenliste ...</span></section>
-        ${dailyCardHtml}
-        <h2 class="section-title">Spiele</h2>
-        <section class="card-list">${gameCardsHtml}</section>
-        <h2 class="section-title">Quiz</h2>
-        <section class="card-list">${quizCardsHtml}</section>
+        ${tabsHtml}
+        ${sectionHtml}
         <footer class="home-footer">
             <span>${countryCount} Länder geladen</span>
             <div class="footer-links">

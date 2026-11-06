@@ -15,7 +15,14 @@ const DUEL_GAMES = [
     { key: 'borderchain', game: 'borderchain', title: 'Grenz-Kette', scoreText: 'Punkte' },
     { key: 'blitz-flags', game: 'blitz', category: 'flags', title: 'Blitzrunde Flaggen', scoreText: 'Richtige' },
     { key: 'blitz-capitals', game: 'blitz', category: 'capitals', title: 'Blitzrunde Hauptstädte', scoreText: 'Richtige' },
-    { key: 'blitz-outlines', game: 'blitz', category: 'outlines', title: 'Blitzrunde Umrisse', scoreText: 'Richtige' }
+    { key: 'blitz-outlines', game: 'blitz', category: 'outlines', title: 'Blitzrunde Umrisse', scoreText: 'Richtige' },
+    { key: 'crestquiz', game: 'crestquiz', title: 'Wappen-Quiz', scoreText: 'Punkte' },
+    { key: 'stadiumduel', game: 'stadiumduel', title: 'Stadion-Quiz', scoreText: 'Serie' },
+    { key: 'playerwordle', game: 'playerwordle', title: 'Spieler-Wordle', scoreText: 'Punkte' },
+    { key: 'valueduel', game: 'valueduel', title: 'Wer ist mehr wert?', scoreText: 'Serie' },
+    { key: 'footballblitz-players', game: 'footballblitz', category: 'players', title: 'Blitzrunde Spieler', scoreText: 'Richtige' },
+    { key: 'footballblitz-crests', game: 'footballblitz', category: 'crests', title: 'Blitzrunde Wappen', scoreText: 'Richtige' },
+    { key: 'footballblitz-stadiums', game: 'footballblitz', category: 'stadiums', title: 'Blitzrunde Stadien', scoreText: 'Richtige' }
 ];
 
 const DUEL_STATUS_TEXTS = {

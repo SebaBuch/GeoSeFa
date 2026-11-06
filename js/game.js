@@ -14,6 +14,7 @@ let nameService;
 let toastCounter = 0;
 let countdownIntervalId = null;
 let shopService;
+let footballService;
 let currentGame = null;
 let lastQuizSettings = null;
 
@@ -26,6 +27,14 @@ const GAMES = [
     { key: 'geodistance', title: 'GeoDistanz', description: 'Finde ein Land, dessen Hauptstadt so weit von der Start-Hauptstadt entfernt ist wie angegeben.', statsType: 'score' },
     { key: 'borderchain', title: 'Grenz-Kette', description: 'Nenne in 90 Sekunden so viele Nachbarländer wie möglich.', statsType: 'score' },
     { key: 'blitz', title: 'Blitzrunde', description: '60 Sekunden: so viele Flaggen, Hauptstädte oder Umrisse wie möglich.', statsType: 'blitz' }
+];
+
+const FOOTBALL_GAMES = [
+    { key: 'crestquiz', title: 'Wappen-Quiz', description: 'Erkenne den Verein am verschwommenen Wappen. Jeder Fehler macht es schärfer.', statsType: 'score' },
+    { key: 'stadiumduel', title: 'Stadion-Quiz', description: 'Welches Stadion hat mehr oder weniger Plätze? Halte deine Serie.', statsType: 'streak' },
+    { key: 'playerwordle', title: 'Spieler-Wordle', description: 'Finde den gesuchten Spieler mit Hinweisen zu Verein, Position, Nation und mehr.', statsType: 'win' },
+    { key: 'valueduel', title: 'Wer ist mehr wert?', description: 'Welcher Spieler hat den höheren Marktwert? Halte deine Serie.', statsType: 'streak' },
+    { key: 'footballblitz', title: 'Blitzrunde Fußball', description: '60 Sekunden: Spieler, Wappen oder Stadien dem richtigen Verein zuordnen.', statsType: 'fbblitz' }
 ];
 
 const QUIZ_CATEGORIES = [
@@ -59,6 +68,7 @@ function createServices() {
     shapeService = new ShapeService(countryService);
     worldMap = new WorldMap(shapeService);
     shopService = new ShopService(profileService, countryService);
+    footballService = new FootballService();
     questService = new QuestService(storageService, profileService);
     soundService = new SoundService(storageService);
     achievementService = new AchievementService(storageService, profileService);
@@ -129,8 +139,29 @@ function showHome() {
     stopCurrentGame();
     setTheme('home');
     updateHeader();
-    showContent(homeTemplate(buildDailyCard() + buildWeeklyCard(), buildGameCards(), buildQuizCards(), countryService.countries.length));
+    showContent(homeTemplate(buildSectionTabs(), buildSectionHtml(), countryService.countries.length));
     startHomeExtras();
+}
+
+function getSection() {
+    return storageService.loadGlobal('section', 'geo');
+}
+
+function selectSection(section) {
+    storageService.saveGlobal('section', section);
+    showHome();
+}
+
+function buildSectionTabs() {
+    const isFootball = getSection() === 'football';
+    return sectionTabsTemplate(isFootball ? '' : 'active', isFootball ? 'active' : '');
+}
+
+function buildSectionHtml() {
+    if (getSection() === 'football') {
+        return footballSectionTemplate(buildGameCards(FOOTBALL_GAMES), footballService.clubs.length, Object.keys(FOOTBALL_LEAGUES).length, footballService.players.length);
+    }
+    return geoSectionTemplate(buildDailyCard() + buildWeeklyCard(), buildGameCards(GAMES), buildQuizCards());
 }
 
 function startHomeExtras() {
@@ -285,18 +316,18 @@ function showImpressum() {
     showContent(impressumTemplate());
 }
 
-function buildGameCards() {
+function buildGameCards(games) {
     let html = '';
-    for (let i = 0; i < GAMES.length; i++) {
-        const stats = storageService.getGameStats(GAMES[i].key);
-        html += gameCardTemplate(GAMES[i], getStatsText(GAMES[i].statsType, stats));
+    for (let i = 0; i < games.length; i++) {
+        const stats = storageService.getGameStats(games[i].key);
+        html += gameCardTemplate(games[i], getStatsText(games[i].statsType, stats));
     }
     return html;
 }
 
 function getStatsText(statsType, stats) {
-    if (statsType === 'blitz') {
-        return getBlitzStatsText();
+    if (statsType === 'blitz' || statsType === 'fbblitz') {
+        return statsType === 'blitz' ? getBlitzStatsText() : getFootballBlitzStatsText();
     }
     if (statsType === 'score') {
         return 'Gespielt: ' + stats.played + ' · Highscore: ' + stats.highscore;
@@ -312,6 +343,13 @@ function getBlitzStatsText() {
     const capitalsBest = storageService.getGameStats('blitz-capitals').highscore;
     const outlinesBest = storageService.getGameStats('blitz-outlines').highscore;
     return 'Rekorde: Flaggen ' + flagsBest + ' · Hauptstädte ' + capitalsBest + ' · Umrisse ' + outlinesBest;
+}
+
+function getFootballBlitzStatsText() {
+    const playersBest = storageService.getGameStats('footballblitz-players').highscore;
+    const crestsBest = storageService.getGameStats('footballblitz-crests').highscore;
+    const stadiumsBest = storageService.getGameStats('footballblitz-stadiums').highscore;
+    return 'Rekorde: Spieler ' + playersBest + ' · Wappen ' + crestsBest + ' · Stadien ' + stadiumsBest;
 }
 
 function buildQuizCards() {
@@ -349,8 +387,23 @@ function createOtherGame(key) {
         return new GeoDistance();
     } else if (key === 'borderchain') {
         return new BorderChain();
+    } else if (key === 'geoconnections') {
+        return new GeoConnections();
     }
-    return new GeoConnections();
+    return createFootballGame(key);
+}
+
+function createFootballGame(key) {
+    if (key === 'crestquiz') {
+        return new CrestQuiz();
+    } else if (key === 'stadiumduel') {
+        return new StadiumDuel();
+    } else if (key === 'playerwordle') {
+        return new PlayerWordle();
+    } else if (key === 'valueduel') {
+        return new ValueDuel();
+    }
+    return new FootballBlitz();
 }
 
 function showQuizSetup(categoryKey) {

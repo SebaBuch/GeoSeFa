@@ -1,4 +1,4 @@
-const ACHIEVEMENT_CATEGORIES = ['Allgemein', 'Meilensteine', 'GeoRoute', 'GeoSize', 'GeoDecide', 'Geodle', 'GeoConnections', 'GeoDistanz', 'Grenz-Kette', 'Blitzrunde', 'Quiz', 'Tages-Challenge', 'Duelle', 'Avatar & Shop', 'Versteckt', 'Legende'];
+const ACHIEVEMENT_CATEGORIES = ['Allgemein', 'Meilensteine', 'GeoRoute', 'GeoSize', 'GeoDecide', 'Geodle', 'GeoConnections', 'GeoDistanz', 'Grenz-Kette', 'Blitzrunde', 'Quiz', 'Tages-Challenge', 'Duelle', 'Fußball', 'Avatar & Shop', 'Versteckt', 'Legende'];
 
 const ACHIEVEMENTS = [
     { id: 'first-game', category: 'Allgemein', tier: 'bronze', title: 'Erste Schritte', description: 'Beende dein erstes Spiel.', counter: 'games', goal: 1 },
@@ -140,6 +140,25 @@ const ACHIEVEMENTS = [
     { id: 'hidden-family', category: 'Versteckt', tier: 'bronze', hidden: true, title: 'Gesellige Runde', description: 'Öffne die Rangliste, wenn mindestens 4 Spieler dabei sind.' },
     { id: 'hidden-fashion', category: 'Versteckt', tier: 'silver', hidden: true, title: 'Modezar', description: 'Ändere dein Outfit 50-mal.', counter: 'outfit-changes', goal: 50 },
     { id: 'hidden-early', category: 'Versteckt', tier: 'silver', hidden: true, title: 'Frühaufsteher', description: 'Schließe die Tages-Challenge vor 7 Uhr morgens ab.' },
+
+    { id: 'fb-first', category: 'Fußball', tier: 'bronze', title: 'Anstoß', description: 'Beende dein erstes Fußball-Spiel.', counter: 'football-games', goal: 1 },
+    { id: 'fb-all', category: 'Fußball', tier: 'silver', title: 'Allrounder', description: 'Beende jeden Fußball-Modus mindestens einmal.' },
+    { id: 'fb-games-25', category: 'Fußball', tier: 'silver', title: 'Stammspieler', description: 'Beende 25 Fußball-Spiele.', counter: 'football-games', goal: 25 },
+    { id: 'fb-games-100', category: 'Fußball', tier: 'gold', title: 'Rekordspieler', description: 'Beende 100 Fußball-Spiele.', counter: 'football-games', goal: 100 },
+    { id: 'crest-80', category: 'Fußball', tier: 'silver', title: 'Wappenkunde', description: 'Hol 80 Punkte im Wappen-Quiz.' },
+    { id: 'crest-perfect', category: 'Fußball', tier: 'gold', title: 'Adlerauge', description: 'Hol 100 Punkte im Wappen-Quiz – jedes Wappen beim ersten Versuch.' },
+    { id: 'crest-blind', category: 'Fußball', tier: 'silver', title: 'Durch den Nebel', description: 'Erkenne 25 Wappen beim ersten Versuch.', counter: 'crest-first-try', goal: 25 },
+    { id: 'stadium-80', category: 'Fußball', tier: 'silver', title: 'Groundhopper', description: 'Schaff eine Serie von 10 im Stadion-Quiz.' },
+    { id: 'stadium-perfect', category: 'Fußball', tier: 'gold', title: 'Stadionsprecher', description: 'Schaff eine Serie von 25 im Stadion-Quiz.' },
+    { id: 'wordle-win', category: 'Fußball', tier: 'bronze', title: 'Scout', description: 'Finde einen Spieler im Spieler-Wordle.', counter: 'wordle-wins', goal: 1 },
+    { id: 'wordle-10', category: 'Fußball', tier: 'silver', title: 'Chefscout', description: 'Finde 10 Spieler im Spieler-Wordle.', counter: 'wordle-wins', goal: 10 },
+    { id: 'wordle-fast', category: 'Fußball', tier: 'gold', title: 'Kennt jeden', description: 'Finde einen Spieler in höchstens 3 Versuchen.' },
+    { id: 'value-10', category: 'Fußball', tier: 'silver', title: 'Berater', description: 'Schaff eine Serie von 10 bei „Wer ist mehr wert?“.' },
+    { id: 'value-25', category: 'Fußball', tier: 'gold', title: 'Sportdirektor', description: 'Schaff eine Serie von 25 bei „Wer ist mehr wert?“.' },
+    { id: 'fbblitz-15', category: 'Fußball', tier: 'silver', title: 'Konter', description: 'Hol 15 Punkte in einer Blitzrunde Fußball.' },
+    { id: 'fbblitz-30', category: 'Fußball', tier: 'gold', title: 'Tempofußball', description: 'Hol 30 Punkte in einer Blitzrunde Fußball.' },
+    { id: 'fbblitz-perfect', category: 'Fußball', tier: 'gold', title: 'Fehlerfrei', description: 'Hol mindestens 15 Punkte in einer Blitzrunde Fußball ohne Fehler.' },
+    { id: 'hidden-own-goal', category: 'Versteckt', tier: 'bronze', hidden: true, title: 'Eigentor', description: 'Beende das Wappen-Quiz mit 0 Punkten.' },
 
     { id: 'all-done', category: 'Legende', tier: 'platinum', title: 'Geo-Gott', description: 'Schalte alle anderen Erfolge frei. Belohnung: Lorbeerkranz, Legendenrobe, Ruhmeshalle, Phönix, Titel „Geo-Gott“, Rahmen und Farbthema „Legende“.' }
 ];
