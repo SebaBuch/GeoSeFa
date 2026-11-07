@@ -33,8 +33,9 @@ class DuelService {
         return await this.cloud.put('matches/' + id + '/status', status);
     }
 
-    async updateScore(id, score, finished) {
-        return await this.cloud.patch('matches/' + id + '/players/' + this.auth.getUid(), { score: score, finished: finished });
+    async updateScore(id, score, finished, seconds) {
+        const data = seconds === undefined ? { score: score, finished: finished } : { score: score, finished: finished, time: seconds };
+        return await this.cloud.patch('matches/' + id + '/players/' + this.auth.getUid(), data);
     }
 
     async loadInbox() {
@@ -104,8 +105,23 @@ class DuelService {
             return '';
         }
         if (mine.score === theirs.score) {
-            return 'draw';
+            return this.compareTime(match, mine, theirs);
         }
         return mine.score > theirs.score ? 'win' : 'loss';
+    }
+
+    isTimeDecided(match) {
+        const mine = match.players[this.auth.getUid()];
+        const theirs = match.players[this.getOpponentUid(match)];
+        return mine.score === theirs.score && this.compareTime(match, mine, theirs) !== 'draw';
+    }
+
+    compareTime(match, mine, theirs) {
+        const config = DUEL_GAMES.filter(game => game.key === match.game)[0];
+        const hasTimes = mine.time !== undefined && theirs.time !== undefined;
+        if ((config && config.timed) || !hasTimes || mine.time === theirs.time) {
+            return 'draw';
+        }
+        return mine.time < theirs.time ? 'win' : 'loss';
     }
 }

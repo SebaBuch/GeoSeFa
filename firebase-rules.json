@@ -90,6 +90,9 @@
           "$playerId": {
             "score": {
               ".validate": "newData.isNumber() && newData.val() >= 0 && newData.val() <= 1000"
+            },
+            "time": {
+              ".validate": "newData.isNumber() && newData.val() >= 0 && newData.val() <= 86400"
             }
           }
         }

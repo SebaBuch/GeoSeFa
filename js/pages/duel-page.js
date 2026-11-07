@@ -125,7 +125,8 @@ function renderDuelPanel(match, outcome) {
     const opponentStatus = opponent.finished ? 'fertig' : 'spielt noch';
     const panel = document.getElementById('duel-panel');
     const rematchHtml = outcome ? duelRematchTemplate(match.id) : '';
-    panel.innerHTML = duelPanelTemplate(config.title, me, opponent, opponentStatus, getOutcomeText(outcome, me, opponent), rematchHtml);
+    const resultText = getOutcomeText(outcome, me, opponent) + getTimeText(match, outcome);
+    panel.innerHTML = duelPanelTemplate(config.title, me, opponent, opponentStatus, resultText, rematchHtml);
     panel.classList.remove('hidden');
 }
 
@@ -140,6 +141,19 @@ function getOutcomeText(outcome, me, opponent) {
         return opponent.name + ' hat gewonnen.';
     }
     return me.finished ? 'Warte auf ' + opponent.name + ' ...' : '';
+}
+
+function getTimeText(match, outcome) {
+    if (outcome === '' || !duelService.isTimeDecided(match)) {
+        return '';
+    }
+    const me = match.players[authService.getUid()];
+    const opponent = match.players[duelService.getOpponentUid(match)];
+    return ' · Gleiche Punkte, entschieden nach Zeit: ' + formatSeconds(me.time) + ' : ' + formatSeconds(opponent.time);
+}
+
+function formatSeconds(seconds) {
+    return seconds.toLocaleString('de-DE', { maximumFractionDigits: 1 }) + ' s';
 }
 
 function closeDuelPanel() {
@@ -227,7 +241,8 @@ function getDuelStateText(match, opponent) {
     const me = match.players[authService.getUid()];
     if (outcome !== '') {
         rewardDuel(match, outcome);
-        return DUEL_OUTCOME_LABELS[outcome] + ' · ' + me.score + ' : ' + opponent.score;
+        const timeText = duelService.isTimeDecided(match) ? ' (Zeit ' + formatSeconds(me.time) + ' : ' + formatSeconds(opponent.time) + ')' : '';
+        return DUEL_OUTCOME_LABELS[outcome] + ' · ' + me.score + ' : ' + opponent.score + timeText;
     }
     return DUEL_STATUS_TEXTS[match.status] || (me.finished ? 'Du: ' + me.score + ' · ' + opponent.name + ' spielt noch' : 'Wartet auf Annahme');
 }

@@ -12,18 +12,18 @@ const DUEL_GAMES = [
     { key: 'geodecide', game: 'geodecide', title: 'GeoDecide', scoreText: 'Serie' },
     { key: 'geodle', game: 'geodle', title: 'Geodle', scoreText: 'Punkte' },
     { key: 'geodistance', game: 'geodistance', title: 'GeoDistanz', scoreText: 'Punkte' },
-    { key: 'borderchain', game: 'borderchain', title: 'Grenz-Kette', scoreText: 'Punkte' },
-    { key: 'blitz-flags', game: 'blitz', category: 'flags', title: 'Blitzrunde Flaggen', scoreText: 'Richtige' },
-    { key: 'blitz-capitals', game: 'blitz', category: 'capitals', title: 'Blitzrunde Hauptstädte', scoreText: 'Richtige' },
-    { key: 'blitz-outlines', game: 'blitz', category: 'outlines', title: 'Blitzrunde Umrisse', scoreText: 'Richtige' },
+    { key: 'borderchain', game: 'borderchain', title: 'Grenz-Kette', scoreText: 'Punkte', timed: true },
+    { key: 'blitz-flags', game: 'blitz', category: 'flags', title: 'Blitzrunde Flaggen', scoreText: 'Richtige', timed: true },
+    { key: 'blitz-capitals', game: 'blitz', category: 'capitals', title: 'Blitzrunde Hauptstädte', scoreText: 'Richtige', timed: true },
+    { key: 'blitz-outlines', game: 'blitz', category: 'outlines', title: 'Blitzrunde Umrisse', scoreText: 'Richtige', timed: true },
     { key: 'crestquiz', game: 'crestquiz', title: 'Wappen-Quiz', scoreText: 'Punkte' },
     { key: 'stadiumduel', game: 'stadiumduel', title: 'Stadion-Quiz', scoreText: 'Serie' },
     { key: 'playerwordle', game: 'playerwordle', category: 10, title: 'Spieler-Wordle', scoreText: 'Punkte' },
     { key: 'valueduel', game: 'valueduel', title: 'Wer ist mehr wert?', scoreText: 'Serie' },
     { key: 'squadduel', game: 'squadduel', title: 'Welcher Kader ist mehr wert?', scoreText: 'Serie' },
-    { key: 'footballblitz-players', game: 'footballblitz', category: 'players', title: 'Blitzrunde Spieler', scoreText: 'Richtige' },
-    { key: 'footballblitz-crests', game: 'footballblitz', category: 'crests', title: 'Blitzrunde Wappen', scoreText: 'Richtige' },
-    { key: 'footballblitz-stadiums', game: 'footballblitz', category: 'stadiums', title: 'Blitzrunde Stadien', scoreText: 'Richtige' }
+    { key: 'footballblitz-players', game: 'footballblitz', category: 'players', title: 'Blitzrunde Spieler', scoreText: 'Richtige', timed: true },
+    { key: 'footballblitz-crests', game: 'footballblitz', category: 'crests', title: 'Blitzrunde Wappen', scoreText: 'Richtige', timed: true },
+    { key: 'footballblitz-stadiums', game: 'footballblitz', category: 'stadiums', title: 'Blitzrunde Stadien', scoreText: 'Richtige', timed: true }
 ];
 
 const DUEL_STATUS_TEXTS = {

@@ -8,6 +8,7 @@ class DuelSession {
     }
 
     start() {
+        this.startTime = Date.now();
         this.tick();
         this.intervalId = setInterval(() => this.tick(), 2000);
     }
@@ -47,7 +48,8 @@ class DuelSession {
 
     async finish(score) {
         this.isFinished = true;
-        await this.service.updateScore(this.match.id, score, true);
+        const seconds = Math.round((Date.now() - this.startTime) / 100) / 10;
+        await this.service.updateScore(this.match.id, score, true, seconds);
         this.tick();
     }
 }
