@@ -149,9 +149,10 @@ function buildMonthRanking(players) {
 }
 
 function buildRankingLists(players) {
+    const rows = COMPARE_ROWS.filter(row => row.ranking !== false);
     let html = '';
-    for (let i = 0; i < COMPARE_ROWS.length; i++) {
-        const row = COMPARE_ROWS[i];
+    for (let i = 0; i < rows.length; i++) {
+        const row = rows[i];
         const entries = players.map(player => ({ player: player, value: player.values ? player.values[row.id] || 0 : 0 }));
         html += rankingListTemplate(row.label, buildRankingRows(entries, ''));
     }
