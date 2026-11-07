@@ -8,7 +8,8 @@ const FOOTBALL_LEAGUES = {
     be: { name: 'Jupiler Pro League', country: 'Belgien' },
     nl: { name: 'Eredivisie', country: 'Niederlande' },
     tr: { name: 'Süper Lig', country: 'Türkei' },
-    gr: { name: 'Super League 1', country: 'Griechenland' }
+    gr: { name: 'Super League 1', country: 'Griechenland' },
+    cz: { name: 'Chance Liga', country: 'Tschechien' }
 };
 
 const FOOTBALL_CLUBS = {
@@ -193,5 +194,9 @@ const FOOTBALL_CLUBS = {
     asteras: { name: 'Asteras Tripolis', league: 'gr', squadValue: 12430000, logo: 'img/football/asteras.webp' },
     kalamata: { name: 'Kalamata FC', league: 'gr', squadValue: 12080000, logo: 'img/football/kalamata.webp' },
     iraklis: { name: 'Iraklis Thessaloniki', league: 'gr', squadValue: 11750000, logo: 'img/football/iraklis.webp' },
-    kifisia: { name: 'Kifisia FC', league: 'gr', squadValue: 11050000, logo: 'img/football/kifisia.webp' }
+    kifisia: { name: 'Kifisia FC', league: 'gr', squadValue: 11050000, logo: 'img/football/kifisia.webp' },
+    slavia: { name: 'SK Slavia Prag', league: 'cz', stadium: 'Fortuna Arena', capacity: 19370, logo: 'img/football/slavia.webp' },
+    spartaprag: { name: 'AC Sparta Prag', league: 'cz', squadValue: 91250000, logo: 'img/football/spartaprag.webp' },
+    plzen: { name: 'FC Viktoria Pilsen', league: 'cz', squadValue: 59450000, logo: 'img/football/plzen.webp' },
+    olomouc: { name: 'SK Sigma Olmütz', league: 'cz', squadValue: 28200000, logo: 'img/football/olomouc.webp' }
 };
