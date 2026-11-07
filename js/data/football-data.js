@@ -7,7 +7,8 @@ const FOOTBALL_LEAGUES = {
     pt: { name: 'Liga Portugal', country: 'Portugal' },
     be: { name: 'Jupiler Pro League', country: 'Belgien' },
     nl: { name: 'Eredivisie', country: 'Niederlande' },
-    tr: { name: 'Süper Lig', country: 'Türkei' }
+    tr: { name: 'Süper Lig', country: 'Türkei' },
+    gr: { name: 'Super League 1', country: 'Griechenland' }
 };
 
 const FOOTBALL_CLUBS = {
@@ -178,5 +179,19 @@ const FOOTBALL_CLUBS = {
     genclerbirligi: { name: 'Genclerbirligi Ankara', league: 'tr', squadValue: 30600000, logo: 'img/football/genclerbirligi.webp' },
     kocaelispor: { name: 'Kocaelispor', league: 'tr', squadValue: 25400000, logo: 'img/football/kocaelispor.webp' },
     erzurumspor: { name: 'Erzurumspor FK', league: 'tr', squadValue: 23100000, logo: 'img/football/erzurumspor.webp' },
-    eyupspor: { name: 'Eyüpspor', league: 'tr', squadValue: 13900000, logo: 'img/football/eyupspor.webp' }
+    eyupspor: { name: 'Eyüpspor', league: 'tr', squadValue: 13900000, logo: 'img/football/eyupspor.webp' },
+    olympiakos: { name: 'Olympiakos Piräus', league: 'gr', stadium: 'Stadio Georgios Karaiskakis', capacity: 33345, logo: 'img/football/olympiakos.webp' },
+    panathinaikos: { name: 'Panathinaikos Athen', league: 'gr', stadium: 'Olympiako Stadio Athinon "Spyros Louis"', capacity: 69618, logo: 'img/football/panathinaikos.webp' },
+    paok: { name: 'PAOK Thessaloniki', league: 'gr', stadium: 'Toumba Stadium', capacity: 28703, logo: 'img/football/paok.webp' },
+    aek: { name: 'AEK Athen', league: 'gr', squadValue: 86450000, logo: 'img/football/aek.webp' },
+    aris: { name: 'Aris Thessaloniki', league: 'gr', squadValue: 43050000, logo: 'img/football/aris.webp' },
+    ofi: { name: 'OFI Kreta', league: 'gr', squadValue: 21780000, logo: 'img/football/ofi.webp' },
+    levadiakos: { name: 'Levadiakos', league: 'gr', squadValue: 18630000, logo: 'img/football/levadiakos.webp' },
+    atromitos: { name: 'Atromitos Athen', league: 'gr', squadValue: 14400000, logo: 'img/football/atromitos.webp' },
+    volos: { name: 'Volos FC', league: 'gr', squadValue: 13800000, logo: 'img/football/volos.webp' },
+    panetolikos: { name: 'Panetolikos', league: 'gr', squadValue: 13530000, logo: 'img/football/panetolikos.webp' },
+    asteras: { name: 'Asteras Tripolis', league: 'gr', squadValue: 12430000, logo: 'img/football/asteras.webp' },
+    kalamata: { name: 'Kalamata FC', league: 'gr', squadValue: 12080000, logo: 'img/football/kalamata.webp' },
+    iraklis: { name: 'Iraklis Thessaloniki', league: 'gr', squadValue: 11750000, logo: 'img/football/iraklis.webp' },
+    kifisia: { name: 'Kifisia FC', league: 'gr', squadValue: 11050000, logo: 'img/football/kifisia.webp' }
 };
