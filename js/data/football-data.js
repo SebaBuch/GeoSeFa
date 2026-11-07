@@ -6,7 +6,8 @@ const FOOTBALL_LEAGUES = {
     l1: { name: 'Ligue 1', country: 'Frankreich' },
     pt: { name: 'Liga Portugal', country: 'Portugal' },
     be: { name: 'Jupiler Pro League', country: 'Belgien' },
-    nl: { name: 'Eredivisie', country: 'Niederlande' }
+    nl: { name: 'Eredivisie', country: 'Niederlande' },
+    tr: { name: 'Süper Lig', country: 'Türkei' }
 };
 
 const FOOTBALL_CLUBS = {
@@ -159,5 +160,23 @@ const FOOTBALL_CLUBS = {
     denhaag: { name: 'ADO Den Haag', league: 'nl', squadValue: 21000000, logo: 'img/football/denhaag.webp' },
     sittard: { name: 'Fortuna Sittard', league: 'nl', squadValue: 20650000, logo: 'img/football/sittard.webp' },
     cambuur: { name: 'SC Cambuur Leeuwarden', league: 'nl', squadValue: 15180000, logo: 'img/football/cambuur.webp' },
-    telstar: { name: 'SC Telstar', league: 'nl', squadValue: 9380000, logo: 'img/football/telstar.webp' }
+    telstar: { name: 'SC Telstar', league: 'nl', squadValue: 9380000, logo: 'img/football/telstar.webp' },
+    galatasaray: { name: 'Galatasaray', league: 'tr', stadium: 'Ali Sami Yen Spor Kompleksi RAMS Park', capacity: 53387, logo: 'img/football/galatasaray.webp' },
+    besiktas: { name: 'Besiktas JK', league: 'tr', stadium: 'Beşiktaş Park', capacity: 42684, logo: 'img/football/besiktas.webp' },
+    fenerbahce: { name: 'Fenerbahce', league: 'tr', stadium: 'Chobani Stadyumu FB Şükrü Saracoğlu Spor Kompleksi', capacity: 47430, logo: 'img/football/fenerbahce.webp' },
+    trabzonspor: { name: 'Trabzonspor', league: 'tr', stadium: 'Papara Park', capacity: 41061, logo: 'img/football/trabzonspor.webp' },
+    basaksehir: { name: 'Basaksehir FK', league: 'tr', squadValue: 72150000, logo: 'img/football/basaksehir.webp' },
+    goztepe: { name: 'Göztepe', league: 'tr', squadValue: 63000000, logo: 'img/football/goztepe.webp' },
+    corum: { name: 'Corum FK', league: 'tr', squadValue: 61750000, logo: 'img/football/corum.webp' },
+    samsunspor: { name: 'Samsunspor', league: 'tr', squadValue: 52850000, logo: 'img/football/samsunspor.webp' },
+    rizespor: { name: 'Caykur Rizespor', league: 'tr', squadValue: 49550000, logo: 'img/football/rizespor.webp' },
+    kasimpasa: { name: 'Kasimpasa', league: 'tr', squadValue: 42150000, logo: 'img/football/kasimpasa.webp' },
+    alanyaspor: { name: 'Alanyaspor', league: 'tr', squadValue: 35200000, logo: 'img/football/alanyaspor.webp' },
+    konyaspor: { name: 'Konyaspor', league: 'tr', squadValue: 34600000, logo: 'img/football/konyaspor.webp' },
+    amed: { name: 'Amed SK', league: 'tr', squadValue: 31850000, logo: 'img/football/amed.webp' },
+    gaziantep: { name: 'Gaziantep FK', league: 'tr', squadValue: 31280000, logo: 'img/football/gaziantep.webp' },
+    genclerbirligi: { name: 'Genclerbirligi Ankara', league: 'tr', squadValue: 30600000, logo: 'img/football/genclerbirligi.webp' },
+    kocaelispor: { name: 'Kocaelispor', league: 'tr', squadValue: 25400000, logo: 'img/football/kocaelispor.webp' },
+    erzurumspor: { name: 'Erzurumspor FK', league: 'tr', squadValue: 23100000, logo: 'img/football/erzurumspor.webp' },
+    eyupspor: { name: 'Eyüpspor', league: 'tr', squadValue: 13900000, logo: 'img/football/eyupspor.webp' }
 };
