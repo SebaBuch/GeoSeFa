@@ -23,7 +23,7 @@ const ACHIEVEMENTS = [
     { id: 'route-kaliningrad', category: 'GeoRoute', tier: 'bronze', title: 'Kaliningrad-Falle', description: 'Versuche, von Polen oder Litauen nach Russland zu fahren.' },
 
     { id: 'size-first', category: 'GeoSize', tier: 'bronze', title: 'Augenmaß', description: 'Beende dein erstes GeoSize.', counter: 'end-geosize', goal: 1 },
-    { id: 'size-bullseye', category: 'GeoSize', tier: 'silver', title: 'Volltreffer', description: 'Hol 98 oder mehr Punkte in einer Runde.', counter: 'size-bullseyes', goal: 1 },
+    { id: 'size-bullseye', category: 'GeoSize', tier: 'silver', title: 'Volltreffer', description: 'Hol 100 Punkte in einer Runde.', counter: 'size-bullseyes', goal: 1 },
     { id: 'size-700', category: 'GeoSize', tier: 'silver', title: 'Gutes Auge', description: 'Hol 700 Punkte in einem Spiel.' },
     { id: 'size-850', category: 'GeoSize', tier: 'gold', title: 'Messlatte', description: 'Hol 850 Punkte in einem Spiel.' },
 
@@ -80,7 +80,7 @@ const ACHIEVEMENTS = [
     { id: 'route-streak-10', category: 'GeoRoute', tier: 'platinum', title: 'Unaufhaltsam', description: 'Schaffe 10 Routen hintereinander.' },
 
     { id: 'size-950', category: 'GeoSize', tier: 'platinum', title: 'Pixelgenau', description: 'Hol 950 Punkte in einem Spiel.' },
-    { id: 'size-bullseye-5', category: 'GeoSize', tier: 'gold', title: 'Scharfschütze', description: 'Hol insgesamt 5-mal 98 oder mehr Punkte in einer Runde.', counter: 'size-bullseyes', goal: 5 },
+    { id: 'size-bullseye-5', category: 'GeoSize', tier: 'gold', title: 'Scharfschütze', description: 'Hol insgesamt 5-mal 100 Punkte in einer Runde.', counter: 'size-bullseyes', goal: 5 },
 
     { id: 'decide-75', category: 'GeoDecide', tier: 'platinum', title: 'Allwissend', description: 'Schaffe eine Serie von 75.' },
 

@@ -83,7 +83,7 @@ class GeoSize extends BaseGame {
         }
         this.checked = true;
         const realShare = this.right.area / (this.left.area + this.right.area) * 100;
-        const difference = Math.abs(this.sliderValue - realShare);
+        const difference = Math.abs(this.sliderValue - Math.round(realShare));
         const points = Math.max(0, Math.round(100 - difference * 4));
         this.score += points;
         this.playCorrectSoundIf(points >= 80);
@@ -105,7 +105,7 @@ class GeoSize extends BaseGame {
     }
 
     showRoundResult(realShare, points, guess) {
-        this.achievements.increase('size-bullseyes', points >= 98 ? 1 : 0);
+        this.achievements.increase('size-bullseyes', points === 100 ? 1 : 0);
         const leftText = this.left.name + ' ' + Math.round(100 - realShare) + ' % (' + formatNumber(this.left.area) + ' km²)';
         const rightText = this.right.name + ' ' + Math.round(realShare) + ' % (' + formatNumber(this.right.area) + ' km²)';
         const isLastRound = this.round >= this.totalRounds;
