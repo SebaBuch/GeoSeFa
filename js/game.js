@@ -131,17 +131,29 @@ function stopCurrentGame() {
 }
 
 function showHome() {
-    if (!countryService || countryService.countries.length === 0) {
+    if (!canShowHome()) {
         return;
-    }
-    if (!authService.isLoggedIn() || !profileService.hasProfile()) {
-        return showLogin();
     }
     stopCurrentGame();
     setTheme('home');
     updateHeader();
     showContent(homeTemplate(buildSectionTabs(), buildSectionHtml(), countryService.countries.length));
     startHomeExtras();
+}
+
+function canShowHome() {
+    if (!countryService || countryService.countries.length === 0) {
+        return false;
+    }
+    if (!authService.isLoggedIn() || !profileService.hasProfile()) {
+        showLogin();
+        return false;
+    }
+    if (!nameService.isAllowed(profileService.getCurrent().name)) {
+        showRename();
+        return false;
+    }
+    return true;
 }
 
 function getSection() {

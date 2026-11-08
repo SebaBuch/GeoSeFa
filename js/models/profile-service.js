@@ -190,6 +190,11 @@ class ProfileService {
         return option.level <= this.getLevelInfo(this.getCurrent().xp).level;
     }
 
+    rename(name) {
+        this.getCurrent().name = name;
+        this.saveProfiles();
+    }
+
     chooseOption(type, value) {
         const matches = PROFILE_OPTIONS.filter(option => option.type === type && option.value === value);
         if (matches.length === 0 || !this.isOptionUnlocked(matches[0])) {

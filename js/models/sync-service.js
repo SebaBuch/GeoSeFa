@@ -94,7 +94,9 @@ class SyncService {
         const uids = Object.keys(result.data);
         const players = [];
         for (let i = 0; i < uids.length; i++) {
-            players.push({ ...result.data[uids[i]], uid: uids[i] });
+            const player = result.data[uids[i]];
+            const name = nameService.isAllowed(player.name || '') ? player.name : 'Gesperrter Name';
+            players.push({ ...player, name: name, uid: uids[i] });
         }
         return players;
     }

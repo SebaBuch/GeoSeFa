@@ -187,3 +187,19 @@ function championsTemplate(dayText, monthName, monthText, lastMonthName, lastMon
 function duelButtonTemplate(uid) {
     return `<button class="button" onclick="showDuelSetup('${uid}')">Zum Duell herausfordern</button>`;
 }
+
+function renameTemplate() {
+    return `
+        <div class="login-layout">
+            <section class="panel login-box">
+                <h1>Neuer Name nötig</h1>
+                <p>Dein bisheriger Name ist nicht erlaubt. Bitte wähl einen neuen Namen, dann kannst du weiterspielen. Dein Spielstand bleibt erhalten.</p>
+                <form class="login-form" onsubmit="submitRename(event)">
+                    <input id="rename-name" maxlength="20" placeholder="Neuer Name" autocomplete="nickname">
+                    <button class="button" type="submit">Name speichern</button>
+                </form>
+                <div id="rename-message" class="message"></div>
+            </section>
+        </div>
+    `;
+}

@@ -51,7 +51,8 @@ async function finishLogin() {
     showContent(loadingTemplate('Lade deinen Spielstand ...'));
     const state = await syncService.startSession();
     if (state === 'empty') {
-        const name = await nameService.findFreeName(escapeHtml(authService.session.email.split('@')[0]));
+        const emailName = escapeHtml(authService.session.email.split('@')[0]);
+        const name = await nameService.findFreeName(nameService.isAllowed(emailName) ? emailName : 'Spieler');
         profileService.createAccountProfile(authService.getUid(), name, 'skin-1', '');
     }
     if (!profileService.hasProfile()) {
@@ -76,6 +77,9 @@ async function submitRegister(event) {
 }
 
 async function registerAccount(name) {
+    if (!nameService.isAllowed(name)) {
+        return { error: 'Dieser Name ist nicht erlaubt. Bitte wähl einen anderen.' };
+    }
     if (!await nameService.isFree(name)) {
         return { error: 'Der Name „' + name + '“ ist schon vergeben.' };
     }
@@ -159,4 +163,48 @@ async function removeAccount(uid) {
     authService.logout();
     profileService.clearCurrent();
     return '';
+}
+
+function showRename() {
+    stopCurrentGame();
+    setTheme('home');
+    showContent(renameTemplate());
+}
+
+async function submitRename(event) {
+    event.preventDefault();
+    if (isLoginBusy) {
+        return;
+    }
+    isLoginBusy = true;
+    const name = escapeHtml(readValue('rename-name'));
+    const error = await checkNewName(name);
+    isLoginBusy = false;
+    if (error !== '') {
+        return setFormMessage('rename-message', error, 'red');
+    }
+    await saveNewName(name);
+}
+
+async function checkNewName(name) {
+    if (name === '') {
+        return 'Bitte gib einen Namen ein.';
+    }
+    if (!nameService.isAllowed(name)) {
+        return 'Dieser Name ist nicht erlaubt. Bitte wähl einen anderen.';
+    }
+    const isFree = await nameService.isFree(name);
+    return isFree ? '' : 'Der Name „' + name + '“ ist schon vergeben.';
+}
+
+async function saveNewName(name) {
+    isLoginBusy = true;
+    const oldName = profileService.getCurrent().name;
+    setFormMessage('rename-message', 'Speichere ...', '');
+    profileService.rename(name);
+    await nameService.release(oldName);
+    await nameService.claim(name);
+    await syncService.publishSummary();
+    isLoginBusy = false;
+    showHome();
 }
