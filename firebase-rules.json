@@ -3,7 +3,10 @@
     "users": {
       "$uid": {
         ".read": "auth != null && auth.uid === $uid",
-        ".write": "auth != null && auth.uid === $uid"
+        ".write": "auth != null && auth.uid === $uid",
+        "profileJson": {
+          ".validate": "newData.isString() && !newData.val().toLowerCase().contains('hure') && !newData.val().toLowerCase().contains('fick') && !newData.val().toLowerCase().contains('fotze') && !newData.val().toLowerCase().contains('wichs') && !newData.val().toLowerCase().contains('nazi') && !newData.val().toLowerCase().contains('hitler')"
+        }
       }
     },
     "public": {
@@ -73,7 +76,7 @@
           ".validate": "newData.isNumber() && newData.val() >= 0 && newData.val() <= 9300"
         },
         "name": {
-          ".validate": "newData.isString() && newData.val().length <= 60"
+          ".validate": "newData.isString() && newData.val().length <= 60 && !newData.val().toLowerCase().contains('hure') && !newData.val().toLowerCase().contains('fick') && !newData.val().toLowerCase().contains('fotze') && !newData.val().toLowerCase().contains('wichs') && !newData.val().toLowerCase().contains('nazi') && !newData.val().toLowerCase().contains('hitler')"
         },
         "favorites": {
           "$achievementId": {

@@ -113,9 +113,19 @@ class AuthService {
             const data = await response.json();
             if (response.ok) {
                 this.saveSession(data.user_id, this.session.email, data.id_token, data.refresh_token, data.expires_in);
+            } else {
+                this.handleRefreshError(data);
             }
         } catch (error) {
             console.error('Token konnte nicht erneuert werden:', error);
+        }
+    }
+
+    handleRefreshError(data) {
+        const code = data.error && data.error.message ? data.error.message : '';
+        if (['USER_DISABLED', 'USER_NOT_FOUND', 'INVALID_REFRESH_TOKEN', 'TOKEN_EXPIRED'].includes(code)) {
+            this.logout();
+            window.location.reload();
         }
     }
 
