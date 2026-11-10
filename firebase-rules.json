@@ -61,6 +61,30 @@
           },
           "blitz-outlines": {
             ".validate": "newData.isNumber() && newData.val() >= 0 && newData.val() <= 300"
+          },
+          "crest-best": {
+            ".validate": "newData.isNumber() && newData.val() >= 0 && newData.val() <= 100"
+          },
+          "stadium-best": {
+            ".validate": "newData.isNumber() && newData.val() >= 0 && newData.val() <= 10000"
+          },
+          "wordle-best": {
+            ".validate": "newData.isNumber() && newData.val() >= 0 && newData.val() <= 100"
+          },
+          "value-best": {
+            ".validate": "newData.isNumber() && newData.val() >= 0 && newData.val() <= 10000"
+          },
+          "squad-best": {
+            ".validate": "newData.isNumber() && newData.val() >= 0 && newData.val() <= 10000"
+          },
+          "fbblitz-players": {
+            ".validate": "newData.isNumber() && newData.val() >= 0 && newData.val() <= 300"
+          },
+          "fbblitz-crests": {
+            ".validate": "newData.isNumber() && newData.val() >= 0 && newData.val() <= 300"
+          },
+          "fbblitz-stadiums": {
+            ".validate": "newData.isNumber() && newData.val() >= 0 && newData.val() <= 300"
           }
         },
         "dailyTotal": {
