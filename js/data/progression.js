@@ -93,12 +93,12 @@ const COMPARE_ROWS = [
     { id: 'blitz-flags', label: 'Blitz Flaggen', source: 'stats', key: 'blitz-flags', field: 'highscore' },
     { id: 'blitz-capitals', label: 'Blitz Hauptstädte', source: 'stats', key: 'blitz-capitals', field: 'highscore' },
     { id: 'blitz-outlines', label: 'Blitz Umrisse', source: 'stats', key: 'blitz-outlines', field: 'highscore' },
-    { id: 'crest-best', label: 'Wappen-Quiz Highscore', source: 'stats', key: 'crestquiz', field: 'highscore' },
-    { id: 'stadium-best', label: 'Stadion-Quiz Rekord', source: 'stats', key: 'stadiumduel', field: 'highscore' },
-    { id: 'wordle-best', label: 'Spieler-Wordle Highscore', source: 'stats', key: 'playerwordle', field: 'highscore' },
-    { id: 'value-best', label: 'Wer ist mehr wert? Rekord', source: 'stats', key: 'valueduel', field: 'highscore' },
-    { id: 'squad-best', label: 'Welcher Kader ist mehr wert? Rekord', source: 'stats', key: 'squadduel', field: 'highscore' },
-    { id: 'fbblitz-players', label: 'Blitz Spieler', source: 'stats', key: 'footballblitz-players', field: 'highscore' },
-    { id: 'fbblitz-crests', label: 'Blitz Wappen', source: 'stats', key: 'footballblitz-crests', field: 'highscore' },
-    { id: 'fbblitz-stadiums', label: 'Blitz Stadien', source: 'stats', key: 'footballblitz-stadiums', field: 'highscore' }
+    { id: 'crest-best', label: 'Wappen-Quiz Highscore', source: 'stats', key: 'crestquiz', field: 'highscore', section: 'football' },
+    { id: 'stadium-best', label: 'Stadion-Quiz Rekord', source: 'stats', key: 'stadiumduel', field: 'highscore', section: 'football' },
+    { id: 'wordle-best', label: 'Spieler-Wordle Highscore', source: 'stats', key: 'playerwordle', field: 'highscore', section: 'football' },
+    { id: 'value-best', label: 'Wer ist mehr wert? Rekord', source: 'stats', key: 'valueduel', field: 'highscore', section: 'football' },
+    { id: 'squad-best', label: 'Welcher Kader ist mehr wert? Rekord', source: 'stats', key: 'squadduel', field: 'highscore', section: 'football' },
+    { id: 'fbblitz-players', label: 'Blitz Spieler', source: 'stats', key: 'footballblitz-players', field: 'highscore', section: 'football' },
+    { id: 'fbblitz-crests', label: 'Blitz Wappen', source: 'stats', key: 'footballblitz-crests', field: 'highscore', section: 'football' },
+    { id: 'fbblitz-stadiums', label: 'Blitz Stadien', source: 'stats', key: 'footballblitz-stadiums', field: 'highscore', section: 'football' }
 ];

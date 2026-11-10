@@ -84,8 +84,10 @@ async function showRanking() {
 
 function renderRanking() {
     achievementService.unlockIf(playersCache.length >= 4, 'hidden-family');
-    const topHtml = buildDailyRanking(playersCache) + buildMonthRanking(playersCache);
-    showContent(rankingTemplate(topHtml, buildRankingLists(playersCache), playersCache.length));
+    const isFootball = getSection() === 'football';
+    const topHtml = isFootball ? '' : buildDailyRanking(playersCache) + buildMonthRanking(playersCache);
+    const title = isFootball ? 'Rangliste Fußball' : 'Rangliste Geografie';
+    showContent(rankingTemplate(title, topHtml, buildRankingLists(playersCache), playersCache.length));
 }
 
 function startOnlineView(type, uid) {
@@ -149,7 +151,8 @@ function buildMonthRanking(players) {
 }
 
 function buildRankingLists(players) {
-    const rows = COMPARE_ROWS.filter(row => row.ranking !== false);
+    const section = getSection();
+    const rows = COMPARE_ROWS.filter(row => row.ranking !== false && (row.section || 'geo') === section);
     let html = '';
     for (let i = 0; i < rows.length; i++) {
         const row = rows[i];

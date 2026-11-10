@@ -55,11 +55,11 @@ function onlineErrorTemplate() {
     `;
 }
 
-function rankingTemplate(dailyHtml, listsHtml, playerCount) {
+function rankingTemplate(title, dailyHtml, listsHtml, playerCount) {
     return `
         <section class="panel">
             <div class="title-row">
-                <h1>Rangliste</h1>
+                <h1>${title}</h1>
                 ${backButtonTemplate()}
             </div>
             <p>${playerCount} Spieler · Gezeigt werden die Top 3. Bist du nicht dabei, siehst du deinen Platz darunter. Klick auf einen Spieler für sein Profil.</p>
