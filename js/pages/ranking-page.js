@@ -12,7 +12,7 @@ function buildPublicSummary() {
     for (let i = 0; i < COMPARE_ROWS.length; i++) {
         values[COMPARE_ROWS[i].id] = getCompareValue(profile, COMPARE_ROWS[i]);
     }
-    const summary = { name: profile.name, title: profile.title, frame: profile.frame, outfit: profile.outfit, values: values };
+    const summary = { name: cleanText(profile.name).slice(0, 30), title: profile.title, frame: profile.frame, outfit: profile.outfit, values: values };
     return { ...summary, ...getDailySummary(), achievements: storageService.load('achievements', {}), favorites: getFavorites(), updatedAt: Date.now() };
 }
 

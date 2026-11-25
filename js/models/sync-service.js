@@ -94,10 +94,15 @@ class SyncService {
         const uids = Object.keys(result.data);
         const players = [];
         for (let i = 0; i < uids.length; i++) {
-            const player = result.data[uids[i]];
-            const name = nameService.isAllowed(player.name || '') ? player.name : 'Gesperrter Name';
-            players.push({ ...player, name: name, uid: uids[i] });
+            players.push(this.cleanPlayer(result.data[uids[i]], uids[i]));
         }
         return players;
+    }
+
+    cleanPlayer(player, uid) {
+        const cleanName = cleanText(player.name);
+        const name = nameService.isAllowed(cleanName) ? cleanName : 'Gesperrter Name';
+        const frame = cleanId(player.frame) || 'none';
+        return { ...player, name: name, title: cleanText(player.title), frame: frame, uid: cleanId(uid) };
     }
 }

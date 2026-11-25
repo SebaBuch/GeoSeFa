@@ -13,20 +13,32 @@ class DuelService {
         const uid = this.auth.getUid();
         const me = this.profiles.getCurrent();
         const players = {};
-        players[uid] = { name: me.name, score: 0, finished: false };
-        players[opponent.uid] = { name: opponent.name, score: 0, finished: false };
+        players[uid] = { name: cleanText(me.name).slice(0, 30), score: 0, finished: false };
+        players[opponent.uid] = { name: cleanText(opponent.name).slice(0, 30), score: 0, finished: false };
         const match = { game: gameKey, mode: mode, createdBy: uid, createdAt: Date.now(), status: mode === 'live' ? 'invited' : 'running', players: players };
         const id = this.createId();
         const ok = await this.cloud.put('matches/' + id, match);
-        const entry = { game: gameKey, mode: mode, fromName: me.name, fromUid: uid, toName: opponent.name, createdAt: match.createdAt };
+        const entry = { game: gameKey, mode: mode, fromName: players[uid].name, fromUid: uid, toName: players[opponent.uid].name, createdAt: match.createdAt };
         await this.cloud.put('inbox/' + opponent.uid + '/' + id, entry);
         await this.cloud.put('inbox/' + uid + '/' + id, entry);
         return ok ? { ...match, id: id } : null;
     }
 
     async getMatch(id) {
+        if (!isValidMatchId(id)) {
+            return null;
+        }
         const result = await this.cloud.get('matches/' + id);
-        return result.ok && result.data ? { ...result.data, id: id } : null;
+        return result.ok && result.data && result.data.players ? this.cleanMatch(result.data, id) : null;
+    }
+
+    cleanMatch(match, id) {
+        const players = {};
+        const uids = Object.keys(match.players);
+        for (let i = 0; i < uids.length; i++) {
+            players[cleanId(uids[i])] = { ...match.players[uids[i]], name: cleanText(match.players[uids[i]].name) };
+        }
+        return { ...match, game: cleanId(match.game), players: players, id: id };
     }
 
     async setStatus(id, status) {
@@ -46,11 +58,18 @@ class DuelService {
         const ids = Object.keys(result.data);
         const entries = [];
         for (let i = 0; i < ids.length; i++) {
-            entries.push({ ...result.data[ids[i]], id: ids[i] });
+            if (isValidMatchId(ids[i])) {
+                entries.push(this.cleanEntry(result.data[ids[i]], ids[i]));
+            }
         }
         const fresh = await this.removeOldEntries(entries);
         const sorted = this.sortNewestFirst(fresh);
         return sorted.slice(0, 20);
+    }
+
+    cleanEntry(entry, id) {
+        const createdAt = Number(entry.createdAt) || 0;
+        return { ...entry, game: cleanId(entry.game), fromName: cleanText(entry.fromName), toName: cleanText(entry.toName), fromUid: cleanId(entry.fromUid), createdAt: createdAt, id: id };
     }
 
     async removeOldEntries(entries) {

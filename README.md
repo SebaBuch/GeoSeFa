@@ -1,6 +1,6 @@
 # GeoSeFa
 
-GeoSeFa ist ein Geografie-Spiel im Browser – inspiriert von Geotrivia, aber ohne Tageslimit. Es gibt acht Geografie-Spielmodi, fünf Fußball-Modi, Quiz, eine tägliche Challenge, Wochenaufgaben, Erfolge, einen Avatar-Shop, eine gemeinsame Rangliste und Duelle gegen andere Spieler (live oder als Herausforderung).
+GeoSeFa ist ein Geografie-Spiel im Browser – inspiriert von Geotrivia, aber ohne Tageslimit. Es gibt acht Geografie-Spielmodi, sechs Fußball-Modi, Quiz, eine tägliche Challenge, Wochenaufgaben, Erfolge, einen Avatar-Shop, eine gemeinsame Rangliste und Duelle gegen andere Spieler (live oder als Herausforderung).
 
 **Live spielen:** https://sebabuch.github.io/GeoSeFa/
 
@@ -24,12 +24,15 @@ GeoSeFa ist ein Geografie-Spiel im Browser – inspiriert von Geotrivia, aber oh
 | Spiel | Worum es geht |
 | --- | --- |
 | **Wappen-Quiz** | Verein am verschwommenen Wappen erkennen – jeder Fehler macht es schärfer. |
-| **Stadion-Quiz** | Welcher Verein spielt hier, wie viele Plätze hat das Stadion? |
+| **Stadion-Quiz** | Welches Stadion hat mehr Plätze? Serie so lange wie möglich halten. |
 | **Spieler-Wordle** | Spieler über Liga, Verein, Position, Nation, Alter, Nummer und Marktwert erraten. |
 | **Wer ist mehr wert?** | Den Spieler mit dem höheren Marktwert wählen. |
-| **Blitzrunde Fußball** | 60 Sekunden Wappen und Spieler zuordnen. |
+| **Welcher Kader ist mehr wert?** | Den Verein mit dem wertvolleren Kader wählen. |
+| **Blitzrunde Fußball** | 60 Sekunden Spieler, Wappen oder Stadien dem richtigen Verein zuordnen. |
 
-Die Fußballdaten (58 Vereine aus Bundesliga, Premier League und Serie A mit 1638 Spielern) liegen als eigene Datendateien im Projekt, eine Datei pro Liga.
+Die Fußballdaten liegen als eigene Datendateien im Projekt, eine Datei pro Liga – ohne externe Fußball-API. Aktuell sind es 186 Vereine mit rund 3.270 Spielern aus elf Ligen:
+
+Bundesliga, Premier League, Serie A, La Liga, Ligue 1, Liga Portugal, Jupiler Pro League, Eredivisie, Süper Lig, Super League 1 (Griechenland) und Chance Liga (Tschechien, noch im Aufbau).
 
 Dazu acht **Quiz-Modi** (Länder auf der Karte, Eintippen, Umrisse, Flaggen, Hauptstädte) mit Regionen, Zeitlimit und einem **Fehler-Training**, das gezielt die Länder abfragt, die man oft falsch hat.
 
@@ -39,7 +42,7 @@ Dazu acht **Quiz-Modi** (Länder auf der Karte, Eintippen, Umrisse, Flaggen, Hau
 ### Fortschritt
 - **Tages-Challenge** mit drei Aufgaben, für alle Spieler gleich (deterministischer Zufall über einen Seed), Serie, Kalender und Countdown.
 - **Wochenaufgaben** mit Coins als Belohnung.
-- **135 Erfolge** in Bronze, Silber, Gold und Platin – darunter versteckte Erfolge. Wer alle schafft, bekommt ein exklusives Legenden-Set.
+- **Über 130 Erfolge** in Bronze, Silber, Gold und Platin – darunter versteckte Erfolge. Wer alle schafft, bekommt ein exklusives Legenden-Set.
 - **Statistik-Seite** mit Trefferquote pro Kontinent und den häufigsten Fehlern, **Lieblingserfolge** im Profil und ein **täglicher Login-Bonus**.
 - **Level, XP und Ränge** (nach bester Tages-Serie).
 - **Avatar-Shop** mit über 240 Teilen (Haare, Kleidung, Hüte, Brillen, Accessoires, Begleiter, Hintergründe, Flaggen), Special- und Saison-Items. Haare und Kleidung sind frei färbbar (33 Farben). Die Figur ist komplett als SVG gezeichnet.
@@ -57,6 +60,8 @@ Dazu acht **Quiz-Modi** (Länder auf der Karte, Eintippen, Umrisse, Flaggen, Hau
 
 ![Rangliste](img/readme/rangliste.jpg)
 
+Duelle gibt es für alle Geografie- und Fußballspiele, inklusive der einzelnen Blitzrunden-Kategorien.
+
 ## Technik
 
 - **HTML, CSS, JavaScript** ohne Framework und ohne Build-Tool
@@ -72,13 +77,14 @@ Dazu acht **Quiz-Modi** (Länder auf der Karte, Eintippen, Umrisse, Flaggen, Hau
 
 ```
 js/
-  data/        feste Daten (Erfolge, Shop-Artikel, Wochenaufgaben, Duelle, Level)
+  data/        feste Daten (Erfolge, Shop-Artikel, Wochenaufgaben, Duelle, Level, Fußball-Vereine und -Spieler)
   models/      Klassen: Spiele, Quiz, Dienste (Speicher, Konto, Cloud, Sync, Shop, Duelle)
   templates/   HTML-Templates (nur Rückgabe von HTML, keine Logik)
   pages/       Seitenaufbau (Profil, Shop, Erfolge, Login, Rangliste, Duelle)
   game.js      Start und Navigation
 css/           Styles pro Bereich
 data/          countries.geojson (Natural Earth)
+img/football/  Vereinswappen
 libs/leaflet/  Leaflet
 sounds/        Soundeffekte
 firebase-rules.json  Sicherheitsregeln für die Realtime Database
@@ -91,6 +97,14 @@ firebase-rules.json  Sicherheitsregeln für die Realtime Database
 3. In `js/config.js` `API_KEY`, `FIREBASE_API_KEY` und `FIREBASE_DB_URL` eintragen.
 4. Leaflet nach `libs/leaflet/` und `ne_50m_admin_0_countries.geojson` als `data/countries.geojson` ablegen.
 5. Mit einem lokalen Server starten (z. B. Live Server in VS Code).
+
+## Sicherheit
+
+- **Firebase-Regeln** (`firebase-rules.json`) prüfen jeden Schreibzugriff: Jeder darf nur seine eigenen Daten ändern, Namen dürfen keine HTML-Zeichen enthalten, Zahlen haben Ober- und Untergrenzen und unbekannte Felder werden abgelehnt.
+- **Duelle:** Jeder Spieler darf nur seinen eigenen Punktestand ändern. Einladungen gehen nur an Spieler, die wirklich in dem Duell eingetragen sind.
+- **Anzeige:** Daten von anderen Spielern (Namen, Titel, Rahmen, Duell-IDs) werden vor der Anzeige bereinigt.
+- Der Firebase-API-Key im Code ist öffentlich und darf das sein – geschützt wird die Datenbank allein über die Regeln.
+- Spielstände werden im Browser berechnet. Wer es darauf anlegt, kann eigene Werte bis zu den Grenzen der Regeln hochsetzen – für ein Hobbyprojekt unter Freunden ein bewusster Kompromiss.
 
 ## Quellen
 

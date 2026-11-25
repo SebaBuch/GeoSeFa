@@ -72,7 +72,26 @@ function escapeHtml(text) {
     let result = text.replaceAll('&', '&amp;');
     result = result.replaceAll('<', '&lt;');
     result = result.replaceAll('>', '&gt;');
-    return result.replaceAll('"', '&quot;');
+    result = result.replaceAll('"', '&quot;');
+    return result.replaceAll("'", '&#39;');
+}
+
+function cleanText(text) {
+    if (typeof text !== 'string') {
+        return '';
+    }
+    return text.replace(/[<>"'`\\]/g, '').trim();
+}
+
+function cleanId(text) {
+    if (typeof text !== 'string') {
+        return '';
+    }
+    return text.replace(/[^A-Za-z0-9-]/g, '');
+}
+
+function isValidMatchId(id) {
+    return typeof id === 'string' && /^m[0-9]+$/.test(id);
 }
 
 function toRadians(degrees) {

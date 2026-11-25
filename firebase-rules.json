@@ -5,7 +5,7 @@
         ".read": "auth != null && auth.uid === $uid",
         ".write": "auth != null && auth.uid === $uid",
         "profileJson": {
-          ".validate": "newData.isString() && !newData.val().toLowerCase().contains('hure') && !newData.val().toLowerCase().contains('fick') && !newData.val().toLowerCase().contains('fotze') && !newData.val().toLowerCase().contains('wichs') && !newData.val().toLowerCase().contains('nazi') && !newData.val().toLowerCase().contains('hitler')"
+          ".validate": "newData.isString() && newData.val().length <= 200000 && !newData.val().toLowerCase().contains('hure') && !newData.val().toLowerCase().contains('fick') && !newData.val().toLowerCase().contains('fotze') && !newData.val().toLowerCase().contains('wichs') && !newData.val().toLowerCase().contains('nazi') && !newData.val().toLowerCase().contains('hitler')"
         }
       }
     },
@@ -13,6 +13,26 @@
       ".read": "auth != null",
       "$uid": {
         ".write": "auth != null && auth.uid === $uid",
+        ".validate": "$uid.length <= 40 && $uid.matches(/^[A-Za-z0-9]+$/)",
+        "name": {
+          ".validate": "newData.isString() && newData.val().length >= 1 && newData.val().length <= 30 && !newData.val().matches(/[<>\"'`]/) && !newData.val().toLowerCase().contains('hure') && !newData.val().toLowerCase().contains('fick') && !newData.val().toLowerCase().contains('fotze') && !newData.val().toLowerCase().contains('wichs') && !newData.val().toLowerCase().contains('nazi') && !newData.val().toLowerCase().contains('hitler')"
+        },
+        "title": {
+          ".validate": "newData.isString() && newData.val().length <= 40 && !newData.val().matches(/[<>\"'`]/)"
+        },
+        "frame": {
+          ".validate": "newData.isString() && newData.val().length >= 1 && newData.val().length <= 30 && newData.val().matches(/^[A-Za-z0-9-]+$/)"
+        },
+        "outfit": {
+          "colors": {
+            "$slot": {
+              ".validate": "$slot.length <= 20 && $slot.matches(/^[a-z]+$/) && newData.isString() && newData.val().length <= 40 && newData.val().matches(/^[A-Za-z0-9-]*$/)"
+            }
+          },
+          "$slot": {
+            ".validate": "$slot.length <= 20 && $slot.matches(/^[a-z]+$/) && newData.isString() && newData.val().length <= 40 && newData.val().matches(/^[A-Za-z0-9-]*$/)"
+          }
+        },
         "values": {
           "level": {
             ".validate": "newData.isNumber() && newData.val() >= 0 && newData.val() <= 30"
@@ -85,43 +105,100 @@
           },
           "fbblitz-stadiums": {
             ".validate": "newData.isNumber() && newData.val() >= 0 && newData.val() <= 300"
+          },
+          "$other": {
+            ".validate": false
           }
+        },
+        "achievements": {
+          "$achievementId": {
+            ".validate": "$achievementId.length <= 60 && $achievementId.matches(/^[a-z0-9-]+$/) && newData.isString() && newData.val().matches(/^[0-9][0-9][0-9][0-9]-[0-9][0-9]-[0-9][0-9]$/)"
+          }
+        },
+        "favorites": {
+          "$achievementId": {
+            ".validate": "$achievementId.length <= 60 && $achievementId.matches(/^[a-z0-9-]+$/) && newData.isBoolean()"
+          }
+        },
+        "dailyDate": {
+          ".validate": "newData.isString() && newData.val().matches(/^[0-9][0-9][0-9][0-9]-[0-9][0-9]-[0-9][0-9]$/)"
         },
         "dailyTotal": {
           ".validate": "newData.isNumber() && newData.val() >= 0 && newData.val() <= 300"
         },
+        "dailyDone": {
+          ".validate": "newData.isNumber() && newData.val() >= 0 && newData.val() <= 10"
+        },
+        "yesterdayDate": {
+          ".validate": "newData.isString() && newData.val().matches(/^[0-9][0-9][0-9][0-9]-[0-9][0-9]-[0-9][0-9]$/)"
+        },
         "yesterdayTotal": {
           ".validate": "newData.isNumber() && newData.val() >= 0 && newData.val() <= 300"
+        },
+        "monthKey": {
+          ".validate": "newData.isString() && newData.val().matches(/^[0-9][0-9][0-9][0-9]-[0-9][0-9]$/)"
         },
         "monthPoints": {
           ".validate": "newData.isNumber() && newData.val() >= 0 && newData.val() <= 9300"
         },
+        "lastMonthKey": {
+          ".validate": "newData.isString() && newData.val().matches(/^[0-9][0-9][0-9][0-9]-[0-9][0-9]$/)"
+        },
         "lastMonthPoints": {
           ".validate": "newData.isNumber() && newData.val() >= 0 && newData.val() <= 9300"
         },
-        "name": {
-          ".validate": "newData.isString() && newData.val().length <= 60 && !newData.val().toLowerCase().contains('hure') && !newData.val().toLowerCase().contains('fick') && !newData.val().toLowerCase().contains('fotze') && !newData.val().toLowerCase().contains('wichs') && !newData.val().toLowerCase().contains('nazi') && !newData.val().toLowerCase().contains('hitler')"
+        "updatedAt": {
+          ".validate": "newData.isNumber() && newData.val() <= now + 600000"
         },
-        "favorites": {
-          "$achievementId": {
-            ".validate": "newData.isBoolean()"
-          }
+        "$other": {
+          ".validate": false
         }
       }
     },
     "matches": {
-      ".read": "auth != null",
       "$matchId": {
-        ".write": "auth != null && (!data.exists() || data.child('players').child(auth.uid).exists())",
+        ".read": "auth != null",
+        ".write": "auth != null && ((!data.exists() && newData.child('createdBy').val() === auth.uid && newData.child('players').child(auth.uid).exists()) || (data.exists() && !newData.exists() && data.child('players').child(auth.uid).exists()))",
+        ".validate": "$matchId.length <= 30 && $matchId.matches(/^m[0-9]+$/) && newData.hasChildren(['game', 'mode', 'createdBy', 'createdAt', 'status', 'players'])",
+        "game": {
+          ".validate": "newData.isString() && newData.val().length <= 40 && newData.val().matches(/^[a-z0-9-]+$/)"
+        },
+        "mode": {
+          ".validate": "newData.val() === 'live' || newData.val() === 'challenge'"
+        },
+        "createdBy": {
+          ".validate": "newData.isString() && newData.val().matches(/^[A-Za-z0-9]+$/)"
+        },
+        "createdAt": {
+          ".validate": "newData.isNumber() && newData.val() <= now + 600000"
+        },
+        "status": {
+          ".write": "auth != null && data.exists() && data.parent().child('players').child(auth.uid).exists()",
+          ".validate": "newData.val() === 'invited' || newData.val() === 'running' || newData.val() === 'declined' || newData.val() === 'expired' || newData.val() === 'cancelled'"
+        },
         "players": {
           "$playerId": {
+            ".write": "auth != null && $playerId === auth.uid && data.exists()",
+            ".validate": "$playerId.length <= 40 && $playerId.matches(/^[A-Za-z0-9]+$/) && newData.hasChildren(['name', 'score', 'finished']) && ($playerId === auth.uid || (!data.exists() && newData.child('score').val() === 0 && newData.child('finished').val() === false))",
+            "name": {
+              ".validate": "newData.isString() && newData.val().length >= 1 && newData.val().length <= 30 && !newData.val().matches(/[<>\"'`]/) && !newData.val().toLowerCase().contains('hure') && !newData.val().toLowerCase().contains('fick') && !newData.val().toLowerCase().contains('fotze') && !newData.val().toLowerCase().contains('wichs') && !newData.val().toLowerCase().contains('nazi') && !newData.val().toLowerCase().contains('hitler')"
+            },
             "score": {
               ".validate": "newData.isNumber() && newData.val() >= 0 && newData.val() <= 1000"
             },
+            "finished": {
+              ".validate": "newData.isBoolean()"
+            },
             "time": {
               ".validate": "newData.isNumber() && newData.val() >= 0 && newData.val() <= 86400"
+            },
+            "$other": {
+              ".validate": false
             }
           }
+        },
+        "$other": {
+          ".validate": false
         }
       }
     },
@@ -129,15 +206,37 @@
       "$uid": {
         ".read": "auth != null && auth.uid === $uid",
         "$matchId": {
-          ".write": "auth != null"
+          ".write": "auth != null && (auth.uid === $uid || (!data.exists() && newData.child('fromUid').val() === auth.uid && root.child('matches').child($matchId).child('createdBy').val() === auth.uid && root.child('matches').child($matchId).child('players').child($uid).exists()))",
+          ".validate": "$matchId.length <= 30 && $matchId.matches(/^m[0-9]+$/) && newData.hasChildren(['game', 'mode', 'fromName', 'fromUid', 'toName', 'createdAt'])",
+          "game": {
+            ".validate": "newData.isString() && newData.val().length <= 40 && newData.val().matches(/^[a-z0-9-]+$/)"
+          },
+          "mode": {
+            ".validate": "newData.val() === 'live' || newData.val() === 'challenge'"
+          },
+          "fromName": {
+            ".validate": "newData.isString() && newData.val().length >= 1 && newData.val().length <= 30 && !newData.val().matches(/[<>\"'`]/) && !newData.val().toLowerCase().contains('hure') && !newData.val().toLowerCase().contains('fick') && !newData.val().toLowerCase().contains('fotze') && !newData.val().toLowerCase().contains('wichs') && !newData.val().toLowerCase().contains('nazi') && !newData.val().toLowerCase().contains('hitler')"
+          },
+          "fromUid": {
+            ".validate": "newData.isString() && newData.val().matches(/^[A-Za-z0-9]+$/)"
+          },
+          "toName": {
+            ".validate": "newData.isString() && newData.val().length >= 1 && newData.val().length <= 30 && !newData.val().matches(/[<>\"'`]/) && !newData.val().toLowerCase().contains('hure') && !newData.val().toLowerCase().contains('fick') && !newData.val().toLowerCase().contains('fotze') && !newData.val().toLowerCase().contains('wichs') && !newData.val().toLowerCase().contains('nazi') && !newData.val().toLowerCase().contains('hitler')"
+          },
+          "createdAt": {
+            ".validate": "newData.isNumber() && newData.val() <= now + 600000"
+          },
+          "$other": {
+            ".validate": false
+          }
         }
       }
     },
     "names": {
-      ".read": true,
       "$nameKey": {
+        ".read": true,
         ".write": "auth != null && (!data.exists() || data.val() === auth.uid)",
-        ".validate": "newData.isString() && newData.val() === auth.uid"
+        ".validate": "$nameKey.length <= 60 && !$nameKey.matches(/[<>\"'`]/) && newData.isString() && newData.val() === auth.uid"
       }
     }
   }

@@ -51,7 +51,7 @@ async function finishLogin() {
     showContent(loadingTemplate('Lade deinen Spielstand ...'));
     const state = await syncService.startSession();
     if (state === 'empty') {
-        const emailName = escapeHtml(authService.session.email.split('@')[0]);
+        const emailName = cleanText(authService.session.email.split('@')[0]).slice(0, 20);
         const name = await nameService.findFreeName(nameService.isAllowed(emailName) ? emailName : 'Spieler');
         profileService.createAccountProfile(authService.getUid(), name, 'skin-1', '');
     }
@@ -63,7 +63,7 @@ async function finishLogin() {
 
 async function submitRegister(event) {
     event.preventDefault();
-    const name = escapeHtml(readValue('register-name'));
+    const name = cleanText(readValue('register-name'));
     if (name === '' || isLoginBusy) {
         return setFormMessage('register-message', 'Bitte gib einen Namen ein.', 'red');
     }
@@ -177,7 +177,7 @@ async function submitRename(event) {
         return;
     }
     isLoginBusy = true;
-    const name = escapeHtml(readValue('rename-name'));
+    const name = cleanText(readValue('rename-name'));
     const error = await checkNewName(name);
     isLoginBusy = false;
     if (error !== '') {
